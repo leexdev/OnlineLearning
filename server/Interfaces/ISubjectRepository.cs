@@ -14,5 +14,7 @@ namespace server.Interfaces
         Task<Subject?> CreateAsync(Subject subject);
         Task<Subject?> UpdateAsync(int id, Subject subject);
         Task<Subject?> DeleteAsync(int id);
+        Task<bool> SubjectExists(int id);
+
     }
 }

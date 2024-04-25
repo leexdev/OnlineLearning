@@ -27,7 +27,7 @@ namespace server.Repository
 
         public async Task<Grade?> DeleteAsync(int id)
         {
-            var grade = await _context.Grades.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);
+            var grade = await _context.Grades.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
             if (grade == null)
             {
                 return null;
@@ -40,12 +40,12 @@ namespace server.Repository
 
         public async Task<List<Grade>> GetAllAsync()
         {
-            return await _context.Grades.Where(x => x.IsDeleted == false).Include(x => x.Subjects).ToListAsync();
+            return await _context.Grades.Where(x => !x.IsDeleted).Include(x => x.Subjects.Where(s => !s.IsDeleted)).ToListAsync();
         }
 
         public async Task<Grade?> GetByIdAsync(int id)
         {
-            var grade = await _context.Grades.Include(x => x.Subjects).FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);
+            var grade = await _context.Grades.Include(x => x.Subjects).FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
             if (grade == null)
             {
                 return null;
@@ -56,12 +56,12 @@ namespace server.Repository
 
         public Task<bool> GradeExists(int id)
         {
-            return _context.Grades.Where(x => x.IsDeleted == false).AnyAsync(x => x.Id == id);
+            return _context.Grades.Where(x => !x.IsDeleted).AnyAsync(x => x.Id == id);
         }
 
         public async Task<Grade?> UpdateAsync(int id, Grade gradeModel)
         {
-            var existingGrade = await _context.Grades.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);
+            var existingGrade = await _context.Grades.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
             if (existingGrade == null)
             {
                 return null;

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace server.Models
+namespace server.Dtos.Course
 {
-    public class Course : BaseModel
+    public class CourseDto
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -16,11 +16,5 @@ namespace server.Models
         public string ImageUrl { get; set; } = string.Empty;
         public int? SubjectId { get; set; }
         public int? DiscountId { get; set; }
-        public bool IsDeleted { get; set; } = false;
-        public Discount? Discount { get; set; }
-        public Subject? Subject { get; set; }
-        public List<Chapter> Chapters { get; set; } = new List<Chapter>();
-        public List<UserCourse> UserCourse { get; set; } = new List<UserCourse>();
-        public List<Payment> Payments { get; set; } = new List<Payment>();
     }
 }

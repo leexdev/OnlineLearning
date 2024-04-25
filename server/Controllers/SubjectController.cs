@@ -11,8 +11,8 @@ using server.Mappers;
 
 namespace server.Controllers
 {
-    [Route("api/subject")]
     [ApiController]
+    [Route("api/[controller]")]
     public class SubjectController : ControllerBase
     {
         private readonly ISubjectRepository _subjectRepo;
@@ -26,6 +26,9 @@ namespace server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            if(!ModelState.IsValid)
+                return BadRequest();
+                
             var subjects = await _subjectRepo.GetAllAsync();
             var subjectDto = subjects.Select(x => x.ToSubjectDto());
             return Ok(subjectDto);
@@ -34,6 +37,9 @@ namespace server.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
+            if(!ModelState.IsValid)
+                return BadRequest();
+                
             var subject = await _subjectRepo.GetByIdAsync(id);
             if (subject == null)
             {
@@ -46,6 +52,9 @@ namespace server.Controllers
         [HttpPost("{gradeId}")]
         public async Task<IActionResult> Create([FromRoute] int gradeId, [FromBody] CreateSubjectDto subjectDto)
         {
+            if(!ModelState.IsValid)
+                return BadRequest();
+                
             if (!await _gradeRepo.GradeExists(gradeId))
             {
                 return BadRequest("Grade does not exist");
@@ -58,6 +67,9 @@ namespace server.Controllers
         [HttpPut("update/{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSubjectDto subjectDto)
         {
+            if(!ModelState.IsValid)
+                return BadRequest();
+                
             var subjectModel = await _subjectRepo.UpdateAsync(id, subjectDto.ToSubjectFromUpdate());
             if (subjectModel == null)
             {
@@ -70,6 +82,9 @@ namespace server.Controllers
         [HttpPut("delete/{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            if(!ModelState.IsValid)
+                return BadRequest();
+                
             var subjectModel = await _subjectRepo.DeleteAsync(id);
 
             if (subjectModel == null)

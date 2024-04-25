@@ -27,23 +27,24 @@ namespace server.Repository
 
         public async Task<Subject?> DeleteAsync(int id)
         {
-            var subject = await _context.Subjects.FirstOrDefaultAsync(x => x.Id == id);
+            var subject = await _context.Subjects.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
             if (subject == null)
             {
                 return null;
             }
             subject.IsDeleted = true;
+            await _context.SaveChangesAsync();
             return subject;
         }
 
         public async Task<List<Subject>> GetAllAsync()
         {
-            return await _context.Subjects.ToListAsync();
+            return await _context.Subjects.Where(x => !x.IsDeleted).Include(x => x.Courses.Where(c=> !c.IsDeleted)).ToListAsync();
         }
 
         public async Task<Subject?> GetByIdAsync(int id)
         {
-            var subject = await _context.Subjects.FindAsync(id);
+            var subject = await _context.Subjects.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
             if (subject == null)
             {
                 return null;
@@ -51,9 +52,15 @@ namespace server.Repository
 
             return subject;
         }
+
+        public Task<bool> SubjectExists(int id)
+        {
+            return _context.Subjects.Where(x => !x.IsDeleted).AnyAsync(x => x.Id == id);
+        }
+
         public async Task<Subject?> UpdateAsync(int id, Subject subjectModel)
         {
-            var subject = await _context.Subjects.FindAsync(id);
+            var subject = await _context.Subjects.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
             if (subject == null)
             {
                 return null;
