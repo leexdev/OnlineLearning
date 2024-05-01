@@ -12,8 +12,8 @@ using server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240427094957_seedRole")]
-    partial class seedRole
+    [Migration("20240427112111_identity")]
+    partial class identity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,19 +54,19 @@ namespace server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "dd7b1cbf-0600-4f64-8940-d0f41571249d",
+                            Id = "fe7f8bad-073a-4c5e-a7db-c8be2779a148",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "eff3152b-11dd-444c-a2f1-fc617902c393",
+                            Id = "0642b7ea-469b-4cd5-a438-c6506fdc8f4c",
                             Name = "Teacher",
                             NormalizedName = "TEACHER"
                         },
                         new
                         {
-                            Id = "ceab9084-fb8b-4612-a0f6-3cf63f5c6589",
+                            Id = "0e1f12e3-abc7-47d4-a0c1-a9cbd1b27f12",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -627,7 +627,10 @@ namespace server.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("BirthDay")
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("BirthDay")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -671,7 +674,6 @@ namespace server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Sex")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")

@@ -4,8 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using server.Dtos.User;
+using server.Interfaces;
+using server.Mappers;
 using server.Models;
+using server.Repository;
 
 namespace server.Controllers
 {
@@ -13,50 +17,40 @@ namespace server.Controllers
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
-        public AccountController(UserManager<User> userManager)
+        private readonly IUserRepository _userRepository;
+
+        public AccountController(IUserRepository userRepository)
         {
-            _userManager = userManager;
+            _userRepository = userRepository;
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDto loginDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var (succeeded, error, userDto) = await _userRepository.CheckUserLoginAsync(loginDto);
+
+            if (!succeeded)
+                return Unauthorized(error);
+
+            return Ok(userDto);
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-                var user = new User
-                {
-                    UserName = registerDto.UserName,
-                    Email = registerDto.Email,
-                };
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-                var createdUser = await _userManager.CreateAsync(user, registerDto.Password);
+            var (succeeded, errors, userDto) = await _userRepository.RegisterUserAsync(registerDto);
 
-                if (createdUser.Succeeded)
-                {
-                    var roleResult = await _userManager.AddToRoleAsync(user, "User");
-                    if (roleResult.Succeeded)
-                    {
-                        return Ok("User create");
-                    }
-                    else
-                    {
-                        return StatusCode(500, roleResult.Errors);
-                    }
-                }
-                else
-                {
-                    return StatusCode(500, createdUser.Errors);
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e);
-            }
+            if (!succeeded)
+                return StatusCode(500, errors);
+
+            return Ok(userDto);
         }
+
     }
 }

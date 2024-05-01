@@ -51,19 +51,19 @@ namespace server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0ab9380b-7abc-4daf-bf4c-6bd04b4dd12d",
+                            Id = "fe7f8bad-073a-4c5e-a7db-c8be2779a148",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8a142503-03b0-47a7-89e5-de9dbd6d52e2",
+                            Id = "0642b7ea-469b-4cd5-a438-c6506fdc8f4c",
                             Name = "Teacher",
                             NormalizedName = "TEACHER"
                         },
                         new
                         {
-                            Id = "6731cdb5-5b62-4a37-beb3-4dc1d06629ff",
+                            Id = "0e1f12e3-abc7-47d4-a0c1-a9cbd1b27f12",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -627,7 +627,7 @@ namespace server.Migrations
                     b.Property<string>("Avatar")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("BirthDay")
+                    b.Property<DateTime?>("BirthDay")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ConcurrencyStamp")
