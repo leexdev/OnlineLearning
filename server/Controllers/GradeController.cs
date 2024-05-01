@@ -25,7 +25,7 @@ namespace server.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize()]
         public async Task<IActionResult> GetAll()
         {
             if(!ModelState.IsValid)

@@ -12,8 +12,8 @@ using server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240427112111_identity")]
-    partial class identity
+    [Migration("20240501171255_update-manytomany")]
+    partial class updatemanytomany
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,19 +54,19 @@ namespace server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fe7f8bad-073a-4c5e-a7db-c8be2779a148",
+                            Id = "59593416-1c62-4cc3-accd-9d540e03d277",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "0642b7ea-469b-4cd5-a438-c6506fdc8f4c",
+                            Id = "30f97d1e-a1e9-47b8-950b-9300b755ec80",
                             Name = "Teacher",
                             NormalizedName = "TEACHER"
                         },
                         new
                         {
-                            Id = "0e1f12e3-abc7-47d4-a0c1-a9cbd1b27f12",
+                            Id = "49e5ac46-3ea7-4a00-b984-7a2129f5aa86",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -269,11 +269,11 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.Comment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("LessonId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -282,23 +282,12 @@ namespace server.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("LessonId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "LessonId");
 
                     b.HasIndex("LessonId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Comments");
                 });
@@ -318,7 +307,7 @@ namespace server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DiscountId")
+                    b.Property<int>("DiscountId")
                         .HasColumnType("int");
 
                     b.Property<string>("ImageUrl")
@@ -338,7 +327,7 @@ namespace server.Migrations
                     b.Property<int?>("OldPrice")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SubjectId")
+                    b.Property<int>("SubjectId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -479,16 +468,13 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.Payment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Amount")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -504,17 +490,9 @@ namespace server.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "CourseId");
 
                     b.HasIndex("CourseId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Payments");
                 });
@@ -555,17 +533,14 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.Rating", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("LessonId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("LessonId")
-                        .HasColumnType("int");
 
                     b.Property<int>("Score")
                         .HasColumnType("int");
@@ -573,17 +548,9 @@ namespace server.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "LessonId");
 
                     b.HasIndex("LessonId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Ratings");
                 });
@@ -698,13 +665,10 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.UserCourse", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CourseId")
+                    b.Property<int>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -716,17 +680,9 @@ namespace server.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "CourseId");
 
                     b.HasIndex("CourseId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("UserCourses");
                 });
@@ -806,11 +762,15 @@ namespace server.Migrations
                 {
                     b.HasOne("server.Models.Lesson", "Lesson")
                         .WithMany("Comments")
-                        .HasForeignKey("LessonId");
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("server.Models.User", "User")
                         .WithMany("Comments")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Lesson");
 
@@ -821,11 +781,15 @@ namespace server.Migrations
                 {
                     b.HasOne("server.Models.Discount", "Discount")
                         .WithMany("Courses")
-                        .HasForeignKey("DiscountId");
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("server.Models.Subject", "Subject")
                         .WithMany("Courses")
-                        .HasForeignKey("SubjectId");
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Discount");
 
@@ -854,11 +818,15 @@ namespace server.Migrations
                 {
                     b.HasOne("server.Models.Course", "Course")
                         .WithMany("Payments")
-                        .HasForeignKey("CourseId");
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("server.Models.User", "User")
                         .WithMany("Payments")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Course");
 
@@ -878,11 +846,15 @@ namespace server.Migrations
                 {
                     b.HasOne("server.Models.Lesson", "Lesson")
                         .WithMany("Ratings")
-                        .HasForeignKey("LessonId");
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("server.Models.User", "User")
                         .WithMany("Ratings")
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Lesson");
 
@@ -901,12 +873,16 @@ namespace server.Migrations
             modelBuilder.Entity("server.Models.UserCourse", b =>
                 {
                     b.HasOne("server.Models.Course", "Course")
-                        .WithMany("UserCourse")
-                        .HasForeignKey("CourseId");
+                        .WithMany("UserCourses")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("server.Models.User", "User")
-                        .WithMany("CourseUsers")
-                        .HasForeignKey("UserId1");
+                        .WithMany("UserCourses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Course");
 
@@ -924,7 +900,7 @@ namespace server.Migrations
 
                     b.Navigation("Payments");
 
-                    b.Navigation("UserCourse");
+                    b.Navigation("UserCourses");
                 });
 
             modelBuilder.Entity("server.Models.Discount", b =>
@@ -962,11 +938,11 @@ namespace server.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("CourseUsers");
-
                     b.Navigation("Payments");
 
                     b.Navigation("Ratings");
+
+                    b.Navigation("UserCourses");
                 });
 #pragma warning restore 612, 618
         }

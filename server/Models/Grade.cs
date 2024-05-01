@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace server.Models
 {
+    [Table("Grades")]
     public class Grade : BaseModel
     {
         public int Id { get; set; }

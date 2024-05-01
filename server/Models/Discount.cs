@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace server.Models
 {
+    [Table("Discounts")]
     public class Discount : BaseModel
     {
         public int Id { get; set; }
