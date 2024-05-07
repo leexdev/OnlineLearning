@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace server.Migrations
 {
     /// <inheritdoc />
-    public partial class updatemanytomany : Migration
+    public partial class seeddata : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -240,7 +240,7 @@ namespace server.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GradeId = table.Column<int>(type: "int", nullable: true),
+                    GradeId = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -252,7 +252,8 @@ namespace server.Migrations
                         name: "FK_Subjects_Grades_GradeId",
                         column: x => x.GradeId,
                         principalTable: "Grades",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -268,7 +269,7 @@ namespace server.Migrations
                     NewPrice = table.Column<int>(type: "int", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SubjectId = table.Column<int>(type: "int", nullable: false),
-                    DiscountId = table.Column<int>(type: "int", nullable: false),
+                    DiscountId = table.Column<int>(type: "int", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -280,8 +281,7 @@ namespace server.Migrations
                         name: "FK_Courses_Discounts_DiscountId",
                         column: x => x.DiscountId,
                         principalTable: "Discounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Courses_Subjects_SubjectId",
                         column: x => x.SubjectId,
@@ -376,7 +376,7 @@ namespace server.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VideoURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ChapterId = table.Column<int>(type: "int", nullable: true),
+                    ChapterId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -387,7 +387,8 @@ namespace server.Migrations
                         name: "FK_Lessons_Chapters_ChapterId",
                         column: x => x.ChapterId,
                         principalTable: "Chapters",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -495,9 +496,39 @@ namespace server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "30f97d1e-a1e9-47b8-950b-9300b755ec80", null, "Teacher", "TEACHER" },
-                    { "49e5ac46-3ea7-4a00-b984-7a2129f5aa86", null, "User", "USER" },
-                    { "59593416-1c62-4cc3-accd-9d540e03d277", null, "Admin", "ADMIN" }
+                    { "2892484e-15b5-41da-a036-63edea481a65", null, "User", "USER" },
+                    { "28f45206-3bc0-4cea-8710-ab0b571036b0", null, "Admin", "ADMIN" },
+                    { "a43e6a39-d5b2-43ce-b26c-568d5da3233c", null, "Teacher", "TEACHER" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Grades",
+                columns: new[] { "Id", "CreatedAt", "IsDeleted", "Name", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8151), false, "Tiền lớp 1", new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8165) },
+                    { 2, new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8169), false, "Lớp 1", new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8170) },
+                    { 3, new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8216), false, "Lớp 2", new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8216) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Subjects",
+                columns: new[] { "Id", "CreatedAt", "GradeId", "IsDeleted", "Name", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8365), 1, false, "Toán học", new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8366) },
+                    { 2, new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8373), 1, false, "Tiếng Việt", new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8374) },
+                    { 3, new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8375), 2, false, "Tiếng Anh", new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8376) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Courses",
+                columns: new[] { "Id", "CreatedAt", "Description", "DiscountId", "ImageUrl", "IsDeleted", "Name", "NewPrice", "OldPrice", "SubjectId", "Title", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8417), "Toán học tiền lớp 1", null, "https://example.com/course-image.jpg", false, "Toán học tiền lớp 1", 80, 100, 1, "Toán học tiền lớp 1", new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8418) },
+                    { 2, new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8425), "Tiếng Việt tiền lớp 1", null, "https://example.com/course-image1.jpg", false, "Tiếng Việt tiền lớp 1", 50, 100, 2, "Tiếng Việt tiền lớp 1", new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8426) },
+                    { 3, new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8428), "Tiếng Anh lớp 1", null, "https://example.com/course-image2.jpg", false, "Tiếng Anh lớp 1", 80, 200, 3, "Tiếng Anh lớp 1", new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8429) }
                 });
 
             migrationBuilder.CreateIndex(

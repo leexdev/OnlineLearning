@@ -111,8 +111,65 @@ namespace server.Data
             builder.Entity<IdentityRole>().HasData(roles);
 
             builder.Entity<Grade>()
-              .HasIndex(x => x.Name)
+                .HasIndex(x => x.Name)
                 .IsUnique();
+
+
+            SeedData(builder);
+        }
+
+        private void SeedData(ModelBuilder builder)
+        {
+            // Khởi tạo dữ liệu cho Grade
+            builder.Entity<Grade>().HasData(
+                new Grade { Id = 1, Name = "Tiền lớp 1" },
+                new Grade { Id = 2, Name = "Lớp 1" },
+                new Grade { Id = 3, Name = "Lớp 2" }
+            );
+
+            // Khởi tạo dữ liệu cho Subject
+            builder.Entity<Subject>().HasData(
+                new Subject { Id = 1, Name = "Toán học", GradeId = 1 },
+                new Subject { Id = 2, Name = "Tiếng Việt", GradeId = 1 },
+                new Subject { Id = 3, Name = "Tiếng Anh", GradeId = 2 }
+            );
+
+            // Khởi tạo dữ liệu cho Course
+            builder.Entity<Course>().HasData(
+                new Course
+                {
+                    Id = 1,
+                    Name = "Toán học tiền lớp 1",
+                    Title = "Toán học tiền lớp 1",
+                    Description = "Toán học tiền lớp 1",
+                    OldPrice = 100,
+                    NewPrice = 80,
+                    ImageUrl = "https://example.com/course-image.jpg",
+                    SubjectId = 1
+                },
+                new Course
+                {
+                    Id = 2,
+                    Name = "Tiếng Việt tiền lớp 1",
+                    Title = "Tiếng Việt tiền lớp 1",
+                    Description = "Tiếng Việt tiền lớp 1",
+                    OldPrice = 100,
+                    NewPrice = 50,
+                    ImageUrl = "https://example.com/course-image1.jpg",
+                    SubjectId = 2
+                },
+                new Course
+                {
+                    Id = 3,
+                    Name = "Tiếng Anh lớp 1",
+                    Title = "Tiếng Anh lớp 1",
+                    Description = "Tiếng Anh lớp 1",
+                    OldPrice = 200,
+                    NewPrice = 80,
+                    ImageUrl = "https://example.com/course-image2.jpg",
+                    SubjectId = 3
+                }
+            );
         }
     }
 }

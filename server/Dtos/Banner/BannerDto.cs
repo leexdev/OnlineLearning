@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace server.Models
+namespace server.Dtos.Banner
 {
-    [Table("Banners")]
-    public class Banner : BaseModel
+    public class BannerDto
     {
         public int Id { get; set; }
         public string ImageUrl { get; set; } = string.Empty;

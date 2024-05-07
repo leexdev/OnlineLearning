@@ -12,5 +12,7 @@ namespace server.Dtos.Course
         public string Description { get; set; } = string.Empty;
         public int NewPrice { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
+        public int SubjectId { get; set; }
+        public int? DiscountId { get; set; }
     }
 }

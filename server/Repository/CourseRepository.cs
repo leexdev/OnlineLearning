@@ -42,7 +42,7 @@ namespace server.Repository
 
         public async Task<List<Course>> GetAllAsync()
         {
-            return await _context.Courses.Where(x => x.IsDeleted == false).ToListAsync();
+            return await _context.Courses.Where(x => !x.IsDeleted).ToListAsync();
         }
 
         public async Task<Course?> GetByIdAsync(int id)
@@ -65,8 +65,10 @@ namespace server.Repository
             course.Name = courseModel.Name;
             course.Title = courseModel.Title;
             course.Description = courseModel.Description;
-            course.NewPrice = course.NewPrice;
-            course.ImageUrl = course.ImageUrl;
+            course.NewPrice = courseModel.NewPrice;
+            course.ImageUrl = courseModel.ImageUrl;
+            course.SubjectId = courseModel.SubjectId;
+            course.DiscountId = courseModel.DiscountId;
 
             await _context.SaveChangesAsync();
             return course;

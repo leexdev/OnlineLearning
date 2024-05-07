@@ -57,7 +57,7 @@ namespace server.Controllers
 
             if (!await _subjectRepo.SubjectExists(subjectId))
             {
-                return BadRequest("gradId does not exist");
+                return BadRequest("Môn học không tồn tại");
             }
 
             var course = courseDto.ToCourseFromCreate(subjectId);
@@ -77,7 +77,7 @@ namespace server.Controllers
                 return NotFound();
             }
 
-            return Ok(courseModel.ToCourceDto());
+            return Ok(courseModel.ToCourceDto());   
         }
 
         [HttpPut("delete/{id}")]

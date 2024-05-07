@@ -39,7 +39,7 @@ namespace server.Repository
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                Token = _tokenService.CreateToken(user)
+                Token = await _tokenService.CreateToken(user)
             };
 
             return (true, null, newUserDto);
@@ -59,7 +59,7 @@ namespace server.Repository
             {
                 UserName = user.UserName,
                 Email = user.Email,
-                Token = _tokenService.CreateToken(user)
+                Token = await _tokenService.CreateToken(user)
             };
 
             return (true, null, newUserDto);

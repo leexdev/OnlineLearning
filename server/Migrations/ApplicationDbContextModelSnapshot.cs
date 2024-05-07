@@ -51,19 +51,19 @@ namespace server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "59593416-1c62-4cc3-accd-9d540e03d277",
+                            Id = "28f45206-3bc0-4cea-8710-ab0b571036b0",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "30f97d1e-a1e9-47b8-950b-9300b755ec80",
+                            Id = "a43e6a39-d5b2-43ce-b26c-568d5da3233c",
                             Name = "Teacher",
                             NormalizedName = "TEACHER"
                         },
                         new
                         {
-                            Id = "49e5ac46-3ea7-4a00-b984-7a2129f5aa86",
+                            Id = "2892484e-15b5-41da-a036-63edea481a65",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -304,7 +304,7 @@ namespace server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DiscountId")
+                    b.Property<int?>("DiscountId")
                         .HasColumnType("int");
 
                     b.Property<string>("ImageUrl")
@@ -341,6 +341,50 @@ namespace server.Migrations
                     b.HasIndex("SubjectId");
 
                     b.ToTable("Courses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8417),
+                            Description = "Toán học tiền lớp 1",
+                            ImageUrl = "https://example.com/course-image.jpg",
+                            IsDeleted = false,
+                            Name = "Toán học tiền lớp 1",
+                            NewPrice = 80,
+                            OldPrice = 100,
+                            SubjectId = 1,
+                            Title = "Toán học tiền lớp 1",
+                            UpdatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8418)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8425),
+                            Description = "Tiếng Việt tiền lớp 1",
+                            ImageUrl = "https://example.com/course-image1.jpg",
+                            IsDeleted = false,
+                            Name = "Tiếng Việt tiền lớp 1",
+                            NewPrice = 50,
+                            OldPrice = 100,
+                            SubjectId = 2,
+                            Title = "Tiếng Việt tiền lớp 1",
+                            UpdatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8426)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8428),
+                            Description = "Tiếng Anh lớp 1",
+                            ImageUrl = "https://example.com/course-image2.jpg",
+                            IsDeleted = false,
+                            Name = "Tiếng Anh lớp 1",
+                            NewPrice = 80,
+                            OldPrice = 200,
+                            SubjectId = 3,
+                            Title = "Tiếng Anh lớp 1",
+                            UpdatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8429)
+                        });
                 });
 
             modelBuilder.Entity("server.Models.Discount", b =>
@@ -401,6 +445,32 @@ namespace server.Migrations
                         .IsUnique();
 
                     b.ToTable("Grades");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8151),
+                            IsDeleted = false,
+                            Name = "Tiền lớp 1",
+                            UpdatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8165)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8169),
+                            IsDeleted = false,
+                            Name = "Lớp 1",
+                            UpdatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8170)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8216),
+                            IsDeleted = false,
+                            Name = "Lớp 2",
+                            UpdatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8216)
+                        });
                 });
 
             modelBuilder.Entity("server.Models.Lesson", b =>
@@ -411,7 +481,7 @@ namespace server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ChapterId")
+                    b.Property<int>("ChapterId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -563,7 +633,7 @@ namespace server.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GradeId")
+                    b.Property<int>("GradeId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -581,6 +651,35 @@ namespace server.Migrations
                     b.HasIndex("GradeId");
 
                     b.ToTable("Subjects");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8365),
+                            GradeId = 1,
+                            IsDeleted = false,
+                            Name = "Toán học",
+                            UpdatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8366)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8373),
+                            GradeId = 1,
+                            IsDeleted = false,
+                            Name = "Tiếng Việt",
+                            UpdatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8374)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8375),
+                            GradeId = 2,
+                            IsDeleted = false,
+                            Name = "Tiếng Anh",
+                            UpdatedAt = new DateTime(2024, 5, 5, 22, 1, 9, 73, DateTimeKind.Local).AddTicks(8376)
+                        });
                 });
 
             modelBuilder.Entity("server.Models.User", b =>
@@ -778,9 +877,7 @@ namespace server.Migrations
                 {
                     b.HasOne("server.Models.Discount", "Discount")
                         .WithMany("Courses")
-                        .HasForeignKey("DiscountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DiscountId");
 
                     b.HasOne("server.Models.Subject", "Subject")
                         .WithMany("Courses")
@@ -797,7 +894,9 @@ namespace server.Migrations
                 {
                     b.HasOne("server.Models.Chapter", "Chapter")
                         .WithMany("Lessons")
-                        .HasForeignKey("ChapterId");
+                        .HasForeignKey("ChapterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Chapter");
                 });
@@ -862,7 +961,9 @@ namespace server.Migrations
                 {
                     b.HasOne("server.Models.Grade", "Grade")
                         .WithMany("Subjects")
-                        .HasForeignKey("GradeId");
+                        .HasForeignKey("GradeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Grade");
                 });
