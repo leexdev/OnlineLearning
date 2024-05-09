@@ -13,5 +13,6 @@ namespace server.Interfaces
         Task<Course> CreateAsync(Course courseModel);
         Task<Course?> UpdateAsync(int id, Course courseModel);
         Task<Course?> DeleteAsync(int id);
+        Task<Course?> ApplyDiscountAsync(int id, int discountId);
     }
 }

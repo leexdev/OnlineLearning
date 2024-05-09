@@ -28,7 +28,7 @@ namespace server.Repository
                     Name = uc.Course.Name,
                     Title = uc.Course.Title,
                     Description = uc.Course.Description,
-                    OldPrice = uc.Course.OldPrice,
+                    Price = uc.Course.Price,
                     NewPrice = uc.Course.NewPrice,
                     ImageUrl = uc.Course.ImageUrl,
                     SubjectId = uc.Course.SubjectId,

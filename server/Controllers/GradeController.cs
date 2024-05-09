@@ -25,23 +25,17 @@ namespace server.Controllers
         }
 
         [HttpGet]
-        [Authorize()]
+        // [Authorize]
         public async Task<IActionResult> GetAll()
         {
-            if(!ModelState.IsValid)
-                return BadRequest();
-                
-            var grades = await _gradeRepo.GetAllAsync(  );
+            var grades = await _gradeRepo.GetAllAsync();
             var gradeDto = grades.Select(x => x.ToGradeDto());
             return Ok(gradeDto);
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var grade = await _gradeRepo.GetByIdAsync(id);
             if (grade == null)
             {
@@ -52,23 +46,16 @@ namespace server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateGrade([FromBody] CreateGradeDto gradeDto)
+        public async Task<IActionResult> CreateGrade(CreateGradeDto gradeDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var grade = gradeDto.ToGradeFromCreate();
             await _gradeRepo.CreateAsync(grade);
             return CreatedAtAction(nameof(GetById), new { id = grade.Id }, grade.ToGradeDto());
         }
 
         [HttpPut]
-        [Route("update/{id:int}")]
-        public async Task<IActionResult> UpdateGrade([FromRoute] int id, [FromBody] UpdateGradeDto updateDto)
+        public async Task<IActionResult> UpdateGrade(int id, UpdateGradeDto updateDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var gradeModel = await _gradeRepo.UpdateAsync(id, updateDto.ToGradeFromUpdate());
             if (gradeModel == null)
             {
@@ -91,13 +78,9 @@ namespace server.Controllers
         //     return NoContent();
         // }
 
-        [HttpPut]
-        [Route("delete/{id:int}")]
-        public async Task<IActionResult> DeleteGrade([FromRoute] int id)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteGrade(int id)
         {
-            if(!ModelState.IsValid)
-                return BadRequest();
-                
             var gradeModel = await _gradeRepo.DeleteAsync(id);
             if (gradeModel == null)
             {

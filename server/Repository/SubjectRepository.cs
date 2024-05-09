@@ -44,7 +44,7 @@ namespace server.Repository
 
         public async Task<Subject?> GetByIdAsync(int id)
         {
-            var subject = await _context.Subjects.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            var subject = await _context.Subjects.Include(x => x.Courses.Where(s => !s.IsDeleted)).FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
             if (subject == null)
             {
                 return null;
@@ -67,6 +67,7 @@ namespace server.Repository
             }
 
             subject.Name = subjectModel.Name;
+            subject.GradeId = subjectModel.GradeId;
             await _context.SaveChangesAsync();
             return subject;
         }

@@ -142,7 +142,7 @@ namespace server.Data
                     Name = "Toán học tiền lớp 1",
                     Title = "Toán học tiền lớp 1",
                     Description = "Toán học tiền lớp 1",
-                    OldPrice = 100,
+                    Price = 100,
                     NewPrice = 80,
                     ImageUrl = "https://example.com/course-image.jpg",
                     SubjectId = 1
@@ -153,7 +153,7 @@ namespace server.Data
                     Name = "Tiếng Việt tiền lớp 1",
                     Title = "Tiếng Việt tiền lớp 1",
                     Description = "Tiếng Việt tiền lớp 1",
-                    OldPrice = 100,
+                    Price = 100,
                     NewPrice = 50,
                     ImageUrl = "https://example.com/course-image1.jpg",
                     SubjectId = 2
@@ -164,7 +164,7 @@ namespace server.Data
                     Name = "Tiếng Anh lớp 1",
                     Title = "Tiếng Anh lớp 1",
                     Description = "Tiếng Anh lớp 1",
-                    OldPrice = 200,
+                    Price = 200,
                     NewPrice = 80,
                     ImageUrl = "https://example.com/course-image2.jpg",
                     SubjectId = 3

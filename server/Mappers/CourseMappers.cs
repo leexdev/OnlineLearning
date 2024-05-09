@@ -9,7 +9,7 @@ namespace server.Mappers
 {
     public static class CourseMappers
     {
-        public static CourseDto ToCourceDto(this Course courseModel)
+        public static CourseDto ToCourseDto(this Course courseModel)
         {
             return new CourseDto
             {
@@ -17,7 +17,7 @@ namespace server.Mappers
                 Name = courseModel.Name,
                 Title = courseModel.Title,
                 Description = courseModel.Description,
-                OldPrice = courseModel.OldPrice,
+                Price = courseModel.Price,
                 NewPrice = courseModel.NewPrice,
                 ImageUrl = courseModel.ImageUrl,
                 SubjectId = courseModel.SubjectId,
@@ -32,7 +32,7 @@ namespace server.Mappers
                 Name = courseDto.Name,
                 Title = courseDto.Title,
                 Description = courseDto.Description,
-                NewPrice = courseDto.NewPrice,
+                NewPrice = courseDto.Price,
                 ImageUrl = courseDto.ImageUrl,
                 SubjectId = subjectId
             };
@@ -45,8 +45,9 @@ namespace server.Mappers
                 Name = courseDto.Name,
                 Title = courseDto.Title,
                 Description = courseDto.Description,
-                NewPrice = courseDto.NewPrice,
-                ImageUrl = courseDto.ImageUrl
+                Price = courseDto.Price,
+                ImageUrl = courseDto.ImageUrl,
+                SubjectId = courseDto.SubjectId
             };
         }
     }

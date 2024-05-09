@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using server.Data;
@@ -19,6 +20,26 @@ namespace server.Repository
         public CourseRepository(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<Course?> ApplyDiscountAsync(int id, int discountId)
+        {
+            var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
+            if (course == null)
+            {
+                return null;
+            }
+
+            var discount = await _context.Discounts.FirstOrDefaultAsync(c => c.Id == discountId && !c.IsDeleted);
+
+            if (discount == null)
+            {
+                return null;
+            }
+            
+            course.NewPrice = (int?)(course.Price * (1 - discount.DiscountAmount / 100.0));
+            await _context.SaveChangesAsync();
+            return course;
         }
 
         public async Task<Course> CreateAsync(Course courseModel)
@@ -65,7 +86,7 @@ namespace server.Repository
             course.Name = courseModel.Name;
             course.Title = courseModel.Title;
             course.Description = courseModel.Description;
-            course.NewPrice = courseModel.NewPrice;
+            course.Price = courseModel.Price;
             course.ImageUrl = courseModel.ImageUrl;
             course.SubjectId = courseModel.SubjectId;
             course.DiscountId = courseModel.DiscountId;

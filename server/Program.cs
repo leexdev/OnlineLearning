@@ -95,6 +95,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserCourseRepository, UserCourseRepository>();
 builder.Services.AddScoped<IBannerRepository, BannerRepository>();
 builder.Services.AddScoped<IChapterRepository, ChapterRepository>();
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();

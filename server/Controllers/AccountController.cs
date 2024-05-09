@@ -39,7 +39,7 @@ namespace server.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+        public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -51,6 +51,5 @@ namespace server.Controllers
 
             return Ok(userDto);
         }
-
     }
 }

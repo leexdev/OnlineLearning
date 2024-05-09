@@ -16,7 +16,7 @@ namespace server.Mappers
                 Id = subjectModel.Id,
                 Name = subjectModel.Name,
                 GradeId = subjectModel.GradeId,
-                Courses = subjectModel.Courses.Select(c => c.ToCourceDto()).ToList()
+                Courses = subjectModel.Courses.Select(c => c.ToCourseDto()).ToList()
             };
         }
 
@@ -33,7 +33,8 @@ namespace server.Mappers
         {
             return new Subject
             {
-                Name = subjectDto.Name
+                Name = subjectDto.Name,
+                GradeId = subjectDto.GradeId
             };
         }
     }

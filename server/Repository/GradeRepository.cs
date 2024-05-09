@@ -45,7 +45,7 @@ namespace server.Repository
 
         public async Task<Grade?> GetByIdAsync(int id)
         {
-            var grade = await _context.Grades.Include(x => x.Subjects).FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            var grade = await _context.Grades.Include(x => x.Subjects.Where(s => !s.IsDeleted)).FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
             if (grade == null)
             {
                 return null;
@@ -54,9 +54,9 @@ namespace server.Repository
             return grade;
         }
 
-        public Task<bool> GradeExists(int id)
+        public async Task<bool> GradeExists(int id)
         {
-            return _context.Grades.Where(x => !x.IsDeleted).AnyAsync(x => x.Id == id);
+            return await _context.Grades.Where(x => !x.IsDeleted).AnyAsync(x => x.Id == id);
         }
 
         public async Task<Grade?> UpdateAsync(int id, Grade gradeModel)

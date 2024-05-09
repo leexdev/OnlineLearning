@@ -23,20 +23,14 @@ namespace server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var banners = await _bannerRepo.GetAllAsync();
             var bannerDto = banners.Select(b => b.ToBannerDto());
             return Ok(bannerDto);
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var banner = await _bannerRepo.GetByIdAsync(id);
             if (banner == null)
             {
@@ -49,9 +43,6 @@ namespace server.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBannerDto bannerDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var banner = bannerDto.ToBannerFromCreate();
             await _bannerRepo.CreateAsync(banner);
             return CreatedAtAction(nameof(GetById), new { id = banner.Id }, banner.ToBannerDto());
@@ -60,9 +51,6 @@ namespace server.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateBannerDto updateDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var banner = await _bannerRepo.UpdateAsync(id, updateDto.ToBannerFromUpdate());
 
             if (banner == null)

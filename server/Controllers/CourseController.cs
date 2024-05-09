@@ -16,79 +16,88 @@ namespace server.Controllers
     {
         private readonly ICourseRepository _courseRepo;
         private readonly ISubjectRepository _subjectRepo;
-        public CourseController(ICourseRepository courseRepo, ISubjectRepository subjectRepo)
+        private readonly IDiscountRepository _discountRepo;
+        public CourseController(ICourseRepository courseRepo, ISubjectRepository subjectRepo, IDiscountRepository discountRepo)
         {
             _courseRepo = courseRepo;
             _subjectRepo = subjectRepo;
+            _discountRepo = discountRepo;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var courses = await _courseRepo.GetAllAsync();
-            var courseDto = courses.Select(x => x.ToCourceDto());
+            var courseDto = courses.Select(x => x.ToCourseDto());
             return Ok(courseDto);
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
             var course = await _courseRepo.GetByIdAsync(id);
             if (course == null)
             {
                 return NotFound();
             }
 
-            return Ok(course.ToCourceDto());
+            return Ok(course.ToCourseDto());
         }
 
 
-        [HttpPost("{subjectId}")]
-        public async Task<IActionResult> Create([FromRoute] int subjectId, [FromBody] CreateCourseDto courseDto)
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateCourseDto courseDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
-            if (!await _subjectRepo.SubjectExists(subjectId))
+            if (!await _subjectRepo.SubjectExists(courseDto.SubjectId))
             {
                 return BadRequest("Môn học không tồn tại");
             }
 
-            var course = courseDto.ToCourseFromCreate(subjectId);
+            var course = courseDto.ToCourseFromCreate(courseDto.SubjectId);
             await _courseRepo.CreateAsync(course);
-            return CreatedAtAction(nameof(GetById), new { id = course.Id }, course.ToCourceDto());
+            return CreatedAtAction(nameof(GetById), new { id = course.Id }, course.ToCourseDto());
         }
 
-        [HttpPut("update/{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCourseDto courseDto)
+        [HttpPut("{id:int}/discounts/{discountId:int}")]
+        public async Task<IActionResult> ApplyDiscount(int id, int discountId)
         {
-            if(!ModelState.IsValid)
-                return BadRequest();
-                
-            var courseModel = await _courseRepo.UpdateAsync(id, courseDto.ToCourseFromUpdate());
-            if (courseModel == null)
+            if (!await _discountRepo.DiscountExists(discountId))
+            {
+                return BadRequest("Mã giảm giá không tồn tại");
+            }
+
+            var course = await _courseRepo.ApplyDiscountAsync(id, discountId);
+            if(course == null)
             {
                 return NotFound();
             }
 
-            return Ok(courseModel.ToCourceDto());   
+            return Ok(course.ToCourseDto());
         }
 
-        [HttpPut("delete/{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Update(int id, UpdateCourseDto courseDto)
         {
-            if(!ModelState.IsValid)
-                return BadRequest();
-                
-            var courseModel = await _courseRepo.DeleteAsync(id);
+            if (!await _subjectRepo.SubjectExists(courseDto.SubjectId))
+            {
+                return BadRequest("Môn học không tồn tại");
+            }
+            
+            var course = await _courseRepo.UpdateAsync(id, courseDto.ToCourseFromUpdate());
+            if (course == null)
+            {
+                return NotFound();
+            }
 
-            if (courseModel == null)
+            return Ok(course.ToCourseDto());
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var course = await _courseRepo.DeleteAsync(id);
+
+            if (course == null)
             {
                 return NotFound();
             }

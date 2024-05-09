@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Channels;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using server.Data;
 using server.Interfaces;
 using server.Models;
@@ -16,29 +19,55 @@ namespace server.Repository
             _context = context;
         }
 
-        public Task<Chapter?> CreateAsync(int courseId, Chapter chapterModel)
+        public async Task<Chapter?> CreateAsync(int courseId, Chapter chapterModel)
         {
-            throw new NotImplementedException();
+            await _context.Chapters.AddAsync(chapterModel);
+            await _context.SaveChangesAsync();
+            return chapterModel;
         }
 
-        public Task<Chapter?> DeleteAsync(int id)
+        public async Task<Chapter?> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var chapter = await _context.Chapters.FirstOrDefaultAsync(c => c.Id == id & !c.IsDeleted);
+            if (chapter == null)
+            {
+                return null;
+            }
+
+            chapter.IsDeleted = true;
+            await _context.SaveChangesAsync();
+            return chapter;
         }
 
-        public Task<List<Chapter>> GetAllAsync()
+        public async Task<List<Chapter>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Chapters.Where(c => !c.IsDeleted).ToListAsync();
         }
 
-        public Task<Chapter?> GetByIdAsync()
+        public async Task<Chapter?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var chapter = await _context.Chapters.FirstOrDefaultAsync(c => c.Id == id & !c.IsDeleted);
+            if (chapter == null)
+            {
+                return null;
+            }
+
+            return chapter;
         }
 
-        public Task<Chapter?> UpdateAsync(int id, Chapter chapterModel)
+        public async Task<Chapter?> UpdateAsync(int id, Chapter chapterModel)
         {
-            throw new NotImplementedException();
+            var chapter = await _context.Chapters.FirstOrDefaultAsync(c => c.Id == id & !c.IsDeleted);
+            if (chapter == null)
+            {
+                return null;
+            }
+
+            chapter.Name = chapterModel.Name;
+            chapter.CourseId = chapterModel.CourseId;
+            
+            await _context.SaveChangesAsync();
+            return chapter;
         }
     }
 }
