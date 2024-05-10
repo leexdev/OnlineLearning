@@ -49,11 +49,11 @@ namespace server.Repository
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.UserName.ToLower());
             if (user == null)
-                return (false, "Invalid username", null);
+                return (false, "Tên đăng nhập không tồn tại", null);
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
             if (!result.Succeeded)
-                return (false, "Username not found and/or password incorrect", null);
+                return (false, "Mật khẩu không chính xác", null);
 
             var newUserDto = new NewUserDto
             {

@@ -9,6 +9,7 @@ namespace server.Models
     [Table("Payments")]
     public class Payment : BaseModel
     {
+        public int Id { get; set;}
         public string? UserId { get; set; }
         public int CourseId { get; set; }
         public int Amount { get; set; }

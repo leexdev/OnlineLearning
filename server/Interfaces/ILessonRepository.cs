@@ -13,5 +13,6 @@ namespace server.Interfaces
         Task<Lesson> CreateAsynO(Lesson lessonModel);
         Task<Lesson?> UpdateAsync(int id, Lesson lessonModel);
         Task<Lesson?> DeleteAsync(int id);
+        Task<bool> LessonExists(int id);
     }
 }

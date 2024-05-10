@@ -53,6 +53,11 @@ namespace server.Repository
             return lesson;
         }
 
+        public async Task<bool> LessonExists(int id)
+        {
+            return await _context.Lessons.Where(l => !l.IsDeleted).AnyAsync(l => l.Id == id);
+        }
+
         public async Task<Lesson?> UpdateAsync(int id, Lesson lessonModel)
         {
             var lesson = await _context.Lessons.FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);

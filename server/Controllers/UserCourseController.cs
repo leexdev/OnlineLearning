@@ -26,7 +26,7 @@ namespace server.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserCourse()
         {
             var userName = HttpContext.User?.FindFirst(ClaimTypes.GivenName)?.Value;

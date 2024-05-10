@@ -20,5 +20,15 @@ namespace server.Mappers
                 Courses = discountModel.Courses.Select(c => c.ToCourseDto()).ToList()
             };
         }
+
+        public static Discount ToDiscountFromCreate(this CreateDiscountDto discountDto)
+        {
+            return new Discount
+            {
+                DiscountAmount = discountDto.DiscountAmount,
+                StartDate = discountDto.StartDate,
+                EndDate = discountDto.EndDate
+            };
+        }
     }
 }

@@ -17,14 +17,24 @@ namespace server.Repository
             _context = context;
         }
 
-        public Task<Discount> CreateAsync(Discount discountModel)
+        public async Task<Discount> CreateAsync(Discount discountModel)
         {
-            throw new NotImplementedException();
+            await _context.Discounts.AddAsync(discountModel);
+            await _context.SaveChangesAsync();
+            return discountModel;
         }
 
-        public Task<Discount?> DeleteAsync(int id)
+        public async Task<Discount?> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var discount = await _context.Discounts.FirstOrDefaultAsync(d => d.Id == id);
+            if (discount == null)
+            {
+                return null;
+            }
+
+            _context.Discounts.Remove(discount);
+            await _context.SaveChangesAsync();
+            return discount;
         }
 
         public async Task<bool> DiscountExists(int id)
@@ -37,14 +47,15 @@ namespace server.Repository
             return await _context.Discounts.Where(d => !d.IsDeleted).ToListAsync();
         }
 
-        public Task<Discount?> GetByIdAsync(int id)
+        public async Task<Discount?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
-        }
+            var discount = await _context.Discounts.FirstOrDefaultAsync(d => d.Id == id);
+            if (discount == null)
+            {
+                return null;
+            }
 
-        public Task<Discount?> UpdateAsync(int id, Discount discountModel)
-        {
-            throw new NotImplementedException();
+            return discount;
         }
     }
 }

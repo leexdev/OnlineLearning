@@ -58,7 +58,7 @@ namespace server.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateChapterDto chapterDto)
         {
-            if (await _courseRepo.CourseExists(chapterDto.CourseId))
+            if (!await _courseRepo.CourseExists(chapterDto.CourseId))
             {
                 return BadRequest("Khóa học không tồn tại");
             }
