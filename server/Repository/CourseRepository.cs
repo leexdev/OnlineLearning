@@ -36,10 +36,15 @@ namespace server.Repository
             {
                 return null;
             }
-            
+
             course.NewPrice = (int?)(course.Price * (1 - discount.DiscountAmount / 100.0));
             await _context.SaveChangesAsync();
             return course;
+        }
+
+        public async Task<bool> CourseExists(int id)
+        {
+            return await _context.Courses.Where(c => !c.IsDeleted).AnyAsync(c => c.Id == id);
         }
 
         public async Task<Course> CreateAsync(Course courseModel)
@@ -63,12 +68,12 @@ namespace server.Repository
 
         public async Task<List<Course>> GetAllAsync()
         {
-            return await _context.Courses.Where(x => !x.IsDeleted).ToListAsync();
+            return await _context.Courses.Where(x => !x.IsDeleted).Include(x => x.Chapters.Where(c => !c.IsDeleted)).ToListAsync();
         }
 
         public async Task<Course?> GetByIdAsync(int id)
         {
-            var course = await _context.Courses.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            var course = await _context.Courses.Include(x => x.Chapters.Where(c => !c.IsDeleted)).FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
             if (course == null)
             {
                 return null;

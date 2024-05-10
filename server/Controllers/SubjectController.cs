@@ -48,9 +48,9 @@ namespace server.Controllers
         {
             if (!await _gradeRepo.GradeExists(subjectDto.GradeId))
             {
-                return BadRequest("Grade does not exist");
+                return BadRequest("Lớp học không tồn tại");
             }
-            var subject = subjectDto.ToSubjectFromCreate(subjectDto.GradeId);
+            var subject = subjectDto.ToSubjectFromCreate();
             await _subjectRepo.CreateAsync(subject);
             return CreatedAtAction(nameof(GetById), new { id = subject.Id }, subject.ToSubjectDto());
         }
@@ -58,6 +58,10 @@ namespace server.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(int id, UpdateSubjectDto subjectDto)
         {
+            if (!await _gradeRepo.GradeExists(subjectDto.GradeId))
+            {
+                return BadRequest("Lớp học không tồn tại");
+            }
             var subjectModel = await _subjectRepo.UpdateAsync(id, subjectDto.ToSubjectFromUpdate());
             if (subjectModel == null)
             {

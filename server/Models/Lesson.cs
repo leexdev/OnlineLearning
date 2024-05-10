@@ -12,9 +12,9 @@ namespace server.Models
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string VideoURL { get; set; } = string.Empty;
-        public bool isFree = false;
+        public bool isFree { get; set; } = false;
         public int ChapterId { get; set; }
-        public bool IsDeleted = false;
+        public bool IsDeleted { get; set; } = false;
         public Chapter? Chapter { get; set; }
         public List<Question> Questions { get; set; } = new List<Question>();
         public List<Comment> Comments { get; set; } = new List<Comment>();

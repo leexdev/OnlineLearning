@@ -21,11 +21,12 @@ namespace server.Mappers
                 NewPrice = courseModel.NewPrice,
                 ImageUrl = courseModel.ImageUrl,
                 SubjectId = courseModel.SubjectId,
-                DiscountId = courseModel.DiscountId
+                DiscountId = courseModel.DiscountId,
+                Chapters = courseModel.Chapters.Select(c => c.ToChapterDto()).ToList()
             };
         }
 
-        public static Course ToCourseFromCreate(this CreateCourseDto courseDto, int subjectId)
+        public static Course ToCourseFromCreate(this CreateCourseDto courseDto)
         {
             return new Course
             {
@@ -34,7 +35,7 @@ namespace server.Mappers
                 Description = courseDto.Description,
                 NewPrice = courseDto.Price,
                 ImageUrl = courseDto.ImageUrl,
-                SubjectId = subjectId
+                SubjectId = courseDto.SubjectId
             };
         }
 

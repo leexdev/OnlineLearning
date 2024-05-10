@@ -53,7 +53,7 @@ namespace server.Controllers
                 return BadRequest("Môn học không tồn tại");
             }
 
-            var course = courseDto.ToCourseFromCreate(courseDto.SubjectId);
+            var course = courseDto.ToCourseFromCreate();
             await _courseRepo.CreateAsync(course);
             return CreatedAtAction(nameof(GetById), new { id = course.Id }, course.ToCourseDto());
         }
@@ -67,7 +67,7 @@ namespace server.Controllers
             }
 
             var course = await _courseRepo.ApplyDiscountAsync(id, discountId);
-            if(course == null)
+            if (course == null)
             {
                 return NotFound();
             }
@@ -82,13 +82,13 @@ namespace server.Controllers
             {
                 return BadRequest("Môn học không tồn tại");
             }
-            
+
             var course = await _courseRepo.UpdateAsync(id, courseDto.ToCourseFromUpdate());
             if (course == null)
             {
                 return NotFound();
             }
-
+    
             return Ok(course.ToCourseDto());
         }
 

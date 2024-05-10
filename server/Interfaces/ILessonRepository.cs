@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using server.Models;
+
+namespace server.Interfaces
+{
+    public interface ILessonRepository
+    {
+        Task<List<Lesson>> GetAllAsync();
+        Task<Lesson?> GetByIdAsync(int id);
+        Task<Lesson> CreateAsynO(Lesson lessonModel);
+        Task<Lesson?> UpdateAsync(int id, Lesson lessonModel);
+        Task<Lesson?> DeleteAsync(int id);
+    }
+}

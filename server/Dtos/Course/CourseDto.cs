@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using server.Dtos.Chapter;
 
 namespace server.Dtos.Course
 {
@@ -16,5 +17,6 @@ namespace server.Dtos.Course
         public string ImageUrl { get; set; } = string.Empty;
         public int SubjectId { get; set; }
         public int? DiscountId { get; set; }
+        public List<ChapterDto> Chapters { get; set; } = new List<ChapterDto>();
     }
 }

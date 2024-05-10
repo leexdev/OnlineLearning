@@ -19,7 +19,12 @@ namespace server.Repository
             _context = context;
         }
 
-        public async Task<Chapter?> CreateAsync(int courseId, Chapter chapterModel)
+        public async Task<bool> ChapterExist(int id)
+        {
+            return await _context.Chapters.Where(c => !c.IsDeleted).AnyAsync(c => c.Id == id);
+        }
+
+        public async Task<Chapter?> CreateAsync(Chapter chapterModel)
         {
             await _context.Chapters.AddAsync(chapterModel);
             await _context.SaveChangesAsync();
@@ -41,12 +46,12 @@ namespace server.Repository
 
         public async Task<List<Chapter>> GetAllAsync()
         {
-            return await _context.Chapters.Where(c => !c.IsDeleted).ToListAsync();
+            return await _context.Chapters.Where(c => !c.IsDeleted).Include(c => c.Lessons.Where(l => !l.IsDeleted)).ToListAsync();
         }
 
         public async Task<Chapter?> GetByIdAsync(int id)
         {
-            var chapter = await _context.Chapters.FirstOrDefaultAsync(c => c.Id == id & !c.IsDeleted);
+            var chapter = await _context.Chapters.Include(c => c.Lessons.Where(l => !l.IsDeleted)).FirstOrDefaultAsync(c => c.Id == id & !c.IsDeleted);
             if (chapter == null)
             {
                 return null;
@@ -65,7 +70,7 @@ namespace server.Repository
 
             chapter.Name = chapterModel.Name;
             chapter.CourseId = chapterModel.CourseId;
-            
+
             await _context.SaveChangesAsync();
             return chapter;
         }

@@ -20,12 +20,12 @@ namespace server.Mappers
             };
         }
 
-        public static Subject ToSubjectFromCreate(this CreateSubjectDto subjectDto, int gradeId)
+        public static Subject ToSubjectFromCreate(this CreateSubjectDto subjectDto)
         {
             return new Subject
             {
                 Name = subjectDto.Name,
-                GradeId = gradeId
+                GradeId = subjectDto.GradeId
             };
         }
 

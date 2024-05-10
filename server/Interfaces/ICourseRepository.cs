@@ -14,5 +14,6 @@ namespace server.Interfaces
         Task<Course?> UpdateAsync(int id, Course courseModel);
         Task<Course?> DeleteAsync(int id);
         Task<Course?> ApplyDiscountAsync(int id, int discountId);
+        Task<bool> CourseExists(int id);
     }
 }
