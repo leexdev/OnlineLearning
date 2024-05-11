@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.Interfaces;
+using server.Mappers;
 using server.Models;
 
 namespace server.Repository
@@ -16,13 +17,6 @@ namespace server.Repository
         {
             _context = context;
         }
-        public async Task<Rating> CreateAsync(Rating ratingModel)
-        {
-            await _context.Ratings.AddAsync(ratingModel);
-            await _context.SaveChangesAsync();
-            return ratingModel;
-        }
-
         public async Task<Rating?> DeleteAsync(int id)
         {
             var rating = await _context.Ratings.FirstOrDefaultAsync(r => r.Id == id);
@@ -52,18 +46,29 @@ namespace server.Repository
             return rating;
         }
 
-        public async Task<Rating?> UpdateAsync(int id, Rating ratingModel)
+        public async Task<Rating?> CreateAsync(string userId, Rating ratingModel)
         {
-            var rating = await _context.Ratings.FirstOrDefaultAsync(r => r.Id == id);
-            if (rating == null)
+            if (!await RatingExist(ratingModel.LessonId, userId))
             {
-                return null;
+                _context.Ratings.Add(ratingModel);
+            }
+            else
+            {
+                var existingRating = await _context.Ratings.FirstOrDefaultAsync(r => r.UserId == userId && r.LessonId == ratingModel.LessonId);
+                if (existingRating == null)
+                {
+                    return null;
+                }
+                existingRating.Score = ratingModel.Score;
             }
 
-            rating.Score = ratingModel.Score;
-
             await _context.SaveChangesAsync();
-            return rating;
+            return ratingModel;
+        }
+
+        public async Task<bool> RatingExist(int lessonId, string userId)
+        {
+            return await _context.Ratings.AnyAsync(r => r.LessonId == lessonId && r.UserId == userId);
         }
     }
 }

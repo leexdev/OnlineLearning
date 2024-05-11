@@ -55,7 +55,7 @@ namespace server.Repository
 
         public Task<bool> SubjectExists(int id)
         {
-            return _context.Subjects.Where(x => !x.IsDeleted).AnyAsync(x => x.Id == id);
+            return _context.Subjects.AnyAsync(x => x.Id == id && !x.IsDeleted);
         }
 
         public async Task<Subject?> UpdateAsync(int id, Subject subjectModel)

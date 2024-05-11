@@ -18,7 +18,9 @@ namespace server.Mappers
                 Title = lessonModel.Title,
                 VideoURL = lessonModel.VideoURL,
                 isFree = lessonModel.isFree,
-                ChapterId = lessonModel.ChapterId
+                ChapterId = lessonModel.ChapterId,
+                Ratings = lessonModel.Ratings.Select(r => r.ToRatingDto()).ToList(),
+                Comments = lessonModel.Comments.Select(c => c.ToCommentDto()).ToList(),
             };
         }
 

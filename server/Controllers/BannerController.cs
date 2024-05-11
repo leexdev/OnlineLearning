@@ -41,7 +41,7 @@ namespace server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateBannerDto bannerDto)
+        public async Task<IActionResult> Create(CreateBannerDto bannerDto)
         {
             var banner = bannerDto.ToBannerFromCreate();
             await _bannerRepo.CreateAsync(banner);
@@ -49,7 +49,7 @@ namespace server.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateBannerDto updateDto)
+        public async Task<IActionResult> Update(int id, UpdateBannerDto updateDto)
         {
             var banner = await _bannerRepo.UpdateAsync(id, updateDto.ToBannerFromUpdate());
 
@@ -62,7 +62,7 @@ namespace server.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var banner = await _bannerRepo.DeleteAsync(id);
             if (banner == null)

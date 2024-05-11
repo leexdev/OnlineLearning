@@ -39,12 +39,12 @@ namespace server.Repository
 
         public async Task<List<Lesson>> GetAllAsync()
         {
-            return await _context.Lessons.Where(l => !l.IsDeleted).ToListAsync();
+            return await _context.Lessons.Include(l => l.Ratings).Include(l => l.Comments).Where(l => !l.IsDeleted).ToListAsync();
         }
 
         public async Task<Lesson?> GetByIdAsync(int id)
         {
-            var lesson = await _context.Lessons.FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
+            var lesson = await _context.Lessons.Include(l => l.Ratings).Include(l => l.Comments).FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
             if (lesson == null)
             {
                 return null;
