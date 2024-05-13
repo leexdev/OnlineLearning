@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using server.Data;
 using server.Interfaces;
 using server.Models;
@@ -17,7 +16,7 @@ namespace server.Repository
         {
             _context = context;
         }
-        public async Task<Lesson> CreateAsynO(Lesson lessonModel)
+        public async Task<Lesson> CreateAsync(Lesson lessonModel)
         {
             await _context.Lessons.AddAsync(lessonModel);
             await _context.SaveChangesAsync();

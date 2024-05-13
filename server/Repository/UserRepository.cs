@@ -135,7 +135,7 @@ namespace server.Repository
             user.PhoneNumber = userModel.PhoneNumber;
             user.BirthDay = userModel.BirthDay;
             user.Sex = userModel.Sex;
-            user.Avatar = user.Avatar;
+            user.Avatar = userModel.Avatar;
 
             await _userManager.UpdateAsync(user);
             return user;

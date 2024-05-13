@@ -8,6 +8,7 @@ namespace server.Dtos.Lesson
     public class CreateLessonDto
     {
         public string Title { get; set; } = string.Empty;
+        public string? Description { get; set; } = string.Empty;
         public string VideoURL { get; set; } = string.Empty;
         public bool isFree { get; set; } = false;
         public int ChapterId { get; set; }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using server.Dtos.User;
+using server.Extensions;
 using server.Interfaces;
 using server.Mappers;
 using server.Models;
@@ -21,19 +22,20 @@ namespace server.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly UserManager<User> _userManager;
+        private readonly IFireBaseService _firebaseService;
+        private readonly IFileService _fileService;
 
-        public AccountController(IUserRepository userRepository, UserManager<User> userManager)
+        public AccountController(IUserRepository userRepository, UserManager<User> userManager, IFireBaseService firebaseService, IFileService fileService)
         {
             _userRepository = userRepository;
             _userManager = userManager;
+            _fileService = fileService;
+            _firebaseService = firebaseService;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var (succeeded, error, userDto) = await _userRepository.CheckUserLoginAsync(loginDto);
 
             if (!succeeded)
@@ -45,9 +47,6 @@ namespace server.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var (succeeded, errors, userDto) = await _userRepository.RegisterUserAsync(registerDto);
 
             if (!succeeded)
@@ -74,7 +73,6 @@ namespace server.Controllers
                     PhoneNumber = user.PhoneNumber,
                     BirthDay = user.BirthDay,
                     Sex = user.Sex,
-                    Avatar = user.Avatar,
                     Roles = roles
                 };
                 userDtos.Add(userDto);
@@ -130,7 +128,7 @@ namespace server.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateCurrentUser(UpdateUserDto userDto)
         {
-            var userName = HttpContext.User?.FindFirst(ClaimTypes.GivenName)?.Value;
+            var userName = User.GetUsername();
             var user = await _userManager.FindByNameAsync(userName);
             var userModel = await _userRepository.UpdateAsync(user.Id, userDto.ToUserFromUpdate());
             if (userModel == null)
@@ -151,6 +149,22 @@ namespace server.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPost("upload")]
+        [Authorize]
+        public async Task<IActionResult> UploadVideo(IFormFile imageFile)
+        {
+            // Kiểm tra xem tệp tin được chọn không
+            if (imageFile == null || imageFile.Length == 0)
+                return BadRequest("Không có file nào được chọn");
+
+            if (!_fileService.IsImageFile(imageFile))
+                return BadRequest("Dịnh dạng không phù hợp");
+
+            var url = await _firebaseService.UploadFile(imageFile);
+
+            return Ok(url);
         }
     }
 }

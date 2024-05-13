@@ -16,6 +16,7 @@ namespace server.Mappers
             {
                 Id = lessonModel.Id,
                 Title = lessonModel.Title,
+                Description = lessonModel.Description,
                 VideoURL = lessonModel.VideoURL,
                 isFree = lessonModel.isFree,
                 ChapterId = lessonModel.ChapterId,
@@ -29,6 +30,7 @@ namespace server.Mappers
             return new Lesson
             {
                 Title = lessonDto.Title,
+                Description = lessonDto.Description,
                 VideoURL = lessonDto.VideoURL,
                 isFree = lessonDto.isFree,
                 ChapterId = lessonDto.ChapterId

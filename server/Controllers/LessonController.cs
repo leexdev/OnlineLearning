@@ -2,6 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Google;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Services;
+using Google.Apis.Upload;
+using Google.Apis.Util.Store;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using server.Dtos.Lesson;
@@ -16,10 +21,14 @@ namespace server.Controllers
     {
         private readonly ILessonRepository _lessonRepo;
         private readonly IChapterRepository _chapterRepo;
-        public LessonController(ILessonRepository lessonRepo, IChapterRepository chapterRepo)
+        private readonly IFireBaseService _firebaseService;
+        private readonly IFileService _fileService;
+        public LessonController(ILessonRepository lessonRepo, IChapterRepository chapterRepo, IFireBaseService firebaseService, IFileService fileService)
         {
             _lessonRepo = lessonRepo;
             _chapterRepo = chapterRepo;
+            _firebaseService = firebaseService;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -51,9 +60,36 @@ namespace server.Controllers
             }
 
             var lesson = lessonDto.ToLessonFromCreate();
-            await _lessonRepo.CreateAsynO(lesson);
+            await _lessonRepo.CreateAsync(lesson);
             return CreatedAtAction(nameof(GetById), new { id = lesson.Id }, lesson.ToLessonDto());
         }
+
+        // [HttpPost("uploadvideo")]
+        // public async Task<IActionResult> UploadVideo(IFormFile file)
+        // {
+        //     var result = await _youtubeService.UploadVideoAsync(file);
+        //     if (result == null)
+        //     {
+        //         return NotFound();
+        //     }
+        //     return Ok(result);
+        // }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadVideo(IFormFile videoFile)
+        {
+            // Kiểm tra xem tệp tin được chọn không
+            if (videoFile == null || videoFile.Length == 0)
+                return BadRequest("Không có file nào được chọn");
+
+            if (!_fileService.IsVideoFile(videoFile))
+                return BadRequest("Dịnh dạng không phù hợp");
+
+            var url = await _firebaseService.UploadFile(videoFile);
+
+            return Ok(url);
+        }
+
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateLessonDto lessonDto)

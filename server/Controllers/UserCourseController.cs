@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using server.Extensions;
 using server.Interfaces;
 using server.Models;
 using server.Repository;
@@ -29,7 +30,7 @@ namespace server.Controllers
         [Authorize]
         public async Task<IActionResult> GetUserCourse()
         {
-            var userName = HttpContext.User?.FindFirst(ClaimTypes.GivenName)?.Value;
+            var userName = User.GetUsername();
             var user = await _userManager.FindByNameAsync(userName);
             var userCourse = await _ucRepo.GetUserCourses(user);
             return Ok(userCourse);

@@ -29,8 +29,7 @@ namespace server.Mappers
                 Email = userDto.Email,
                 PhoneNumber = userDto.PhoneNumber,
                 BirthDay = userDto.BirthDay,
-                Sex = userDto.Sex,
-                Avatar = userDto.Avatar
+                Sex = userDto.Sex
             };
         }
     }

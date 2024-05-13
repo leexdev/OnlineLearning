@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.Rating;
+using server.Extensions;
 using server.Interfaces;
 using server.Mappers;
 using server.Models;
@@ -42,8 +43,8 @@ namespace server.Controllers
             {
                 return BadRequest("Bài giảng không tồn tại");
             }
-            
-            var userName = HttpContext.User?.FindFirst(ClaimTypes.GivenName)?.Value;
+
+            var userName = User.GetUsername();
             var user = await _userManager.FindByNameAsync(userName);
             var ratingModel = ratingDto.ToRatingFromCreate(user.Id);
             var rating = await _ratingRepo.CreateAsync(user.Id, ratingModel);

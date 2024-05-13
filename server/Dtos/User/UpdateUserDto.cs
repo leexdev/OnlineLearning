@@ -11,6 +11,5 @@ namespace server.Dtos.User
         public string PhoneNumber { get; set; } = string.Empty;
         public DateTime? BirthDay { get; set; }
         public string? Sex { get; set; }
-        public string? Avatar { get; set; }
     }
 }

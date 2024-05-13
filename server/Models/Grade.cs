@@ -14,6 +14,6 @@ namespace server.Models
         public string Name { get; set; } = string.Empty;
         public bool IsDeleted { get; set; } = false;
         public List<Subject> Subjects {get; set;} = new List<Subject>();
-        public List<New> News { get; set; } = new List<New>();
+        public List<News> News { get; set; } = new List<News>();
     }
 }

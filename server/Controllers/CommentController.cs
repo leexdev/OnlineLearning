@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.Comment;
+using server.Extensions;
 using server.Interfaces;
 using server.Mappers;
 using server.Models;
@@ -43,7 +44,7 @@ namespace server.Controllers
             {
                 return BadRequest("Bài giảng không tồn tại");
             }
-            var userName = HttpContext.User?.FindFirst(ClaimTypes.GivenName)?.Value;
+            var userName = User.GetUsername();
             var user = await _userManager.FindByNameAsync(userName);
             var commentModel = commentDto.ToCommentFromCreate(user.Id);
 
@@ -62,7 +63,7 @@ namespace server.Controllers
         public async Task<IActionResult> Update(int id, UpdateCommentDto commentDto)
         {
             var comment = await _commentRepo.UpdateAsync(id, commentDto.ToCommentFromUpdate());
-            if(comment == null)
+            if (comment == null)
             {
                 return NotFound();
             }
