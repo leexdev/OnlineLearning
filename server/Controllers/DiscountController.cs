@@ -21,7 +21,7 @@ namespace server.Controllers
             _discountRepo = discountRepo;
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var discounts = await _discountRepo.GetAllAsync();
@@ -29,7 +29,7 @@ namespace server.Controllers
             return Ok(discountDto);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("get-by-id/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             var discount = await _discountRepo.GetByIdAsync(id);
@@ -41,7 +41,7 @@ namespace server.Controllers
             return Ok(discount.ToDiscountDto());
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(CreateDiscountDto discountDto)
         {
             var discount = discountDto.ToDiscountFromCreate();
@@ -49,7 +49,7 @@ namespace server.Controllers
             return CreatedAtAction(nameof(GetById), new { id = discount.Id }, discount.ToDiscountDto());
         }
 
-        [HttpDelete]
+        [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             var discount = await _discountRepo.DeleteAsync(id);

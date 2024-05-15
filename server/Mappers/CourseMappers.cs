@@ -26,7 +26,7 @@ namespace server.Mappers
             };
         }
 
-        public static Course ToCourseFromCreate(this CreateCourseDto courseDto)
+        public static Course ToCourseFromCreate(this CreateCourseDto courseDto, string imageUrl)
         {
             return new Course
             {
@@ -34,12 +34,12 @@ namespace server.Mappers
                 Title = courseDto.Title,
                 Description = courseDto.Description,
                 NewPrice = courseDto.Price,
-                ImageUrl = courseDto.ImageUrl,
+                ImageUrl = imageUrl,
                 SubjectId = courseDto.SubjectId
             };
         }
 
-        public static Course ToCourseFromUpdate(this UpdateCourseDto courseDto)
+        public static Course ToCourseFromUpdate(this UpdateCourseDto courseDto, string imageUrl)
         {
             return new Course
             {
@@ -47,7 +47,7 @@ namespace server.Mappers
                 Title = courseDto.Title,
                 Description = courseDto.Description,
                 Price = courseDto.Price,
-                ImageUrl = courseDto.ImageUrl,
+                ImageUrl = imageUrl,
                 SubjectId = courseDto.SubjectId
             };
         }

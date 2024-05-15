@@ -21,7 +21,7 @@ namespace server.Controllers
             _gradeRepo = gradeRepo;
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var news = await _newsRepo.GetAllAsync();
@@ -29,7 +29,7 @@ namespace server.Controllers
             return Ok(newsDto);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("get-by-id/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             var news = await _newsRepo.GetByIdAsync(id);
@@ -40,7 +40,7 @@ namespace server.Controllers
             return Ok(news.ToNewsDto());
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(CreateNewsDto newsDto)
         {
             if (!await _gradeRepo.GradeExists(newsDto.GradeId))
@@ -52,7 +52,7 @@ namespace server.Controllers
             return CreatedAtAction(nameof(GetById), new { id = news.Id }, news.ToNewsDto());
         }
 
-        [HttpPut]
+        [HttpPut("Update/{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateNewsDto newsDto)
         {
             if (!await _gradeRepo.GradeExists(newsDto.GradeId))
@@ -68,7 +68,7 @@ namespace server.Controllers
             return Ok(news.ToNewsDto());
         }
 
-        [HttpDelete]
+        [HttpDelete("delete")]
         public async Task<IActionResult> Delete(int id)
         {
             var news = await _newsRepo.DeleteAsync(id);

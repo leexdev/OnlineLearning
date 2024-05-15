@@ -20,7 +20,7 @@ namespace server.Controllers
             _bannerRepo = bannerRepo;
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var banners = await _bannerRepo.GetAllAsync();
@@ -28,7 +28,7 @@ namespace server.Controllers
             return Ok(bannerDto);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("get-by-id/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             var banner = await _bannerRepo.GetByIdAsync(id);
@@ -40,7 +40,7 @@ namespace server.Controllers
             return Ok(banner.ToBannerDto());
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(CreateBannerDto bannerDto)
         {
             var banner = bannerDto.ToBannerFromCreate();
@@ -48,7 +48,7 @@ namespace server.Controllers
             return CreatedAtAction(nameof(GetById), new { id = banner.Id }, banner.ToBannerDto());
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("update/{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateBannerDto updateDto)
         {
             var banner = await _bannerRepo.UpdateAsync(id, updateDto.ToBannerFromUpdate());
@@ -61,7 +61,7 @@ namespace server.Controllers
             return Ok(banner.ToBannerDto());
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             var banner = await _bannerRepo.DeleteAsync(id);

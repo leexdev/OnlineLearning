@@ -22,27 +22,28 @@ namespace server.Mappers
                 ChapterId = lessonModel.ChapterId,
                 Ratings = lessonModel.Ratings.Select(r => r.ToRatingDto()).ToList(),
                 Comments = lessonModel.Comments.Select(c => c.ToCommentDto()).ToList(),
+                Questions = lessonModel.Questions.Select(c => c.ToQuestionDto()).ToList(),
             };
         }
 
-        public static Lesson ToLessonFromCreate(this CreateLessonDto lessonDto)
+        public static Lesson ToLessonFromCreate(this CreateLessonDto lessonDto, string videoUrl)
         {
             return new Lesson
             {
                 Title = lessonDto.Title,
                 Description = lessonDto.Description,
-                VideoURL = lessonDto.VideoURL,
+                VideoURL = videoUrl,
                 isFree = lessonDto.isFree,
                 ChapterId = lessonDto.ChapterId
             };
         }
 
-        public static Lesson ToLessonFromUpdate(this UpdateLessonDto lessonDto)
+        public static Lesson ToLessonFromUpdate(this UpdateLessonDto lessonDto, string videoUrl)
         {
             return new Lesson
             {
                 Title = lessonDto.Title,
-                VideoURL = lessonDto.VideoURL,
+                VideoURL = videoUrl,
                 isFree = lessonDto.isFree,
                 ChapterId = lessonDto.ChapterId
             };

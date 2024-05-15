@@ -55,7 +55,7 @@ namespace server.Controllers
             return Ok(userDto);
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var users = await _userRepository.GetAllAsync();
@@ -73,6 +73,7 @@ namespace server.Controllers
                     PhoneNumber = user.PhoneNumber,
                     BirthDay = user.BirthDay,
                     Sex = user.Sex,
+                    Avatar = user.Avatar,
                     Roles = roles
                 };
                 userDtos.Add(userDto);
@@ -81,10 +82,10 @@ namespace server.Controllers
             return Ok(userDtos);
         }
 
-        [HttpPost("/changeroles/{userId}")]
-        public async Task<IActionResult> ChangeRoles(string userId, [FromBody] string[] newRoles)
+        [HttpPost("changeroles/{id}")]
+        public async Task<IActionResult> ChangeRoles(string id, [FromBody] string[] newRoles)
         {
-            var user = await _userRepository.GetUserByIdAsync(userId);
+            var user = await _userRepository.GetUserByIdAsync(id);
 
             if (user == null)
             {
@@ -112,7 +113,7 @@ namespace server.Controllers
             }
         }
 
-        [HttpPut("update/user")]
+        [HttpPut("update/user{id:int}")]
         public async Task<IActionResult> Update(string id, UpdateUserDto userDto)
         {
             var user = await _userRepository.UpdateAsync(id, userDto.ToUserFromUpdate());
@@ -139,7 +140,7 @@ namespace server.Controllers
             return Ok(userModel.ToUserDto());
         }
 
-        [HttpDelete]
+        [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete(string id)
         {
             var user = await _userRepository.DeleteAsync(id);
@@ -151,20 +152,33 @@ namespace server.Controllers
             return NoContent();
         }
 
-        [HttpPost("upload")]
+        [HttpPost("upload-image")]
         [Authorize]
-        public async Task<IActionResult> UploadVideo(IFormFile imageFile)
+        public async Task<IActionResult> UploadImage(IFormFile imageFile)
         {
-            // Kiểm tra xem tệp tin được chọn không
             if (imageFile == null || imageFile.Length == 0)
                 return BadRequest("Không có file nào được chọn");
 
             if (!_fileService.IsImageFile(imageFile))
-                return BadRequest("Dịnh dạng không phù hợp");
+                return BadRequest("Định dạng ảnh không phù hợp");
 
-            var url = await _firebaseService.UploadFile(imageFile);
+            try
+            {
+                var user = await _userManager.FindByNameAsync(User.GetUsername());
+                if (user == null)
+                    return Unauthorized("Không tìm thấy người dùng");
 
-            return Ok(url);
+                var folderPath = $"avatar_user";
+                var urlImage = await _firebaseService.HandleFile(user.Avatar, folderPath, imageFile);
+                user.Avatar = urlImage;
+                await _userManager.UpdateAsync(user);
+
+                return Ok(user.ToUserDto());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Có lỗi xảy ra khi tải lên ảnh: {ex.Message}");
+            }
         }
     }
 }

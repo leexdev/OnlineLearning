@@ -45,21 +45,9 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "CloudinaryDotNet": {
-              "target": "Package",
-              "version": "[1.26.2, )"
-            },
             "Firebase.Auth": {
               "target": "Package",
               "version": "[1.0.0, )"
-            },
-            "Firebase.Database": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "FirebaseAdmin": {
-              "target": "Package",
-              "version": "[3.0.0, )"
             },
             "FirebaseStorage.net": {
               "target": "Package",

@@ -26,7 +26,7 @@ namespace server.Controllers
             _ucRepo = ucRepo;
         }
 
-        [HttpGet]
+        [HttpGet("get-by-userid")]
         [Authorize]
         public async Task<IActionResult> GetUserCourse()
         {

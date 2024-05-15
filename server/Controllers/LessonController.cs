@@ -2,11 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Google;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Services;
-using Google.Apis.Upload;
-using Google.Apis.Util.Store;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using server.Dtos.Lesson;
@@ -31,7 +26,7 @@ namespace server.Controllers
             _fileService = fileService;
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var lessons = await _lessonRepo.GetAllAsync();
@@ -39,7 +34,7 @@ namespace server.Controllers
             return Ok(lessonDto);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("get-by-id/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             var lesson = await _lessonRepo.GetByIdAsync(id);
@@ -51,64 +46,68 @@ namespace server.Controllers
             return Ok(lesson.ToLessonDto());
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateLessonDto lessonDto)
+        [HttpPost("create")]
+        public async Task<IActionResult> Create(CreateLessonDto lessonDto, IFormFile videoFile)
         {
-            if (!await _chapterRepo.ChapterExist(lessonDto.ChapterId))
+            try
             {
-                return NotFound("Chương không tồn tại");
-            }
+                if (!await _chapterRepo.ChapterExist(lessonDto.ChapterId))
+                    return NotFound("Chương không tồn tại");
 
-            var lesson = lessonDto.ToLessonFromCreate();
-            await _lessonRepo.CreateAsync(lesson);
-            return CreatedAtAction(nameof(GetById), new { id = lesson.Id }, lesson.ToLessonDto());
+                if (videoFile == null || videoFile.Length == 0)
+                    return BadRequest("Không có file video nào được chọn");
+
+                if (!_fileService.IsVideoFile(videoFile))
+                    return BadRequest("Định dạng video không phù hợp");
+
+                var folderPath = $"video_lesson";
+                var urlVideo = await _firebaseService.HandleFile(null, folderPath, videoFile);
+
+                var lesson = lessonDto.ToLessonFromCreate(urlVideo);
+                await _lessonRepo.CreateAsync(lesson);
+
+                return CreatedAtAction(nameof(GetById), new { id = lesson.Id }, lesson.ToLessonDto());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Có lỗi xảy ra khi tạo bài học và tải lên video: {ex.Message}");
+            }
         }
 
-        // [HttpPost("uploadvideo")]
-        // public async Task<IActionResult> UploadVideo(IFormFile file)
-        // {
-        //     var result = await _youtubeService.UploadVideoAsync(file);
-        //     if (result == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     return Ok(result);
-        // }
 
-        [HttpPost("upload")]
-        public async Task<IActionResult> UploadVideo(IFormFile videoFile)
+        [HttpPut("update/{id:int}")]
+        public async Task<IActionResult> Update(int id, IFormFile videoFile, UpdateLessonDto lessonDto)
         {
-            // Kiểm tra xem tệp tin được chọn không
             if (videoFile == null || videoFile.Length == 0)
-                return BadRequest("Không có file nào được chọn");
+                return BadRequest("Không có file video nào được chọn");
 
             if (!_fileService.IsVideoFile(videoFile))
-                return BadRequest("Dịnh dạng không phù hợp");
+                return BadRequest("Định dạng video không phù hợp");
 
-            var url = await _firebaseService.UploadFile(videoFile);
+            try
+            {
+                var existingLesson = await _lessonRepo.GetByIdAsync(id);
+                if (existingLesson == null)
+                    return NotFound();
 
-            return Ok(url);
+                var folderPath = $"video_lesson";
+                var newVideoUrl = await _firebaseService.HandleFile(existingLesson.VideoURL, folderPath, videoFile);
+
+                var updatedLessonModel = await _lessonRepo.UpdateAsync(id, lessonDto.ToLessonFromUpdate(newVideoUrl));
+
+                if (updatedLessonModel == null)
+                    return NotFound();
+
+                return Ok(updatedLessonModel.ToLessonDto());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Có lỗi xảy ra khi cập nhật bài học: {ex.Message}");
+            }
         }
 
 
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, UpdateLessonDto lessonDto)
-        {
-            if (!await _chapterRepo.ChapterExist(lessonDto.ChapterId))
-            {
-                return NotFound("Chương không tồn tại");
-            }
-
-            var lessonModel = await _lessonRepo.UpdateAsync(id, lessonDto.ToLessonFromUpdate());
-            if (lessonModel == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(lessonModel.ToLessonDto());
-        }
-
-        [HttpDelete]
+        [HttpDelete("delete")]
         public async Task<IActionResult> Delete(int id)
         {
             var lessonModel = await _lessonRepo.DeleteAsync(id);

@@ -22,7 +22,7 @@ namespace server.Controllers
             _courseRepo = courseRepo;
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var chapters = await _chappterRepo.GetAllAsync();
@@ -30,7 +30,7 @@ namespace server.Controllers
             return Ok(chapterDto);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("get-by-id/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             var chapter = await _chappterRepo.GetByIdAsync(id);
@@ -42,7 +42,7 @@ namespace server.Controllers
             return Ok(chapter.ToChapterDto());
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(CreateChapterDto chapterDto)
         {
             if (!await _courseRepo.CourseExists(chapterDto.CourseId))
@@ -55,7 +55,7 @@ namespace server.Controllers
             return CreatedAtAction(nameof(GetById), new { id = chapter.Id }, chapter.ToChapterDto());
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("update/{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateChapterDto chapterDto)
         {
             if (!await _courseRepo.CourseExists(chapterDto.CourseId))
@@ -72,7 +72,7 @@ namespace server.Controllers
             return Ok(chapter.ToChapterDto());
         }
 
-        [HttpDelete]
+        [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             var chapter = await _chappterRepo.DeleteAsync(id);

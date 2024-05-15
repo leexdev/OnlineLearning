@@ -51,19 +51,19 @@ namespace server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b9e1c756-c1ff-4bcd-a6c3-ff5b3ccc646e",
+                            Id = "30c2854d-a0df-4b7e-8093-e203c5d6916d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "26d60fc2-4250-4cbb-a226-98f4bf4d66d8",
+                            Id = "72d0c0f1-6208-46fe-8f34-78b0b893c0c3",
                             Name = "Teacher",
                             NormalizedName = "TEACHER"
                         },
                         new
                         {
-                            Id = "12c82627-d8ef-4942-a55d-a27f46e7f1a0",
+                            Id = "afddc00a-3f89-49fc-948c-abb0db82585d",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -267,10 +267,10 @@ namespace server.Migrations
                         {
                             Id = 1,
                             CourseId = 1,
-                            CreatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7561),
+                            CreatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(952),
                             IsDeleted = false,
                             Name = "Đếm số 10",
-                            UpdatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7561)
+                            UpdatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(953)
                         });
                 });
 
@@ -364,7 +364,7 @@ namespace server.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7522),
+                            CreatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(910),
                             Description = "Toán học tiền lớp 1",
                             ImageUrl = "https://example.com/course-image.jpg",
                             IsDeleted = false,
@@ -373,12 +373,12 @@ namespace server.Migrations
                             Price = 100,
                             SubjectId = 1,
                             Title = "Toán học tiền lớp 1",
-                            UpdatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7522)
+                            UpdatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(911)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7528),
+                            CreatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(916),
                             Description = "Tiếng Việt tiền lớp 1",
                             ImageUrl = "https://example.com/course-image1.jpg",
                             IsDeleted = false,
@@ -387,12 +387,12 @@ namespace server.Migrations
                             Price = 100,
                             SubjectId = 2,
                             Title = "Tiếng Việt tiền lớp 1",
-                            UpdatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7528)
+                            UpdatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(917)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7530),
+                            CreatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(919),
                             Description = "Tiếng Anh lớp 1",
                             ImageUrl = "https://example.com/course-image2.jpg",
                             IsDeleted = false,
@@ -401,7 +401,7 @@ namespace server.Migrations
                             Price = 200,
                             SubjectId = 3,
                             Title = "Tiếng Anh lớp 1",
-                            UpdatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7531)
+                            UpdatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(919)
                         });
                 });
 
@@ -468,26 +468,26 @@ namespace server.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7336),
+                            CreatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(676),
                             IsDeleted = false,
                             Name = "Tiền lớp 1",
-                            UpdatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7352)
+                            UpdatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(690)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7354),
+                            CreatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(692),
                             IsDeleted = false,
                             Name = "Lớp 1",
-                            UpdatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7355)
+                            UpdatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(693)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7356),
+                            CreatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(743),
                             IsDeleted = false,
                             Name = "Lớp 2",
-                            UpdatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7356)
+                            UpdatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(743)
                         });
                 });
 
@@ -506,7 +506,6 @@ namespace server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -537,11 +536,11 @@ namespace server.Migrations
                         {
                             Id = 1,
                             ChapterId = 1,
-                            CreatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7589),
+                            CreatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(985),
                             Description = "",
                             IsDeleted = false,
                             Title = "Số 2",
-                            UpdatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7590),
+                            UpdatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(985),
                             VideoURL = "String",
                             isFree = true
                         });
@@ -629,12 +628,6 @@ namespace server.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsImageAnswer")
-                        .HasColumnType("bit");
-
                     b.Property<int>("LessonId")
                         .HasColumnType("int");
 
@@ -714,29 +707,29 @@ namespace server.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7479),
+                            CreatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(872),
                             GradeId = 1,
                             IsDeleted = false,
                             Name = "Toán học",
-                            UpdatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7479)
+                            UpdatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(872)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7483),
+                            CreatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(875),
                             GradeId = 1,
                             IsDeleted = false,
                             Name = "Tiếng Việt",
-                            UpdatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7484)
+                            UpdatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(876)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7485),
+                            CreatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(877),
                             GradeId = 2,
                             IsDeleted = false,
                             Name = "Tiếng Anh",
-                            UpdatedAt = new DateTime(2024, 5, 12, 17, 45, 24, 526, DateTimeKind.Local).AddTicks(7486)
+                            UpdatedAt = new DateTime(2024, 5, 15, 19, 44, 31, 396, DateTimeKind.Local).AddTicks(877)
                         });
                 });
 

@@ -7,6 +7,7 @@ namespace server.Interfaces
 {
     public interface IFireBaseService
     {
-        Task<string> UploadFile(IFormFile file);
+        Task<string> HandleFile(string existingFileUrl, string folderPath, IFormFile newFile);
+        string ConvertUrlToRelativePath(string fileUrl);
     }
 }

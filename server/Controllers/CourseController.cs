@@ -17,14 +17,18 @@ namespace server.Controllers
         private readonly ICourseRepository _courseRepo;
         private readonly ISubjectRepository _subjectRepo;
         private readonly IDiscountRepository _discountRepo;
-        public CourseController(ICourseRepository courseRepo, ISubjectRepository subjectRepo, IDiscountRepository discountRepo)
+        private readonly IFireBaseService _firebaseService;
+        private readonly IFileService _fileService;
+        public CourseController(ICourseRepository courseRepo, ISubjectRepository subjectRepo, IDiscountRepository discountRepo, IFireBaseService firebaseService, IFileService fileService)
         {
             _courseRepo = courseRepo;
             _subjectRepo = subjectRepo;
             _discountRepo = discountRepo;
+            _fileService = fileService;
+            _firebaseService = firebaseService;
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var courses = await _courseRepo.GetAllAsync();
@@ -32,33 +36,65 @@ namespace server.Controllers
             return Ok(courseDto);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("get-by-id/{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var course = await _courseRepo.GetByIdAsync(id);
             if (course == null)
             {
-                return NotFound();
+                return NoContent();
             }
 
             return Ok(course.ToCourseDto());
         }
 
+        [HttpPost("create")]
+        public async Task<IActionResult> Create(CreateCourseDto courseDto, IFormFile imageFile)
+        {
+            if (!await _subjectRepo.SubjectExists(courseDto.SubjectId))
+                return BadRequest("Môn học không tồn tại");
 
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateCourseDto courseDto)
+            if (!_fileService.IsImageFile(imageFile))
+                return BadRequest("Định dạng ảnh không phù hợp");
+
+            try
+            {
+                var folderPath = $"image_course";
+                var urlImage = await _firebaseService.HandleFile(null, folderPath, imageFile);
+                var course = courseDto.ToCourseFromCreate(urlImage);
+                await _courseRepo.CreateAsync(course);
+
+                return CreatedAtAction(nameof(GetById), new { id = course.Id }, course.ToCourseDto());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Có lỗi xảy ra khi tải lên video và tạo khóa học: {ex.Message}");
+            }
+        }
+
+        [HttpPut("update/{id:int}")]
+        public async Task<IActionResult> Update(int id, IFormFile imageFile, UpdateCourseDto courseDto)
         {
             if (!await _subjectRepo.SubjectExists(courseDto.SubjectId))
             {
                 return BadRequest("Môn học không tồn tại");
             }
 
-            var course = courseDto.ToCourseFromCreate();
-            await _courseRepo.CreateAsync(course);
-            return CreatedAtAction(nameof(GetById), new { id = course.Id }, course.ToCourseDto());
+            var existingCourse = await _courseRepo.GetByIdAsync(id);
+            if (existingCourse == null)
+                return NotFound();
+
+            var folderPath = $"image_course";
+            var urlImage = await _firebaseService.HandleFile(existingCourse.ImageUrl, folderPath, imageFile);
+            var updatedCourseModel = await _courseRepo.UpdateAsync(id, courseDto.ToCourseFromUpdate(urlImage));
+
+            if (updatedCourseModel == null)
+                return NotFound();
+
+            return Ok(updatedCourseModel.ToCourseDto());
         }
 
-        [HttpPut("{id:int}/discounts/{discountId:int}")]
+        [HttpPut("apply-discount/{id:int}/{discountId:int}")]
         public async Task<IActionResult> ApplyDiscount(int id, int discountId)
         {
             if (!await _discountRepo.DiscountExists(discountId))
@@ -75,24 +111,7 @@ namespace server.Controllers
             return Ok(course.ToCourseDto());
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, UpdateCourseDto courseDto)
-        {
-            if (!await _subjectRepo.SubjectExists(courseDto.SubjectId))
-            {
-                return BadRequest("Môn học không tồn tại");
-            }
-
-            var course = await _courseRepo.UpdateAsync(id, courseDto.ToCourseFromUpdate());
-            if (course == null)
-            {
-                return NotFound();
-            }
-    
-            return Ok(course.ToCourseDto());
-        }
-
-        [HttpDelete]
+        [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             var course = await _courseRepo.DeleteAsync(id);

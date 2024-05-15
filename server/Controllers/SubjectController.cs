@@ -23,7 +23,7 @@ namespace server.Controllers
             _gradeRepo = gradeRepo;
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var subjects = await _subjectRepo.GetAllAsync();
@@ -31,7 +31,7 @@ namespace server.Controllers
             return Ok(subjectDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("get-by-id/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             var subject = await _subjectRepo.GetByIdAsync(id);
@@ -43,7 +43,7 @@ namespace server.Controllers
             return Ok(subject.ToSubjectDto());
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(CreateSubjectDto subjectDto)
         {
             if (!await _gradeRepo.GradeExists(subjectDto.GradeId))
@@ -55,7 +55,7 @@ namespace server.Controllers
             return CreatedAtAction(nameof(GetById), new { id = subject.Id }, subject.ToSubjectDto());
         }
 
-        [HttpPut]
+        [HttpPut("update/{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateSubjectDto subjectDto)
         {
             if (!await _gradeRepo.GradeExists(subjectDto.GradeId))
@@ -71,7 +71,7 @@ namespace server.Controllers
             return Ok(subjectModel.ToSubjectDto());
         }
 
-        [HttpDelete]
+        [HttpDelete("delete")]
         public async Task<IActionResult> Delete(int id)
         {
             var subjectModel = await _subjectRepo.DeleteAsync(id);

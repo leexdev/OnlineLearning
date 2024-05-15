@@ -28,7 +28,7 @@ namespace server.Controllers
             _lessonRepo = lessonRepo;
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var ratings = await _ratingRepo.GetAllAsync();
@@ -36,7 +36,7 @@ namespace server.Controllers
             return Ok(ratingDto);
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(CreateRatingDto ratingDto)
         {
             if (!await _lessonRepo.LessonExists(ratingDto.LessonId))

@@ -24,7 +24,7 @@ namespace server.Controllers
             _gradeRepo = gradeRepo;
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         // [Authorize]
         public async Task<IActionResult> GetAll()
         {
@@ -33,7 +33,7 @@ namespace server.Controllers
             return Ok(gradeDto);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("get-by-id/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             var grade = await _gradeRepo.GetByIdAsync(id);
@@ -45,16 +45,16 @@ namespace server.Controllers
             return Ok(grade.ToGradeDto());
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateGrade(CreateGradeDto gradeDto)
+        [HttpPost("create")]
+        public async Task<IActionResult> Create(CreateGradeDto gradeDto)
         {
             var grade = gradeDto.ToGradeFromCreate();
             await _gradeRepo.CreateAsync(grade);
             return CreatedAtAction(nameof(GetById), new { id = grade.Id }, grade.ToGradeDto());
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateGrade(int id, UpdateGradeDto updateDto)
+        [HttpPut("update/{id:int}")]
+        public async Task<IActionResult> Update(int id, UpdateGradeDto updateDto)
         {
             var gradeModel = await _gradeRepo.UpdateAsync(id, updateDto.ToGradeFromUpdate());
             if (gradeModel == null)
@@ -78,8 +78,8 @@ namespace server.Controllers
         //     return NoContent();
         // }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteGrade(int id)
+        [HttpDelete("delete/{id:int}")]
+        public async Task<IActionResult> Delete(int id)
         {
             var gradeModel = await _gradeRepo.DeleteAsync(id);
             if (gradeModel == null)

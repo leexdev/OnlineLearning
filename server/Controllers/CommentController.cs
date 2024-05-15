@@ -28,7 +28,7 @@ namespace server.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var comments = await _commentRepo.GetAllAsync();
@@ -36,7 +36,7 @@ namespace server.Controllers
             return Ok(commentDto);
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         [Authorize]
         public async Task<IActionResult> Create(CreateCommentDto commentDto)
         {
@@ -59,7 +59,7 @@ namespace server.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("update/{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateCommentDto commentDto)
         {
             var comment = await _commentRepo.UpdateAsync(id, commentDto.ToCommentFromUpdate());
@@ -69,6 +69,18 @@ namespace server.Controllers
             }
 
             return Ok(comment.ToCommentDto());
+        }
+
+        [HttpDelete("delete/{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var comment = await _commentRepo.DeleteAsync(id);
+            if(comment == null)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }
