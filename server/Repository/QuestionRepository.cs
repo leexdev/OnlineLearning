@@ -37,12 +37,12 @@ namespace server.Repository
 
         public async Task<List<Question>> GetAllAsync()
         {
-            return await _context.Questions.ToListAsync();
+            return await _context.Questions.Include(q => q.Answers).ToListAsync();
         }
 
         public async Task<Question?> GetByIdAsync(int id)
         {
-            var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == id);
+            var question = await _context.Questions.Include(q => q.Answers).FirstOrDefaultAsync(q => q.Id == id);
             if (question == null)
             {
                 return null;

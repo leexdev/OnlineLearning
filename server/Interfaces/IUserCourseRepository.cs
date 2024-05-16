@@ -10,5 +10,7 @@ namespace server.Interfaces
     public interface IUserCourseRepository
     {
         Task<List<CourseDto>> GetUserCourses(User user);
+        Task<UserCourse> CreateAsync(UserCourse userCourse);
+
     }
 }

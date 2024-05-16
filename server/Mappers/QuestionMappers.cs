@@ -15,7 +15,8 @@ namespace server.Mappers
             {
                 Id = questionModel.Id,
                 Content = questionModel.Content,
-                LessonId = questionModel.LessonId
+                LessonId = questionModel.LessonId,
+                Answers = questionModel.Answers.Select(a => a.ToAnswerDto()).ToList(),
             };
         }
 

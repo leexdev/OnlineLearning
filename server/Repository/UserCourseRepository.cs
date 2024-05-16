@@ -34,5 +34,12 @@ namespace server.Repository
                     SubjectId = uc.Course.SubjectId,
                 }).ToListAsync();
         }
+
+        public async Task<UserCourse> CreateAsync(UserCourse userCourse)
+        {
+            await _context.UserCourses.AddAsync(userCourse);
+            await _context.SaveChangesAsync();
+            return userCourse;
+        }
     }
 }

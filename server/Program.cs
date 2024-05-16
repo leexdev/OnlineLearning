@@ -9,6 +9,7 @@ using server.Interfaces;
 using server.Models;
 using server.Repository;
 using server.Service;
+using server.Service.VnPay;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGen(option =>
 {
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Learning Online", Version = "v1" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -56,6 +57,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.Configure<FireBaseSettings>(builder.Configuration.GetSection("FireBaseSettings"));
+builder.Services.Configure<VnPaySettings>(builder.Configuration.GetSection("VnPaySettings"));
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
@@ -106,9 +108,13 @@ builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<INewsRepository, NewsRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IFireBaseService, FireBaseService>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IVnPayService, VnPayService>();
+builder.Services.AddSingleton<VnPayLibrary>();
+
 
 var app = builder.Build();
 
