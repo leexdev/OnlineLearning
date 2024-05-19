@@ -1,11 +1,11 @@
 import Home from '~/pages/Home';
 import Lesson from '~/pages/Lesson';
-import Source from '~/pages/Source';
+import Course from '~/pages/Course';
 
 //public routes
 const publicRoutes = [
     { path: '/', component: Home },
-    { path: '/source', component: Source },
+    { path: '/course', component: Course },
     { path: '/lesson', component: Lesson},
 ];
 

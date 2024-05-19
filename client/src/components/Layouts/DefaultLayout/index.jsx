@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import Header from './Header';
-import { Footer } from 'flowbite-react';
+import Footer from './Footer';
 
 const DefaultLayout = ({ children }) => {
     return (
@@ -8,9 +8,7 @@ const DefaultLayout = ({ children }) => {
             <div className="header">
                 <Header />
             </div>
-            <div className="content">
-                {children}
-            </div>
+            <div className="content">{children}</div>
             <div className="footer">
                 <Footer />
             </div>

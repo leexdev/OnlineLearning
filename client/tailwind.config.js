@@ -27,7 +27,22 @@ module.exports = {
                 xl: '1280px', // Định nghĩa breakpoint xl
                 xxl: '1536px', // Định nghĩa breakpoint xxl
             },
+            container: {
+                center: true,
+                padding: '20px',
+            },
+            height: {
+                '90vh': '90vh',
+                '80vh': '80vh',
+                '70vh': '70vh',
+                '60vh': '60vh',
+                '50vh': '50vh',
+                '10vh': '10vh',
+                '20vh': '20vh',
+                '30vh': '30vh',
+                '40vh': '40vh',
+            },
         },
     },
-    plugins: [require('flowbite/plugin')],
+    plugins: [require('flowbite/plugin'), require('@tailwindcss/line-clamp')],
 };
