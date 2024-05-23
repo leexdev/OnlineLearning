@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+// eslint-disable-next-line no-undef
 module.exports = {
     content: [
         './src/**/*.{js,jsx,ts,tsx}',
@@ -9,8 +10,9 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                header: '#FF6609',
+                peach: '#FF6609',
                 cobalt: '#026597',
+                content: '#F8F9FD',
             },
             fontFamily: {
                 quicksand: ['Quicksand', 'sans-serif'],
@@ -31,6 +33,7 @@ module.exports = {
                 center: true,
                 padding: '20px',
             },
+            // eslint-disable-next-line no-dupe-keys
             height: {
                 '90vh': '90vh',
                 '80vh': '80vh',
@@ -41,8 +44,9 @@ module.exports = {
                 '20vh': '20vh',
                 '30vh': '30vh',
                 '40vh': '40vh',
-            },
+            }
         },
     },
+    // eslint-disable-next-line no-undef
     plugins: [require('flowbite/plugin'), require('@tailwindcss/line-clamp')],
 };

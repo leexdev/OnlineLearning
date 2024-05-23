@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const Slider = () => {
     return (
         <div id="default-carousel" className="relative w-full" data-carousel="slide">
-            <div className="relative overflow-hidden rounded-lg h-30vh xs:h-40vh md:h-90vh">
+            <div className="relative overflow-hidden rounded-lg h-30vh xs:h-40vh xl:h-90vh">
                 <div className="hidden duration-700 ease-in-out" data-carousel-item="">
                     <img
                         src="https://xcdn-cf.vuihoc.vn/upload/5c209fe6176b0/2024/01/04/ec6d_banner-3c_2-web--283-29.png"

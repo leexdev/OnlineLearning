@@ -18,5 +18,6 @@ namespace server.Models
         public List<Payment> Payments { get; set; } = new List<Payment>();
         public List<Rating> Ratings { get; set; } = new List<Rating>();
         public List<Comment> Comments { get; set; } = new List<Comment>();
+        public List<LessonComplete> LessonCompletes { get; set; } = new List<LessonComplete>();
     }
 }

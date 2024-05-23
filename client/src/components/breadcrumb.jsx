@@ -10,7 +10,7 @@ const BreadCrumb = () => {
                     <div className="inline-flex items-center">
                         <Link
                             to="/"
-                            className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-header dark:text-gray-400 dark:hover:text-white"
+                            className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-peach dark:text-gray-400 dark:hover:text-white"
                         >
                             <FontAwesomeIcon className="text-xl mr-1" icon={faHouse} />
                             Trang chủ
@@ -19,7 +19,7 @@ const BreadCrumb = () => {
                     <div>
                         <div className="flex items-center">
                             <FontAwesomeIcon icon={faAngleRight} />
-                            <Link to="#!" className="ms-1 text-sm font-medium text-gray-700 hover:text-header md:ms-2">
+                            <Link to="#!" className="ms-1 text-sm font-medium text-gray-700 hover:text-peach md:ms-2">
                                 Lớp 1
                             </Link>
                         </div>

@@ -1,12 +1,14 @@
+import Course from '~/pages/Course';
 import Home from '~/pages/Home';
 import Lesson from '~/pages/Lesson';
-import Course from '~/pages/Course';
+import Subject from '~/pages/Subject';
 
 //public routes
 const publicRoutes = [
     { path: '/', component: Home },
-    { path: '/course', component: Course },
+    { path: '/subject', component: Subject },
     { path: '/lesson', component: Lesson},
+    { path: '/course', component: Course},
 ];
 
 //private routes

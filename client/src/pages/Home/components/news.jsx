@@ -10,7 +10,7 @@ const News = () => {
                 </div>
                 <div className="content grid sm:grid-cols-2 gap-4">
                     <div className="news-item">
-                        <a href="#" className="title font-bold uppercase text-xl">
+                        <a href="#" className="title font-bold uppercase text-xl hover:text-peach">
                             ĐÁP ÁN SỰ KIỆN TRUY TÌM NHÀ THÔNG THÁI LỚP 3 - TUẦN 2 THÁNG 5
                         </a>
                         <div className="text-gray-400 mb-2">
@@ -24,7 +24,7 @@ const News = () => {
                         </div>
                     </div>
                     <div className="news-item mb-4">
-                        <a href="#" className="title font-bold uppercase text-xl">
+                        <a href="#" className="title font-bold uppercase text-xl hover:text-peach">
                             ĐÁP ÁN SỰ KIỆN TRUY TÌM NHÀ THÔNG THÁI LỚP 3 - TUẦN 2 THÁNG 5
                         </a>
                         <div className="text-gray-400 mb-2">
@@ -38,7 +38,7 @@ const News = () => {
                         </div>
                     </div>
                     <div className="news-item mb-4">
-                        <a href="#" className="title font-bold uppercase text-xl">
+                        <a href="#" className="title font-bold uppercase text-xl hover:text-peach">
                             ĐÁP ÁN SỰ KIỆN TRUY TÌM NHÀ THÔNG THÁI LỚP 3 - TUẦN 2 THÁNG 5
                         </a>
                         <div className="text-gray-400 mb-2">
@@ -52,7 +52,7 @@ const News = () => {
                         </div>
                     </div>
                     <div className="news-item mb-4">
-                        <a href="#" className="title font-bold uppercase text-xl">
+                        <a href="#" className="title font-bold uppercase text-xl hover:text-peach">
                             ĐÁP ÁN SỰ KIỆN TRUY TÌM NHÀ THÔNG THÁI LỚP 3 - TUẦN 2 THÁNG 5
                         </a>
                         <div className="text-gray-400 mb-2">
@@ -68,8 +68,8 @@ const News = () => {
                 </div>
             </div>
             <div className="get-all text-center ">
-                <a href="#!" className='text-sky-600'>
-                    <FontAwesomeIcon className='mr-2' icon={faHandPointRight} />
+                <a href="#!" className="text-sky-600">
+                    <FontAwesomeIcon className="mr-2" icon={faHandPointRight} />
                     <span>Xem tất cả</span>
                 </a>
             </div>

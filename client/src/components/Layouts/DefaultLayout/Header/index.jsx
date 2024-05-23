@@ -1,18 +1,42 @@
-import { faBook, faMessage, faSquarePen } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faMessage, faSquarePen, faUser, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import images from '~/assets/images';
+import RegisterForm from '../components/registerform';
+import LoginForm from '../components/loginform';
+import Modal from '../components/modal';
 
 const Header = () => {
     const location = useLocation();
+
+    const [isLoginOpen, setIsLoginOpen] = useState(false);
+    const [isRegister, setIsRegister] = useState(false);
+
+    const toggleModal = () => {
+        setIsLoginOpen(!isLoginOpen);
+    };
+
+    const switchToRegister = () => {
+        setIsRegister(true);
+    };
+
+    const switchToLogin = () => {
+        setIsRegister(false);
+    };
+
+    const closeModal = () => {
+        setIsLoginOpen(false);
+        setIsRegister(false);
+    };
     return (
-        <nav className="bg-header text-white">
-            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
+        <nav className="bg-peach text-white fixed w-full z-[1000]">
+            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto z-[1000]">
                 <Link to="/" className="space-x-3 rtl:space-x-reverse md:opacity-70 md:hover:opacity-100">
                     <img src={images.logo} className="h-12 mb-3" alt="Logo" />
                 </Link>
-                <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <button
+                <div className="flex items-center md:order-2 md:space-x-0 rtl:space-x-reverse">
+                    {/* <button
                         type="button"
                         className="flex text-sm rounded-full md:me-0 items-center"
                         id="user-menu-button"
@@ -40,12 +64,15 @@ const Header = () => {
                         </div>
                         <ul className="py-2" aria-labelledby="user-menu-button">
                             <li>
-                                <Link to="/course" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <Link to="/subject" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     Thông tin tài khoản
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/my-course" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <Link
+                                    to="/my-course"
+                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                >
                                     Khóa học của tôi
                                 </Link>
                             </li>
@@ -74,29 +101,54 @@ const Header = () => {
                     <button
                         data-collapse-toggle="navbar-user"
                         type="button"
-                        className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden hover:bg-gray-100  focus:bg-header"
+                        className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden hover:bg-gray-100  focus:bg-peach"
                         aria-controls="navbar-user"
                         aria-expanded="false"
                     >
-                        <svg
-                            className="w-5 h-5"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 17 14"
+                        <FontAwesomeIcon icon={faBars} />
+                    </button> */}
+                    <>
+                        {/* Modal toggle */}
+                        <button
+                            data-modal-target="authentication-modal"
+                            data-modal-toggle="authentication-modal"
+                            className="block text-white bg-peach font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                            type="button"
+                            onClick={toggleModal}
                         >
-                            <path
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M1 1h15M1 7h15M1 13h15"
-                            />
-                        </svg>
-                    </button>
+                            <FontAwesomeIcon className='mr-2 text-lg' icon={faUser}/>
+                            <span>Đăng nhập</span>
+                        </button>
+                        {isLoginOpen && (
+                            <Modal isOpen={isLoginOpen} onClose={closeModal}>
+                                <div className="relative md:min-w-[450px] bg-white rounded-lg shadow">
+                                    <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                                        <h3 className="text-2xl text-gray-900 uppercase font-bold">
+                                            {isRegister ? 'Đăng ký' : 'Đăng nhập'}
+                                        </h3>
+                                        <button
+                                            type="button"
+                                            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                                            onClick={toggleModal}
+                                        >
+                                            <FontAwesomeIcon icon={faX} />
+                                            <span className="sr-only">Close modal</span>
+                                        </button>
+                                    </div>
+                                    <div className="p-4 md:p-5">
+                                        {isRegister ? (
+                                            <RegisterForm switchToLogin={switchToLogin} />
+                                        ) : (
+                                            <LoginForm switchToRegister={switchToRegister} onClose={closeModal} />
+                                        )}
+                                    </div>
+                                </div>
+                            </Modal>
+                        )}
+                    </>
                 </div>
                 <div
-                    className="items-center justify-between hidden w-full md:flex md:w-auto bg-cobalt md:bg-header md:order-1"
+                    className="items-center justify-between hidden w-full md:flex md:w-auto bg-cobalt md:bg-peach md:order-1"
                     id="navbar-user"
                 >
                     <ul className="flex flex-col font-bold p-4 md:p-0 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
@@ -110,35 +162,35 @@ const Header = () => {
                                 className="py-2 px-3 uppercase rounded md:p-0 flex items-center"
                                 aria-current="page"
                             >
-                                <FontAwesomeIcon className='text-xl mr-1' icon={faBook}/>
+                                <FontAwesomeIcon className="text-xl mr-1" icon={faBook} />
                                 <span>Tự ôn luyện</span>
                             </Link>
                         </li>
                         <li
-                            className={`hover:bg-header rounded md:bg-transparent md:hover:opacity-100 ${
+                            className={`hover:bg-peach rounded md:bg-transparent md:hover:opacity-100 ${
                                 location.pathname === '/source' ? 'md:opacity-100' : 'md:opacity-70'
                             }`}
                         >
                             <Link
-                                to="/course"
+                                to="/subject"
                                 className="py-2 px-3 uppercase rounded md:p-0 flex items-center"
                                 aria-current="page"
                             >
-                                <FontAwesomeIcon className='text-xl mr-1' icon={faSquarePen}/>
+                                <FontAwesomeIcon className="text-xl mr-1" icon={faSquarePen} />
                                 Góc học tập
                             </Link>
                         </li>
                         <li
-                            className={`hover:bg-header rounded md:bg-transparent md:hover:opacity-100 ${
+                            className={`hover:bg-peach rounded md:bg-transparent md:hover:opacity-100 ${
                                 location.pathname === '/lesson' ? 'md:opacity-100' : 'md:opacity-70'
                             }`}
                         >
                             <Link
-                                to="/lesson"
+                                to="/course"
                                 className="py-2 px-3 uppercase md:p-0 flex items-center "
                                 aria-current="page"
                             >
-                                <FontAwesomeIcon className='text-xl mr-1' icon={faMessage}/>
+                                <FontAwesomeIcon className="text-xl mr-1" icon={faMessage} />
                                 Hỏi đáp
                             </Link>
                         </li>

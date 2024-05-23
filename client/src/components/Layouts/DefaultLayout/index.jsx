@@ -2,13 +2,14 @@ import { Fragment } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 
+// eslint-disable-next-line react/prop-types
 const DefaultLayout = ({ children }) => {
     return (
         <Fragment>
-            <div className="header">
+            <div className="header overflow-hidden">
                 <Header />
             </div>
-            <div className="content">{children}</div>
+            <div className="content mt-[60px]">{children}</div>
             <div className="footer">
                 <Footer />
             </div>

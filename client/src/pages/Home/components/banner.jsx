@@ -221,7 +221,7 @@ const Banner = () => {
                         </div>
                     </li>
                     <li className="rounded-2xl text-xl font-bold text-center md:text-start text-white">
-                        <button className="btn bg-header rounded-xl p-2 px-5">
+                        <button className="btn bg-peach rounded-xl p-2 px-5">
                             <FontAwesomeIcon className="" icon={faSearch} />
                             <span className="glyphicon glyphicon-search" /> <span className="text">Tìm kiếm</span>
                         </button>

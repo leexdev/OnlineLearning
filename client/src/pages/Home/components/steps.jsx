@@ -1,5 +1,5 @@
-import { faBookReader, faSearch, faUserGraduate, faWallet } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookReader, faSearch, faUserGraduate, faWallet } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Steps = () => {
     return (
@@ -18,7 +18,7 @@ const Steps = () => {
                     </div>
                 </div>
                 <div className="overflow-hidden flex flex-col items-center justify-center">
-                    <div className="text-3xl font-bold text-white bg-header p-3 flex items-center justify-center w-full">
+                    <div className="text-3xl font-bold text-white bg-peach p-3 flex items-center justify-center w-full">
                         Bước 2
                     </div>
                     <div className="text-base text-gray-900 p-3 rounded-b-xl flex items-center justify-center w-full">
