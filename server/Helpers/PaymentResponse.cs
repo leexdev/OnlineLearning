@@ -7,7 +7,7 @@ namespace server.Helpers
 {
     public class PaymentResponse
     {
-        public int PaymentId { get; set; }
+        public Guid PaymentId { get; set; }
         public string Vnp_TransactionNo { get; set; }
         public string Vnp_ResponseCode { get; set; }
     }

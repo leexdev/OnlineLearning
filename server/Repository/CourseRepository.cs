@@ -81,6 +81,11 @@ namespace server.Repository
             return course;
         }
 
+        public async Task<List<Course>> GetBySubjectId(int subjectId)
+        {
+            return await _context.Courses.Where(c => c.SubjectId == subjectId && !c.IsDeleted).ToListAsync();
+        }
+
         public async Task<Course?> UpdateAsync(int id, Course courseModel)
         {
             var course = await _context.Courses.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);

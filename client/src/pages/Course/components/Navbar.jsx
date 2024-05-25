@@ -1,4 +1,4 @@
-const Nav = () => {
+const Navbar = () => {
     return (
         <div className="hidden bg-white lg:grid lg:grid-cols-2 mb-10 z-50 top-16 sticky">
             <a
@@ -17,4 +17,4 @@ const Nav = () => {
     );
 };
 
-export default Nav;
+export default Navbar;

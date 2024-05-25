@@ -29,7 +29,7 @@ namespace server.Repository
             return await _context.Payments.ToListAsync();
         }
 
-        public async Task<Payment?> GetByIdAsync(int id)
+        public async Task<Payment?> GetByIdAsync(Guid id)
         {
             var payment = await _context.Payments.FirstOrDefaultAsync(p => p.Id == id);
             if (payment == null)
@@ -40,7 +40,7 @@ namespace server.Repository
             return payment;
         }
 
-        public async Task<Payment?> UpdateAsync(int id, string status)
+        public async Task<Payment?> UpdateAsync(Guid id, string status)
         {
             var payment = await _context.Payments.FirstOrDefaultAsync(p => p.Id == id);
             if (payment == null)

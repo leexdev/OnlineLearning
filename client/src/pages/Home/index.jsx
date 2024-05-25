@@ -1,8 +1,8 @@
-import Slider from './components/slider';
-import Banner from './components/banner';
-import Course from './components/course';
-import Steps from './components/steps';
-import News from './components/news';
+import Slider from './components/Slider';
+import Banner from './components/Banner';
+import Course from './components/Course';
+import Steps from './components/Steps';
+import News from './components/News';
 import { Fragment } from 'react';
 
 const Home = () => {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.Course;
@@ -46,6 +47,18 @@ namespace server.Controllers
             }
 
             return Ok(course.ToCourseDto());
+        }
+
+        [HttpGet("get-by-subjectid/{subjectId}")]
+        public async Task<IActionResult> GetBySubjectId([FromRoute] int subjectId)
+        {
+            var courses = await _courseRepo.GetBySubjectId(subjectId);
+            if (courses == null || !courses.Any())
+            {
+                return NotFound();
+            }
+            var courseDto = courses.Select(c => c.ToCourseDto()).ToList();
+            return Ok(courseDto);
         }
 
         [HttpPost("create")]

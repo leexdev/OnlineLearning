@@ -9,8 +9,8 @@ namespace server.Interfaces
     public interface IPaymentRepository
     {
         Task<List<Payment>> GetAllAsync();
-        Task<Payment?> GetByIdAsync(int id);
+        Task<Payment?> GetByIdAsync(Guid id);
         Task<Payment> CreateAsync(Payment paymentModel);
-        Task<Payment?> UpdateAsync(int id, string status);
+        Task<Payment?> UpdateAsync(Guid id, string status);
     }
 }

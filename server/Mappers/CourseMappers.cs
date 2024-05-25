@@ -33,7 +33,7 @@ namespace server.Mappers
                 Name = courseDto.Name,
                 Title = courseDto.Title,
                 Description = courseDto.Description,
-                NewPrice = courseDto.Price,
+                Price = courseDto.Price,
                 ImageUrl = imageUrl,
                 SubjectId = courseDto.SubjectId
             };

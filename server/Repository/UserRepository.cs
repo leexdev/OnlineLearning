@@ -27,7 +27,7 @@ namespace server.Repository
 
         public async Task<(bool Succeeded, IEnumerable<IdentityError> Errors, NewUserDto User)> RegisterUserAsync(RegisterDto registerDto)
         {
-            var user = new User { UserName = registerDto.UserName, Email = registerDto.Email };
+            var user = new User { UserName = registerDto.Email, Email = registerDto.Email };
             var result = await _userManager.CreateAsync(user, registerDto.Password);
 
             if (!result.Succeeded)
@@ -39,8 +39,7 @@ namespace server.Repository
 
             var newUserDto = new NewUserDto
             {
-                UserName = user.UserName,
-                Email = user.Email,
+                Email = user.UserName,
                 Token = await _tokenService.CreateToken(user)
             };
 
@@ -49,7 +48,7 @@ namespace server.Repository
 
         public async Task<(bool Succeeded, string Error, NewUserDto User)> CheckUserLoginAsync(LoginDto loginDto)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.UserName.ToLower() && !x.IsDeleted);
+            var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Email.ToLower() && !x.IsDeleted);
             if (user == null)
                 return (false, "Tên đăng nhập không tồn tại", null);
 
@@ -59,7 +58,6 @@ namespace server.Repository
 
             var newUserDto = new NewUserDto
             {
-                UserName = user.UserName,
                 Email = user.Email,
                 Token = await _tokenService.CreateToken(user)
             };

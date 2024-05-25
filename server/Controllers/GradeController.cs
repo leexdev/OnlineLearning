@@ -25,7 +25,6 @@ namespace server.Controllers
         }
 
         [HttpGet("get-all")]
-        // [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var grades = await _gradeRepo.GetAllAsync();

@@ -115,6 +115,18 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 builder.Services.AddSingleton<VnPayLibrary>();
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("*")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();;
+                      });
+});
 
 var app = builder.Build();
 
@@ -124,7 +136,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors();
+app.UseCors(MyAllowSpecificOrigins);
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

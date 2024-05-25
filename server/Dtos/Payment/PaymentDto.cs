@@ -7,7 +7,7 @@ namespace server.Dtos.Payment
 {
     public class PaymentDto
     {
-        public int Id { get; set;}
+        public Guid Id { get; set;} = Guid.NewGuid();
         public string? UserId { get; set; }
         public int CourseId { get; set; }
         public int? Amount { get; set; }

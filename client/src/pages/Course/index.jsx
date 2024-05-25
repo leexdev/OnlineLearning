@@ -1,10 +1,10 @@
 import { Fragment } from 'react';
-import Header from './components/header';
-import BreadCrumb from '~/components/breadcrumb';
-import Nav from './components/nav';
-import Info from './components/info';
-import Syllabus from './components/syllabus';
-import Sidebar from './components/sidebar';
+import Header from './components/Header';
+import BreadCrumb from '~/components/Layouts/DefaultLayout/components/BreadCrumb';
+import Nav from './components/Navbar';
+import Info from './components/Info';
+import Syllabus from './components/Syllabus';
+import Sidebar from './components/Sidebar';
 
 const Course = () => {
     return (
@@ -13,7 +13,7 @@ const Course = () => {
             <Header />
             <div className="bg-content pt-5">
                 <div className="container">
-                        <Sidebar />
+                    <Sidebar />
                     <div className="lg:w-2/3">
                         <Nav />
                         <Info />

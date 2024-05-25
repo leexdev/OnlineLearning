@@ -36,6 +36,20 @@ namespace server.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
+            var existingUser = await _userManager.FindByNameAsync(loginDto.Email);
+            if (existingUser == null)
+            {
+                ModelState.AddModelError("Email", "Địa chỉ email không tồn tại");
+                return BadRequest(new ValidationProblemDetails(this.ModelState));
+            }
+
+            var signInResult = await _userManager.CheckPasswordAsync(existingUser, loginDto.Password);
+            if (!signInResult)
+            {
+                ModelState.AddModelError("Password", "Mật khẩu không chính xác");
+                return BadRequest(new ValidationProblemDetails(this.ModelState));
+            }
+
             var (succeeded, error, userDto) = await _userRepository.CheckUserLoginAsync(loginDto);
 
             if (!succeeded)
@@ -47,10 +61,21 @@ namespace server.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
+            var existingUser = await _userManager.FindByNameAsync(registerDto.Email);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("Email", "Địa chỉ email đã được sử dụng.");
+                return BadRequest(new ValidationProblemDetails(this.ModelState));
+            }
+
             var (succeeded, errors, userDto) = await _userRepository.RegisterUserAsync(registerDto);
 
             if (!succeeded)
-                return StatusCode(500, errors);
+            {
+                // Trường hợp không thành công, trả về các lỗi từ quá trình đăng ký
+                var errorObject = new { errors };
+                return StatusCode(500, new { data = errorObject });
+            }
 
             return Ok(userDto);
         }
@@ -68,7 +93,6 @@ namespace server.Controllers
                 var userDto = new UserDto
                 {
                     Id = user.Id,
-                    UserName = user.UserName,
                     Email = user.Email,
                     PhoneNumber = user.PhoneNumber,
                     BirthDay = user.BirthDay,

@@ -1,53 +1,55 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
+import userApi from '~/api/userApi';
+import EmailInput from './EmailInput';
+import PasswordInput from './PasswordInput';
+import { convertErrorsToCamelCase } from '~/utils/errorUtils';
+import PasswordConfirmInput from './PasswordConfirmInput';
+import SubmitButton from './SubmitButton';
 
-const RegisterForm = ({ switchToLogin }) => {
+const RegisterForm = ({ switchToLogin, onClose }) => {
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+        setError,
+    } = useForm();
+
+    const onSubmit = async (data) => {
+        if (data.password !== data.passwordConfirm) {
+            setError('passwordConfirm', {
+                type: 'manual',
+                message: 'Mật khẩu và xác nhận mật khẩu không khớp',
+            });
+            return;
+        }
+        try {
+            await userApi.register({
+                email: data.email,
+                password: data.password,
+            });
+            alert('Đăng ký thành công');
+            onClose();
+        } catch (error) {
+            const responseData = error.response.data;
+            if (responseData.errors) {
+                const errorData = convertErrorsToCamelCase(responseData);
+                Object.keys(errorData).forEach((key) =>
+                    setError(key, { type: 'manual', message: errorData[key] })
+                );
+            } else {
+                alert('Đã xảy ra lỗi khi đăng ký.');
+            }
+        }
+    };
+
     return (
-        <form className="space-y-4" action="#">
-            <div>
-                <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
-                    Tên đăng nhập
-                </label>
-                <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-peach focus:border-peach block w-full p-2.5"
-                    placeholder="Tên đăng nhập"
-                    required
-                />
-            </div>
-            <div>
-                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">
-                    Địa chỉ Email
-                </label>
-                <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-peach focus:border-peach block w-full p-2.5"
-                    placeholder="Địa chỉ Email"
-                    required
-                />
-            </div>
-            <div>
-                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">
-                    Mật khẩu
-                </label>
-                <input
-                    type="password"
-                    name="password"
-                    id="password"
-                    placeholder="Mật khẩu"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-peach focus:border-peach block w-full p-2.5"
-                    required
-                />
-            </div>
-            <button
-                type="submit"
-                className="w-full text-white bg-peach hover:bg-orange-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            >
-                Đăng ký
-            </button>
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <EmailInput register={register} error={errors.email} />
+            <PasswordInput register={register} error={errors.password} />
+            <PasswordConfirmInput register={register} error={errors.passwordConfirm} watch={watch} />
+            <SubmitButton label="Đăng ký" />
             <div className="text-sm font-medium text-gray-500">
                 Bạn đã có tài khoản?{' '}
                 <button type="button" onClick={switchToLogin} className="text-peach hover:underline">

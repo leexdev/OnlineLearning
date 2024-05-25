@@ -7,7 +7,7 @@ namespace server.Helpers
 {
     public class PaymentRequest
     {
-        public int PaymentId { get; set; }
+        public Guid PaymentId { get; set; }
         public string ReturnUrl { get; set; }
         public int? Amount { get; set; }
     }

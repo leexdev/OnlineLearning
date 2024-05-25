@@ -1,8 +1,8 @@
 import { Fragment, useEffect, useState } from 'react';
-import Sidebar from './components/sidebar';
-import Video from './components/video';
-import Info from './components/info';
-import Comment from './components/comment';
+import Sidebar from './components/Sidebar';
+import Video from './components/Video';
+import Info from './components/Info';
+import Comment from './components/Comment';
 
 const Lesson = () => {
     const [duration, setDuration] = useState(0);

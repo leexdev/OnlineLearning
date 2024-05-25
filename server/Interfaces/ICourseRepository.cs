@@ -9,6 +9,7 @@ namespace server.Interfaces
     public interface ICourseRepository
     {
         Task<List<Course>> GetAllAsync();
+        Task<List<Course>> GetBySubjectId(int subjectId);
         Task<Course?> GetByIdAsync(int id);
         Task<Course> CreateAsync(Course courseModel);
         Task<Course?> UpdateAsync(int id, Course courseModel);
