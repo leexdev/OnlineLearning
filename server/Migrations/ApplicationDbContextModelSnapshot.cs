@@ -51,19 +51,19 @@ namespace server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a83cc6bb-3a89-4f1f-8404-0c169154319b",
+                            Id = "a9fddfa9-4f8e-4f37-8626-803ef8b3092a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "9b70e4a7-f8b2-41ec-ba9d-b5147fae22a7",
+                            Id = "988603e0-cf9c-41e4-a0f1-e1a2ddf07e18",
                             Name = "Teacher",
                             NormalizedName = "TEACHER"
                         },
                         new
                         {
-                            Id = "1842b3be-79dc-48c0-8191-96cb19de9f24",
+                            Id = "659b1da6-2377-48ad-a246-00bafbf99b7e",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -267,10 +267,10 @@ namespace server.Migrations
                         {
                             Id = 1,
                             CourseId = 1,
-                            CreatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2460),
+                            CreatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8156),
                             IsDeleted = false,
                             Name = "Đếm số 10",
-                            UpdatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2460)
+                            UpdatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8156)
                         });
                 });
 
@@ -364,7 +364,7 @@ namespace server.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2417),
+                            CreatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8113),
                             Description = "Toán học tiền lớp 1",
                             ImageUrl = "https://example.com/course-image.jpg",
                             IsDeleted = false,
@@ -373,12 +373,12 @@ namespace server.Migrations
                             Price = 100,
                             SubjectId = 1,
                             Title = "Toán học tiền lớp 1",
-                            UpdatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2418)
+                            UpdatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8113)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2423),
+                            CreatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8119),
                             Description = "Tiếng Việt tiền lớp 1",
                             ImageUrl = "https://example.com/course-image1.jpg",
                             IsDeleted = false,
@@ -387,12 +387,12 @@ namespace server.Migrations
                             Price = 100,
                             SubjectId = 2,
                             Title = "Tiếng Việt tiền lớp 1",
-                            UpdatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2423)
+                            UpdatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8119)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2426),
+                            CreatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8121),
                             Description = "Tiếng Anh lớp 1",
                             ImageUrl = "https://example.com/course-image2.jpg",
                             IsDeleted = false,
@@ -401,7 +401,7 @@ namespace server.Migrations
                             Price = 200,
                             SubjectId = 3,
                             Title = "Tiếng Anh lớp 1",
-                            UpdatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2426)
+                            UpdatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8122)
                         });
                 });
 
@@ -468,26 +468,26 @@ namespace server.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2222),
+                            CreatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(7895),
                             IsDeleted = false,
                             Name = "Tiền lớp 1",
-                            UpdatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2235)
+                            UpdatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(7911)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2239),
+                            CreatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(7914),
                             IsDeleted = false,
                             Name = "Lớp 1",
-                            UpdatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2239)
+                            UpdatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(7915)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2240),
+                            CreatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(7916),
                             IsDeleted = false,
                             Name = "Lớp 2",
-                            UpdatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2241)
+                            UpdatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(7916)
                         });
                 });
 
@@ -510,6 +510,9 @@ namespace server.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -536,14 +539,41 @@ namespace server.Migrations
                         {
                             Id = 1,
                             ChapterId = 1,
-                            CreatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2519),
+                            CreatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8185),
                             Description = "",
                             IsDeleted = false,
+                            Order = 0,
                             Title = "Số 2",
-                            UpdatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2520),
+                            UpdatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8185),
                             VideoURL = "String",
                             isFree = true
                         });
+                });
+
+            modelBuilder.Entity("server.Models.LessonCompleted", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("LessonId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("LessonCompleteds");
                 });
 
             modelBuilder.Entity("server.Models.News", b =>
@@ -576,11 +606,9 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.Payment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("Amount")
                         .HasColumnType("int");
@@ -645,11 +673,11 @@ namespace server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("LessonId")
-                        .HasColumnType("int");
 
                     b.Property<int>("Score")
                         .HasColumnType("int");
@@ -662,7 +690,7 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LessonId");
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("UserId");
 
@@ -703,29 +731,29 @@ namespace server.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2374),
+                            CreatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8043),
                             GradeId = 1,
                             IsDeleted = false,
                             Name = "Toán học",
-                            UpdatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2375)
+                            UpdatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8043)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2380),
+                            CreatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8046),
                             GradeId = 1,
                             IsDeleted = false,
                             Name = "Tiếng Việt",
-                            UpdatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2380)
+                            UpdatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8046)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2381),
+                            CreatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8048),
                             GradeId = 2,
                             IsDeleted = false,
                             Name = "Tiếng Anh",
-                            UpdatedAt = new DateTime(2024, 5, 16, 16, 53, 0, 377, DateTimeKind.Local).AddTicks(2382)
+                            UpdatedAt = new DateTime(2024, 5, 27, 17, 12, 59, 571, DateTimeKind.Local).AddTicks(8048)
                         });
                 });
 
@@ -762,6 +790,9 @@ namespace server.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -957,6 +988,23 @@ namespace server.Migrations
                     b.Navigation("Chapter");
                 });
 
+            modelBuilder.Entity("server.Models.LessonCompleted", b =>
+                {
+                    b.HasOne("server.Models.Lesson", "Lesson")
+                        .WithMany("LessonCompletes")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("server.Models.User", "User")
+                        .WithMany("LessonCompletes")
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("server.Models.News", b =>
                 {
                     b.HasOne("server.Models.Grade", "Grade")
@@ -998,9 +1046,9 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.Rating", b =>
                 {
-                    b.HasOne("server.Models.Lesson", "Lesson")
-                        .WithMany("Ratings")
-                        .HasForeignKey("LessonId")
+                    b.HasOne("server.Models.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1008,7 +1056,7 @@ namespace server.Migrations
                         .WithMany("Ratings")
                         .HasForeignKey("UserId");
 
-                    b.Navigation("Lesson");
+                    b.Navigation("Course");
 
                     b.Navigation("User");
                 });
@@ -1073,9 +1121,9 @@ namespace server.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Questions");
+                    b.Navigation("LessonCompletes");
 
-                    b.Navigation("Ratings");
+                    b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("server.Models.Question", b =>
@@ -1091,6 +1139,8 @@ namespace server.Migrations
             modelBuilder.Entity("server.Models.User", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("LessonCompletes");
 
                     b.Navigation("Payments");
 

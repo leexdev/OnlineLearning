@@ -30,7 +30,7 @@ namespace server.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Banner> Banners { get; set; }
         public DbSet<News> News { get; set; }
-        public DbSet<LessonComplete> LessonCompletes { get; set; }
+        public DbSet<LessonCompleted> LessonCompletes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

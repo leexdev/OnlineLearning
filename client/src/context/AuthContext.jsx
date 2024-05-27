@@ -1,4 +1,3 @@
-// src/context/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode as decode } from 'jwt-decode';
@@ -26,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem('jwtToken');
         setUser(null);
-        navigate('/'); 
+        navigate('/');
     };
 
     return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;

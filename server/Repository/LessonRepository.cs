@@ -18,6 +18,13 @@ namespace server.Repository
         }
         public async Task<Lesson> CreateAsync(Lesson lessonModel)
         {
+            var maxOrder = _context.Lessons
+                .Where(l => l.ChapterId == lessonModel.ChapterId && !l.IsDeleted)
+                .OrderByDescending(l => l.Order)
+                .Select(l => l.Order)
+                .FirstOrDefault();
+
+            lessonModel.Order = maxOrder + 1;
             await _context.Lessons.AddAsync(lessonModel);
             await _context.SaveChangesAsync();
             return lessonModel;
@@ -38,12 +45,12 @@ namespace server.Repository
 
         public async Task<List<Lesson>> GetAllAsync()
         {
-            return await _context.Lessons.Include(l => l.Ratings).Include(l => l.Questions).Include(l => l.Comments).Where(l => !l.IsDeleted).ToListAsync();
+            return await _context.Lessons.Include(l => l.LessonCompletes).Include(l => l.Comments).ThenInclude(l => l.User).Where(l => !l.IsDeleted).OrderBy(l => l.Order).ToListAsync();
         }
 
         public async Task<Lesson?> GetByIdAsync(int id)
         {
-            var lesson = await _context.Lessons.Include(l => l.Ratings).Include(l => l.Questions).Include(l => l.Comments).FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
+            var lesson = await _context.Lessons.Include(l => l.LessonCompletes).Include(l => l.Comments).ThenInclude(l => l.User).FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
             if (lesson == null)
             {
                 return null;

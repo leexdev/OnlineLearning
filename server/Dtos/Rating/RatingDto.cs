@@ -9,7 +9,7 @@ namespace server.Dtos.Rating
     {
         public int Id { get; set; }
         public string? UserId { get; set; }
-        public int LessonId { get; set; }
+        public int CourseId { get; set; }
         public int Score { get; set; }
     }
 }

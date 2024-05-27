@@ -1,9 +1,9 @@
-import { faUser, faX } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Modal from "../../components/Modal";
-import RegisterForm from "../../components/RegisterForm";
-import LoginForm from "../../components/LoginForm";
-import { useState } from "react";
+import { faUser, faX } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Modal from '../../Modal';
+import RegisterForm from '../../RegisterForm';
+import LoginForm from '../../LoginForm';
+import { useState } from 'react';
 
 const NotLogin = () => {
     const [isLoginOpen, setIsLoginOpen] = useState(false);

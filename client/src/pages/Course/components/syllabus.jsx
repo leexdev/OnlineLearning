@@ -1,7 +1,11 @@
-import { faChevronDown, faCircle, faCirclePlay, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import FreeLessons from './FreeLessons';
+import ChapterList from './ChapterList';
 
-const Syllabus = () => {
+const Syllabus = ({ chapters, onLessonClick, completedLessons }) => {
+    const freeLessons = chapters.flatMap(chapter => chapter.lessons.filter(lesson => lesson.isFree));
+
     return (
         <div id="course-syllabus">
             <div className="header block lg:flex lg:justify-between mb-3">
@@ -14,120 +18,16 @@ const Syllabus = () => {
                         <input
                             type="search"
                             id="default-search"
-                            className="w-full p-3 ps-10 text-lg text-gray-900 border font-bold border-gray-200 rounded-lg bg-white focus:ring-peach focus:border-peach"
+                            className="w-full p-3 ps-10 text-lg text-gray-900 border font-bold border-gray-200 rounded-lg bg-white focus:ring-cyan-500 focus:border-cyan-500"
                             placeholder="Tìm kiếm bài học"
-                            required=""
+                            required
                         />
                     </div>
                 </form>
             </div>
-            <div className="syllabus bg-white rounded-lg mb-20">
-                <div className="syllabus-box-free">
-                    <button
-                        type="button"
-                        className="flex border-b items-center w-full p-3 text-white font-semibold text-xl transition duration-75 rounded-t-lg group bg-cyan-500"
-                        data-collapse-toggle="syllabus-free"
-                        aria-expanded="true"
-                    >
-                        <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
-                            Bài giảng miễn phí
-                        </span>
-                        <FontAwesomeIcon className="mr-3" icon={faChevronDown} />
-                    </button>
-                    <ul id="syllabus-free" className="py-2 space-y-2">
-                        <li>
-                            <a
-                                href="#!"
-                                className="block hover:text-peach w-full p-2 text-gray-900 transition duration-75 pl-11 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                            >
-                                <p className="p-1">
-                                    Điền số (tiết 4)
-                                    <span className="float-right">
-                                        <FontAwesomeIcon className="mr-3 text-2xl" icon={faCirclePlay} />
-                                    </span>
-                                </p>
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="#!"
-                                className="block hover:text-peach w-full p-2 text-gray-900 transition duration-75 pl-11 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                            >
-                                <p className="p-1">
-                                    Quy luật số (tiết 3)
-                                    <span className="float-right">
-                                        <FontAwesomeIcon className="mr-3 text-2xl" icon={faCirclePlay} />
-                                    </span>
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div className="syllabus-box">
-                    <div className="syllabus-item rounded-b-lg">
-                        <button
-                            type="button"
-                            className="flex border-b items-center w-full p-3 text-white font-semibold text-xl transition duration-75 group bg-cyan-500"
-                            data-collapse-toggle="syllabus-1"
-                            aria-expanded="true"
-                        >
-                            <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
-                                Chuyên đề 1: Tìm x
-                            </span>
-                            <FontAwesomeIcon className="mr-3" icon={faChevronDown} />
-                        </button>
-                        <ul id="syllabus-1" className="py-2 space-y-2">
-                            <li>
-                                <a
-                                    href="#!"
-                                    className="block hover:text-peach w-full p-2 text-gray-900 transition duration-75 pl-11 hover:bg-gray-100"
-                                >
-                                    <p className="p-1">
-                                        <span className="text-lime-500 float-left mr-6">
-                                            <FontAwesomeIcon className="text-2xl" icon={faCircle} />
-                                        </span>
-                                        Tìm x (tiết 1)
-                                        <span className="float-right">
-                                            <FontAwesomeIcon className="mr-3 text-2xl" icon={faCirclePlay} />
-                                        </span>
-                                    </p>
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#!"
-                                    className="block hover:text-peach w-full p-2 text-gray-900 transition duration-75 pl-11 hover:bg-gray-100"
-                                >
-                                    <p className="p-1">
-                                        <span className="text-gray-300 float-left mr-6">
-                                            <FontAwesomeIcon className="text-2xl" icon={faCircle} />
-                                        </span>
-                                        Tìm x (tiết 2)
-                                        <span className="float-right">
-                                            <FontAwesomeIcon className="mr-3 text-2xl" icon={faCirclePlay} />
-                                        </span>
-                                    </p>
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="#!"
-                                    className="block hover:text-peach w-full p-2 text-gray-900 transition duration-75 pl-11 hover:bg-gray-100"
-                                >
-                                    <p className="p-1">
-                                        <span className="text-gray-300 float-left mr-6">
-                                            <FontAwesomeIcon className="text-2xl" icon={faCircle} />
-                                        </span>
-                                        Tìm x (tiết 3)
-                                        <span className="float-right">
-                                            <FontAwesomeIcon className="mr-3 text-2xl" icon={faCirclePlay} />
-                                        </span>
-                                    </p>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+            <div className="box rounded-b-lg border-cyan-500 bg-white">
+                <FreeLessons lessons={freeLessons} onLessonClick={onLessonClick} />
+                <ChapterList chapters={chapters} onLessonClick={onLessonClick} completedLessons={completedLessons} />
             </div>
         </div>
     );

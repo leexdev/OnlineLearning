@@ -68,12 +68,12 @@ namespace server.Repository
 
         public async Task<List<Course>> GetAllAsync()
         {
-            return await _context.Courses.Where(x => !x.IsDeleted).Include(x => x.Chapters.Where(c => !c.IsDeleted)).ToListAsync();
+            return await _context.Courses.Where(x => !x.IsDeleted).Include(x => x.Chapters.Where(c => !c.IsDeleted)).ThenInclude(c => c.Lessons.Where(l => !l.IsDeleted)).ToListAsync();
         }
 
         public async Task<Course?> GetByIdAsync(int id)
         {
-            var course = await _context.Courses.Include(x => x.Chapters.Where(c => !c.IsDeleted)).FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            var course = await _context.Courses.Include(x => x.Chapters.Where(c => !c.IsDeleted)).ThenInclude(c => c.Lessons.Where(l => !l.IsDeleted)).FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
             if (course == null)
             {
                 return null;

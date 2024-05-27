@@ -39,9 +39,9 @@ namespace server.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create(CreateRatingDto ratingDto)
         {
-            if (!await _lessonRepo.LessonExists(ratingDto.LessonId))
+            if (!await _lessonRepo.LessonExists(ratingDto.CourseId))
             {
-                return BadRequest("Bài giảng không tồn tại");
+                return BadRequest("Khóa học không tồn tại");
             }
 
             var userName = User.GetUsername();

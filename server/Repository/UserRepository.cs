@@ -131,6 +131,7 @@ namespace server.Repository
 
             user.Email = userModel.Email;
             user.PhoneNumber = userModel.PhoneNumber;
+            user.Name = userModel.Name;
             user.BirthDay = userModel.BirthDay;
             user.Sex = userModel.Sex;
             user.Avatar = userModel.Avatar;

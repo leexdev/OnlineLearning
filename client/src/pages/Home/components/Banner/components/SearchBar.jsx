@@ -1,25 +1,15 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
-import gradeApi from '~/api/gradeApi';
 
-const SearchBar = () => {
-    const [gradeData, setGradeData] = useState([]);
+const SearchBar = ({ gradeData }) => {
     const [selectedGrade, setSelectedGrade] = useState('');
     const [subjects, setSubjects] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState('');
 
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchGrades = async () => {
-            const data = await gradeApi.getAll();
-            setGradeData(data);
-        };
-        
-        fetchGrades();
-    }, []);
 
     useEffect(() => {
         if (selectedGrade) {
@@ -56,7 +46,7 @@ const SearchBar = () => {
                 <li className="md:mx-5 text-center md:text-end">
                     <div className="selectBox py-2 sm:py-0">
                         <select
-                            className="rounded-xl border-none text-xl font-bold text-sky-600 px-10"
+                            className="rounded-xl border-none text-xl font-bold text-sky-600 px-7"
                             value={selectedGrade}
                             onChange={(e) => setSelectedGrade(e.target.value)}
                         >
@@ -70,7 +60,7 @@ const SearchBar = () => {
                 <li className="sm:mr-3 md:mr-5 text-center pb-2 sm:pb-0">
                     <div className="selectBox">
                         <select
-                            className="rounded-xl border-none text-xl font-bold text-sky-600 px-10"
+                            className="rounded-xl border-none text-xl font-bold text-sky-600 px-7"
                             value={selectedSubject}
                             onChange={(e) => setSelectedSubject(e.target.value)}
                             disabled={!selectedGrade}
@@ -91,6 +81,17 @@ const SearchBar = () => {
             </ul>
         </form>
     );
+};
+
+SearchBar.propTypes = {
+    gradeData: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        name: PropTypes.string.isRequired,
+        subjects: PropTypes.arrayOf(PropTypes.shape({
+            id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+            name: PropTypes.string.isRequired,
+        })).isRequired,
+    })).isRequired,
 };
 
 export default SearchBar;

@@ -10,6 +10,7 @@ namespace server.Models
     [Table("Users")]
     public class User : IdentityUser
     {
+        public string? Name { get; set; }
         public DateTime? BirthDay { get; set; }
         public string? Sex { get; set; }
         public string? Avatar { get; set; }
@@ -18,6 +19,6 @@ namespace server.Models
         public List<Payment> Payments { get; set; } = new List<Payment>();
         public List<Rating> Ratings { get; set; } = new List<Rating>();
         public List<Comment> Comments { get; set; } = new List<Comment>();
-        public List<LessonComplete> LessonCompletes { get; set; } = new List<LessonComplete>();
+        public List<LessonCompleted> LessonCompletes { get; set; } = new List<LessonCompleted>();
     }
 }

@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import gradeApi from '~/api/gradeApi';
+import PropTypes from 'prop-types';
 import GradeCard from './GradeCard';
 
 const shuffleArray = (array) => {
@@ -16,39 +15,44 @@ const shuffleArray = (array) => {
     return array;
 }
 
-const GradeGrid = () => {
-    const [gradeData, setGradeData] = useState([]);
+const gridColsClasses = {
+    1: 'grid-cols-1',
+    2: 'grid-cols-2',
+    3: 'grid-cols-3',
+    4: 'grid-cols-4',
+    5: 'grid-cols-5',
+    6: 'grid-cols-6',
+};
 
-    useEffect(() => {
-        const fetchGrades = async () => {
-            try {
-                const data = await gradeApi.getAll();
-                setGradeData(data);
-            } catch (error) {
-                console.error('Failed to fetch grade data', error);
-            }
-        };
-
-        fetchGrades();
-    }, []);
-
+const GradeGrid = ({ gradeData }) => {
     const bgColors = ["bg-red-400", "bg-yellow-300", "bg-blue-500", "bg-teal-400", "bg-green-400", "bg-pink-500"];
     const uniqueColors = shuffleArray([...bgColors]);
-    const gridCols = `grid-cols-${(gradeData.length > 6) ? "6" : `${gradeData.length}`}`;
+    const numCols = gradeData.length > 6 ? 6 : gradeData.length;
+    const gridColsClass = gridColsClasses[numCols] || 'grid-cols-1';
 
     return (
-        <div className={`classBlock mx-auto my-4 -mt-12 relative z-50 grid ${gridCols} gap-2`}>
-            {gradeData.map((classInfo, index) => (
+        <div className={`classBlock mx-auto my-4 -mt-12 relative z-50 grid grid-cols-2 md:${gridColsClass} gap-2`}>
+            {gradeData.map((grade, index) => (
                 <GradeCard 
-                    key={classInfo.id} 
-                    title={classInfo.name} 
-                    grade={classInfo.grade} 
-                    subjects={classInfo.subjects.map(subject => ({ id: subject.id, name: subject.name }))} 
+                    key={grade.id} 
+                    title={grade.name} 
+                    subjects={grade.subjects.map(subject => ({ id: subject.id, name: subject.name }))} 
                     bgColor={gradeData.length <= 6 ? uniqueColors[index % uniqueColors.length] : bgColors[index % bgColors.length]}
                 />
             ))}
         </div>
     );
+};
+
+GradeGrid.propTypes = {
+    gradeData: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        name: PropTypes.string.isRequired,
+        subjects: PropTypes.arrayOf(PropTypes.shape({
+            id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+            name: PropTypes.string.isRequired,
+        })).isRequired,
+    })).isRequired,
 };
 
 export default GradeGrid;

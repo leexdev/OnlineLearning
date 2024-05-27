@@ -48,13 +48,13 @@ namespace server.Repository
 
         public async Task<Rating?> CreateAsync(string userId, Rating ratingModel)
         {
-            if (!await RatingExist(ratingModel.LessonId, userId))
+            if (!await RatingExist(ratingModel.CourseId, userId))
             {
                 _context.Ratings.Add(ratingModel);
             }
             else
             {
-                var existingRating = await _context.Ratings.FirstOrDefaultAsync(r => r.UserId == userId && r.LessonId == ratingModel.LessonId);
+                var existingRating = await _context.Ratings.FirstOrDefaultAsync(r => r.UserId == userId && r.CourseId == ratingModel.CourseId);
                 if (existingRating == null)
                 {
                     return null;
@@ -66,9 +66,9 @@ namespace server.Repository
             return ratingModel;
         }
 
-        public async Task<bool> RatingExist(int lessonId, string userId)
+        public async Task<bool> RatingExist(int courseId, string userId)
         {
-            return await _context.Ratings.AnyAsync(r => r.LessonId == lessonId && r.UserId == userId);
+            return await _context.Ratings.AnyAsync(r => r.CourseId == courseId && r.UserId == userId);
         }
     }
 }

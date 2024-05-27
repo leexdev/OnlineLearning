@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace server.Models
 {
-    [Table("LessonCompletes")]
-    public class LessonComplete
+    [Table("LessonCompleteds")]
+    public class LessonCompleted
     {
         public int Id { get; set; }
-        public string? UserId { get; set; }
+        public Guid UserId { get; set; }
         public int LessonId { get; set; }
         public Lesson? Lesson { get; set; }
         public User? User { get; set; }

@@ -53,10 +53,6 @@ namespace server.Controllers
         public async Task<IActionResult> GetBySubjectId([FromRoute] int subjectId)
         {
             var courses = await _courseRepo.GetBySubjectId(subjectId);
-            if (courses == null || !courses.Any())
-            {
-                return NotFound();
-            }
             var courseDto = courses.Select(c => c.ToCourseDto()).ToList();
             return Ok(courseDto);
         }

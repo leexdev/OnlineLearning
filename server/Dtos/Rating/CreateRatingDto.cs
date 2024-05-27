@@ -7,7 +7,7 @@ namespace server.Dtos.Rating
 {
     public class CreateRatingDto
     {
-        public int LessonId { get; set; }
+        public int CourseId { get; set; }
         public int Score { get; set; }
     }
 }

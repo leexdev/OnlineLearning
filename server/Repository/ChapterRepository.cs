@@ -46,12 +46,12 @@ namespace server.Repository
 
         public async Task<List<Chapter>> GetAllAsync()
         {
-            return await _context.Chapters.Where(c => !c.IsDeleted).Include(c => c.Lessons.Where(l => !l.IsDeleted)).ToListAsync();
+            return await _context.Chapters.Where(c => !c.IsDeleted).Include(c => c.Lessons.Where(l => !l.IsDeleted).OrderBy(l => l.Order)).ToListAsync();
         }
 
         public async Task<Chapter?> GetByIdAsync(int id)
         {
-            var chapter = await _context.Chapters.Include(c => c.Lessons.Where(l => !l.IsDeleted)).FirstOrDefaultAsync(c => c.Id == id & !c.IsDeleted);
+            var chapter = await _context.Chapters.Include(c => c.Lessons.Where(l => !l.IsDeleted).OrderBy(l => l.Order)).FirstOrDefaultAsync(c => c.Id == id & !c.IsDeleted);
             if (chapter == null)
             {
                 return null;

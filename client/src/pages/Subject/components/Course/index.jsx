@@ -3,23 +3,41 @@ import courseApi from '~/api/courseApi';
 import CourseCard from './components/CourseCard';
 import CourseList from './components/CourseList';
 import PropTypes from 'prop-types';
+import Spinner from '~/components/Spinner';
 
 const ListCourse = ({ subjectId, subjectName, gradeName }) => {
     const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchCourses = async () => {
-            let data;
-            if (subjectId) {
-                data = await courseApi.getBySubjectId(subjectId);
-            } else {
-                data = await courseApi.getAll();
+            try {
+                let data;
+                if (subjectId) {
+                    data = await courseApi.getBySubjectId(subjectId);
+                } else {
+                    data = await courseApi.getAll();
+                }
+                setCourses(data);
+                setLoading(false);
+            } catch (error) {
+                console.error('Failed to fetch grade data', error);
+                setError('Failed to fetch grade data');
+                setLoading(false);
             }
-            setCourses(data);
         };
 
         fetchCourses();
     }, [subjectId]);
+
+    if (loading) {
+        return <Spinner />;
+    }
+
+    if (error) {
+        return <div className="error">{error}</div>;
+    }
 
     return (
         <div className="course-container container">

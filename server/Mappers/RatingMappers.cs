@@ -14,7 +14,7 @@ namespace server.Mappers
             return new RatingDto
             {
                 Id = ratingModel.Id,
-                LessonId = ratingModel.LessonId,
+                CourseId = ratingModel.CourseId,
                 UserId = ratingModel.UserId,
                 Score = ratingModel.Score
             };
@@ -25,7 +25,7 @@ namespace server.Mappers
             return new Rating
             {
                 UserId = userId,
-                LessonId = ratingDto.LessonId,
+                CourseId = ratingDto.CourseId,
                 Score = ratingDto.Score
             };
         }

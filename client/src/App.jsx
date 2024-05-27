@@ -1,35 +1,17 @@
 import { Routes, Route } from 'react-router-dom';
 import { publicRoutes } from '~/routes';
-import { Fragment, useEffect } from 'react';
 import DefaultLayout from '~/components/Layouts/DefaultLayout';
-import gradeApi from './api/gradeApi';
 import { AuthProvider } from './context/AuthContext';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
-    useEffect(() => {
-        const fetchGrades = async () => {
-            const params = {
-                _limit: 1,
-            };
-            const gradeList = await gradeApi.getAll(params);
-            console.log(gradeList);
-        };
-
-        fetchGrades();
-    }, []);
     return (
         <AuthProvider>
             <div className="App font-quicksand">
+                <ScrollToTop />
                 <Routes>
                     {publicRoutes.map((route, index) => {
-                        let Layout = DefaultLayout;
-
-                        if (route.layout) {
-                            Layout = route.layout;
-                        } else if (route.layout === null) {
-                            Layout = Fragment;
-                        }
-
+                        const Layout = route.layout || DefaultLayout;
                         const Page = route.component;
                         return (
                             <Route

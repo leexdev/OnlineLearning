@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using server.Data;
+using server.Dtos.Comment;
+using server.Dtos.User;
 using server.Interfaces;
 using server.Models;
 
@@ -44,12 +46,12 @@ namespace server.Repository
         public async Task<List<Comment>> GetAllAsync()
         {
 
-            return await _context.Comments.ToListAsync();
+            return await _context.Comments.Include(c => c.User).ToListAsync();
         }
 
         public async Task<Comment?> GetByIdAsync(int id)
         {
-            var comment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id);
+            var comment = await _context.Comments.Include(c => c.User).FirstOrDefaultAsync(c => c.Id == id);
             if (comment == null)
             {
                 return null;
@@ -57,6 +59,20 @@ namespace server.Repository
 
             return comment;
         }
+
+        public async Task<List<Comment>> GetByLessonId(int lessonId, int page = 1, int pageSize = 5)
+        {
+            var comments = await _context.Comments
+                .Include(c => c.User)
+                .Where(c => c.LessonId == lessonId)
+                .OrderBy(c => c.CreatedAt) 
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return comments;
+        }
+
 
         public async Task<Comment?> UpdateAsync(int id, Comment commentModel)
         {

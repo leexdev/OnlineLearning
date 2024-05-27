@@ -28,10 +28,11 @@ namespace server.Service
         public async Task<string> CreateToken(User user)
         {
             var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),
-            };
+    {
+        new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),
+        new Claim(JwtRegisteredClaimNames.Sub, user.Id) // Ensure userId is added as 'sub'
+    };
 
             // Lấy roles của người dùng và thêm vào như là role claims
             var roles = await _userManager.GetRolesAsync(user);
@@ -51,7 +52,8 @@ namespace server.Service
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return tokenHandler.WriteToken(token); 
+            return tokenHandler.WriteToken(token);
         }
+
     }
 }

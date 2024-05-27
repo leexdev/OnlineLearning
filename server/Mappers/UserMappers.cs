@@ -16,6 +16,7 @@ namespace server.Mappers
                 Id = userModel.Id,
                 Email = userModel.Email,
                 PhoneNumber = userModel.PhoneNumber,
+                Name = userModel.Name,
                 BirthDay = userModel.BirthDay,
                 Sex = userModel.Sex,
                 Avatar = userModel.Avatar
@@ -25,6 +26,7 @@ namespace server.Mappers
         {
             return new User
             {
+                Name = userDto.Name,
                 PhoneNumber = userDto.PhoneNumber,
                 BirthDay = userDto.BirthDay,
                 Sex = userDto.Sex

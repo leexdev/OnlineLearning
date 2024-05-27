@@ -20,9 +20,9 @@ namespace server.Mappers
                 VideoURL = lessonModel.VideoURL,
                 isFree = lessonModel.isFree,
                 ChapterId = lessonModel.ChapterId,
-                Ratings = lessonModel.Ratings.Select(r => r.ToRatingDto()).ToList(),
+                Order = lessonModel.Order,
                 Comments = lessonModel.Comments.Select(c => c.ToCommentDto()).ToList(),
-                Questions = lessonModel.Questions.Select(c => c.ToQuestionDto()).ToList(),
+                LessonCompletes = lessonModel.LessonCompletes.Select(c => c.ToLessonCompletedDto()).ToList(),
             };
         }
 

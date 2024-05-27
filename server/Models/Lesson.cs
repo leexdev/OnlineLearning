@@ -16,10 +16,10 @@ namespace server.Models
         public bool isFree { get; set; } = false;
         public int ChapterId { get; set; }
         public bool IsDeleted { get; set; } = false;
+        public int Order { get; set; }
         public Chapter? Chapter { get; set; }
         public List<Question> Questions { get; set; } = new List<Question>();
         public List<Comment> Comments { get; set; } = new List<Comment>();
-        public List<Rating> Ratings { get; set; } = new List<Rating>();
-        public List<LessonComplete> LessonCompletes { get; set; } = new List<LessonComplete>();
+        public List<LessonCompleted> LessonCompletes { get; set; } = new List<LessonCompleted>();
     }
 }

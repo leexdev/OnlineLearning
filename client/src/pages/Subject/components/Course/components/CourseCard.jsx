@@ -1,6 +1,7 @@
 import React from 'react';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 import images from '~/assets/images';
 
 const CourseCard = ({ course }) => {
@@ -42,12 +43,15 @@ const CourseCard = ({ course }) => {
                             )}
                         </div>
                         <div className="action text-center mt-5 text-white text-xl block sm:flex sm:justify-center">
-                            <a
-                                href="#!"
+                            <Link
+                                to={`/course/${course.id}`}
+                                state={{
+                                    courseId: course.id,
+                                }}
                                 className="mr-3 mb-3 md:mb-0 shadow-md block bg-gray-300 p-2 xl:py-2 xl:px-5 rounded-xl"
                             >
                                 Xem thêm
-                            </a>
+                            </Link>
                             <a href="#!" className="mr-3 shadow-md block bg-orange-600 p-2 xl:py-2 xl:px-7 rounded-xl">
                                 Đăng ký
                             </a>

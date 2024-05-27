@@ -10,9 +10,9 @@ const Home = () => {
         <Fragment>
             <Slider />
             <Banner />
-            <Course title="Khóa toán nổi bật" />
+            {/* <Course title="Khóa toán nổi bật" />
             <Course title="Khóa tiếng việt nổi bật" />
-            <Course title="Khóa tiếng anh nổi bật" />
+            <Course title="Khóa tiếng anh nổi bật" /> */}
             <Steps />
             <News />
         </Fragment>

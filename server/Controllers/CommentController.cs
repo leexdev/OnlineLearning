@@ -36,6 +36,15 @@ namespace server.Controllers
             return Ok(commentDto);
         }
 
+        [HttpGet("get-by-lessonid")]
+        public async Task<IActionResult> GetByLessonId(int lessonId, int page = 1, int pageSize = 10)
+        {
+            var comments = await _commentRepo.GetByLessonId(lessonId, page, pageSize);
+            var commentDto = comments.Select(c => c.ToCommentDto());
+            return Ok(commentDto);
+        }
+
+
         [HttpPost("create")]
         [Authorize]
         public async Task<IActionResult> Create(CreateCommentDto commentDto)
@@ -75,7 +84,7 @@ namespace server.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var comment = await _commentRepo.DeleteAsync(id);
-            if(comment == null)
+            if (comment == null)
             {
                 return NotFound();
             }
