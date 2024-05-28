@@ -8,7 +8,7 @@ namespace server.Dtos.LessonCompleted
     public class LessonCompletedDto
     {
         public int Id { get; set; }
-        public Guid UserId { get; set; }
+        public string? UserId { get; set; }
         public int LessonId { get; set; }
     }
 }

@@ -1,10 +1,12 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { faBars, faChevronDown, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import AuthContext from '~/context/AuthContext';
 
-const Sidebar = ({ chapters, activeLessonId, completedLessons }) => {
-    // Xác định chương mặc định mở dựa trên activeLessonId
+const Sidebar = ({ chapters, activeLessonId, completedLessons, handleLessonClick }) => {
+    const navigate = useNavigate();
+
     const getDefaultOpenChapters = () => {
         const openChapters = {};
         chapters.forEach((chapter, index) => {
@@ -29,7 +31,7 @@ const Sidebar = ({ chapters, activeLessonId, completedLessons }) => {
     }, [activeLessonId, chapters]);
 
     const getCompletedLessonsCount = (chapter) => {
-        return chapter.lessons.filter(lesson => completedLessons.includes(lesson.id)).length;
+        return chapter.lessons.filter((lesson) => completedLessons.includes(lesson.id)).length;
     };
 
     return (
@@ -61,7 +63,9 @@ const Sidebar = ({ chapters, activeLessonId, completedLessons }) => {
                                 >
                                     <div className="flex-1 ms-3 text-left rtl:text-right">
                                         <div className="title font-bold text-sm md:text-base">{chapter.name}</div>
-                                        <span className="text-sm">{getCompletedLessonsCount(chapter)}/{chapter.lessons.length} bài học</span>
+                                        <span className="text-sm">
+                                            {getCompletedLessonsCount(chapter)}/{chapter.lessons.length} bài học
+                                        </span>
                                     </div>
                                     <FontAwesomeIcon icon={faChevronDown} />
                                 </button>
@@ -76,25 +80,27 @@ const Sidebar = ({ chapters, activeLessonId, completedLessons }) => {
                                             <li
                                                 key={lessonIndex}
                                                 className={`p-3 w-full transition duration-75 !mt-0 pl-7 group ${
-                                                    isActive ? 'bg-blue-200 font-bold cursor-default' : 'hover:bg-gray-100'
+                                                    isActive
+                                                        ? 'bg-blue-200 font-bold cursor-default'
+                                                        : 'hover:bg-gray-100'
                                                 }`}
                                             >
-                                                <Link
-                                                    className={`flex items-center ${
+                                                <button
+                                                    onClick={() => handleLessonClick(lesson.id)}
+                                                    className={`flex items-center w-full justify-between ${
                                                         isActive ? 'pointer-events-none' : ''
                                                     }`}
-                                                    to={`/lesson/${lesson.id}`}
                                                 >
-                                                    <div className="flex-1 title p-2 text-sm md:text-base">
+                                                    <div className="flex-1 text-left title p-2 text-sm md:text-base">
                                                         {lesson.order}. {lesson.title}
                                                     </div>
                                                     {isCompleted && (
                                                         <FontAwesomeIcon
-                                                            className="text-right text-lime-500"
+                                                            className="text-lime-500"
                                                             icon={faCheckCircle}
                                                         />
                                                     )}
-                                                </Link>
+                                                </button>
                                             </li>
                                         );
                                     })}

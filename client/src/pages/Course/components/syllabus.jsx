@@ -5,7 +5,6 @@ import ChapterList from './ChapterList';
 
 const Syllabus = ({ chapters, onLessonClick, completedLessons }) => {
     const freeLessons = chapters.flatMap(chapter => chapter.lessons.filter(lesson => lesson.isFree));
-
     return (
         <div id="course-syllabus">
             <div className="header block lg:flex lg:justify-between mb-3">

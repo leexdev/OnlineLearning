@@ -50,7 +50,7 @@ namespace server.Repository
 
         public async Task<Lesson?> GetByIdAsync(int id)
         {
-            var lesson = await _context.Lessons.Include(l => l.LessonCompletes).Include(l => l.Comments).ThenInclude(l => l.User).FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
+            var lesson = await _context.Lessons.Include(l => l.Chapter).Include(l => l.LessonCompletes).Include(l => l.Comments).ThenInclude(l => l.User).FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
             if (lesson == null)
             {
                 return null;

@@ -29,7 +29,7 @@ namespace server.Repository
             return await _context.LessonCompletes.ToListAsync();
         }
 
-        public async Task<List<LessonCompleted>> GetByUserIdAsync(Guid userId)
+        public async Task<List<LessonCompleted>> GetByUserIdAsync(string userId)
         {
             return await _context.LessonCompletes.Where(l => l.UserId == userId).ToListAsync();
         }

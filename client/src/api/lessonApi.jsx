@@ -11,9 +11,9 @@ const lessonApi = {
         return axiosClient.get(url);
     },
 
-    add(data) {
-        const url = '/Lesson/create';
-        return axiosClient.post(url, data);
+    getVideo(lessonId) {
+        const url = `/Lesson/${lessonId}/video`;
+        return axiosClient.get(url);
     },
 
     update(data) {

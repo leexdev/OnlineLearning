@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.LessonCompleted;
@@ -17,10 +18,12 @@ namespace server.Controllers
     public class LessonCompletedController : ControllerBase
     {
         private readonly ILessonCompletedRepository _lessonCompletedRepo;
+        private readonly UserManager<User> _userManager;
 
-        public LessonCompletedController(ILessonCompletedRepository lessonCompletedRepo)
+        public LessonCompletedController(ILessonCompletedRepository lessonCompletedRepo, UserManager<User> userManager)
         {
             _lessonCompletedRepo = lessonCompletedRepo;
+            _userManager = userManager;
         }
 
         [HttpGet("get-all")]
@@ -32,17 +35,23 @@ namespace server.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize]
         public async Task<IActionResult> Create(CreateLessonCompletedDto lessonCompletedDto)
         {
-            var lessonComplete = lessonCompletedDto.ToLessonCompletedFromCreate();
+            var userName = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(userName);
+            var lessonComplete = lessonCompletedDto.ToLessonCompletedFromCreate(user.Id);
             await _lessonCompletedRepo.CreateAsync(lessonComplete);
             return Ok(lessonComplete.ToLessonCompletedDto());
         }
 
         [HttpGet("get-by-userid")]
-        public async Task<IActionResult> GetByUserId(Guid userId)
+        [Authorize]
+        public async Task<IActionResult> GetByUserId()
         {
-            var lessonCompletes = await _lessonCompletedRepo.GetByUserIdAsync(userId);
+            var userName = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(userName);
+            var lessonCompletes = await _lessonCompletedRepo.GetByUserIdAsync(user.Id);
             var lessonCompletedDto = lessonCompletes.Select(lc => lc.ToLessonCompletedDto());
             return Ok(lessonCompletedDto);
         }

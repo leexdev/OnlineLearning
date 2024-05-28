@@ -2,11 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using server.Dtos.Lesson;
+using server.Extensions;
 using server.Interfaces;
 using server.Mappers;
+using server.Models;
 
 namespace server.Controllers
 {
@@ -15,15 +19,20 @@ namespace server.Controllers
     public class LessonController : ControllerBase
     {
         private readonly ILessonRepository _lessonRepo;
+        private readonly IUserCourseRepository _ucRepo;
         private readonly IChapterRepository _chapterRepo;
         private readonly IFireBaseService _firebaseService;
         private readonly IFileService _fileService;
-        public LessonController(ILessonRepository lessonRepo, IChapterRepository chapterRepo, IFireBaseService firebaseService, IFileService fileService)
+        private readonly UserManager<User> _userManager;
+
+        public LessonController(ILessonRepository lessonRepo, IChapterRepository chapterRepo, IUserCourseRepository ucRepo, IFireBaseService firebaseService, IFileService fileService, UserManager<User> userManager)
         {
             _lessonRepo = lessonRepo;
             _chapterRepo = chapterRepo;
+            _ucRepo = ucRepo;
             _firebaseService = firebaseService;
             _fileService = fileService;
+            _userManager = userManager;
         }
 
         [HttpGet("get-all")]
@@ -33,17 +42,36 @@ namespace server.Controllers
             var lessonDto = lessons.Select(l => l.ToLessonDto());
             return Ok(lessonDto);
         }
-
-        [HttpGet("get-by-id/{id:int}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{lessonId}/video")]
+        public async Task<IActionResult> GetLessonVideo(int lessonId)
         {
-            var lesson = await _lessonRepo.GetByIdAsync(id);
+            var lesson = await _lessonRepo.GetByIdAsync(lessonId);
             if (lesson == null)
             {
-                return NotFound();
+                return NotFound("Bài học không tồn tại");
             }
 
-            return Ok(lesson.ToLessonDto());
+            if (lesson.isFree)
+            {
+                return Ok(lesson.ToLessonVideoDto());
+            }
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Unauthorized("Bạn cần đăng nhập để truy cập video này");
+            }
+
+            var userName = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(userName);
+            var userCourses = await _ucRepo.GetUserCourses(user.Id);
+
+            var hasAccess = userCourses.Any(uc => uc.Id == lesson.Chapter.CourseId);
+            if (!hasAccess)
+            {
+                return Forbid();
+            }
+
+            return Ok(lesson.ToLessonVideoDto());
         }
 
         [HttpPost("create")]

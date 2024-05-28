@@ -24,8 +24,12 @@ namespace server.Controllers
         private readonly IVnPayService _vnPayService;
         private readonly UserManager<User> _userManager;
 
-
-        public PaymentController(ICourseRepository courseRepo, IPaymentRepository paymentRepo, IUserCourseRepository userCourseRepo, IVnPayService vnPayService, UserManager<User> userManager)
+        public PaymentController(
+            ICourseRepository courseRepo,
+            IPaymentRepository paymentRepo,
+            IUserCourseRepository userCourseRepo,
+            IVnPayService vnPayService,
+            UserManager<User> userManager)
         {
             _vnPayService = vnPayService;
             _courseRepo = courseRepo;
@@ -57,6 +61,11 @@ namespace server.Controllers
             var userName = User.GetUsername();
             var user = await _userManager.FindByNameAsync(userName);
 
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
             var payment = paymentDto.ToPaymentFromCreate(user.Id, amount);
             await _paymentRepo.CreateAsync(payment);
 
@@ -64,7 +73,6 @@ namespace server.Controllers
 
             return Ok(new { PaymentUrl = paymentUrl });
         }
-
 
         [HttpPost("process-payment-response")]
         public async Task<IActionResult> ProcessPaymentResponse()
@@ -83,7 +91,9 @@ namespace server.Controllers
                 var payment = await _paymentRepo.GetByIdAsync(paymentId);
 
                 if (payment == null)
+                {
                     return NotFound();
+                }
 
                 var userCourse = new CreateUserCourseDto
                 {

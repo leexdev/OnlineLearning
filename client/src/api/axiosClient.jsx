@@ -9,23 +9,31 @@ const axiosClient = axios.create({
     paramsSerializer: (params) => queryString.stringify(params),
 });
 
-axiosClient.interceptors.request.use(async (config) => {
-    // Handle token here ...
-    return config;
-});
+axiosClient.interceptors.request.use(
+    async (config) => {
+        // Lấy token từ localStorage
+        const token = localStorage.getItem('jwtToken');
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
 axiosClient.interceptors.response.use(
     (response) => {
         if (response && response.data) {
             return response.data;
         }
-
         return response;
     },
     (error) => {
-        // Handle errors
+        // Xử lý lỗi
         throw error;
-    },
+    }
 );
 
 export default axiosClient;

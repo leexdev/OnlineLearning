@@ -32,15 +32,19 @@ namespace server.Controllers
         {
             var userName = User.GetUsername();
             var user = await _userManager.FindByNameAsync(userName);
-            var userCourse = await _ucRepo.GetUserCourses(user);
+            var userCourse = await _ucRepo.GetUserCourses(user.Id);
             return Ok(userCourse);
         }
 
-        // [HttpPost]
-        // [Authorize]
-        // public async Task<IActionResult> AddUserCourse()
-        // {
-
-        // }
+        [HttpGet("has-access/{courseId}")]
+        [Authorize]
+        public async Task<IActionResult> HasAccess(int courseId)
+        {
+            var userName = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(userName);
+            var userCourses = await _ucRepo.GetUserCourses(user.Id);
+            var hasAccess = userCourses.Any(uc => uc.Id == courseId);
+            return Ok(new { HasAccess = hasAccess });
+        }
     }
 }

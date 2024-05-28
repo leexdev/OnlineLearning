@@ -6,9 +6,9 @@ const lessonCompletedApi = {
         return axiosClient.get(url, { params });
     },
 
-    get(userId) {
+    get(params) {
         const url = `/LessonCompleted/get-by-userid`;
-        return axiosClient.get(url, { params: { userId } });
+        return axiosClient.get(url, {params});
     },
 
     add(data) {

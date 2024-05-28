@@ -19,12 +19,12 @@ namespace server.Mappers
             };
         }
 
-        public static LessonCompleted ToLessonCompletedFromCreate(this CreateLessonCompletedDto lessonCompletedDto)
+        public static LessonCompleted ToLessonCompletedFromCreate(this CreateLessonCompletedDto lessonCompletedDto, string userId)
         {
             return new LessonCompleted
             {
                 LessonId = lessonCompletedDto.LessonId,
-                UserId = lessonCompletedDto.UserId
+                UserId = userId
             };
         }
     }

@@ -10,7 +10,7 @@ namespace server.Models
     public class LessonCompleted
     {
         public int Id { get; set; }
-        public Guid UserId { get; set; }
+        public string? UserId { get; set; }
         public int LessonId { get; set; }
         public Lesson? Lesson { get; set; }
         public User? User { get; set; }

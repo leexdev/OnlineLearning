@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,10 +17,11 @@ namespace server.Repository
         {
             _context = context;
         }
-        public async Task<List<CourseDto>> GetUserCourses(User user)
+
+        public async Task<List<CourseDto>> GetUserCourses(string userId)
         {
             return await _context.UserCourses
-                .Where(uc => uc.UserId == user.Id)
+                .Where(uc => uc.UserId == userId)
                 .Select(uc => new CourseDto
                 {
                     Id = uc.Course.Id,

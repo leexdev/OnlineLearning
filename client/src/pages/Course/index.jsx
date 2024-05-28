@@ -5,10 +5,12 @@ import Nav from './components/Navbar';
 import Info from './components/Info';
 import Syllabus from './components/Syllabus';
 import courseApi from '~/api/courseApi';
+import lessonApi from '~/api/lessonApi';
 import lessonCompletedApi from '~/api/lessonCompletedApi';
 import Spinner from '../../components/Spinner';
 import Thumbnail from './components/Thumbnail';
 import AuthContext from '~/context/AuthContext';
+import ErrorModal from '~/components/ErrorModal';
 
 const Course = () => {
     const { id } = useParams();
@@ -17,6 +19,8 @@ const Course = () => {
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [completedLessons, setCompletedLessons] = useState([]);
+    const [videoUrl, setVideoUrl] = useState(null);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchCourse = async () => {
@@ -36,8 +40,7 @@ const Course = () => {
                 return;
             }
             try {
-                const data = await lessonCompletedApi.get(user.sub);
-                console.log(data);
+                const data = await lessonCompletedApi.get();
                 const completedLessonIds = data.map((lesson) => lesson.lessonId);
                 setCompletedLessons(completedLessonIds);
             } catch (error) {
@@ -49,19 +52,40 @@ const Course = () => {
         if (user) {
             fetchCompletedLessons();
         }
-    }, [id, user, navigate]);
+    }, [id, user]);
+
+    const handleLessonClick = async (lessonId) => {
+        try {
+            const data = await lessonApi.getVideo(lessonId);
+            if (data.status === 403) {
+                setError(
+                    `Rất tiếc, bạn chưa thể xem được bài giảng này. Hãy đăng ký khóa học để xem tất cả các bài giảng không giới hạn nhé!`,
+                );
+                setLoading(false);
+                return;
+            }
+            navigate(`/lesson/${lessonId}`);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching lesson:', error);
+            setLoading(false);
+            if (error.response) {
+                setError(
+                    `Rất tiếc, bạn chưa thể xem được bài giảng này. Hãy đăng ký khóa học để xem tất cả các bài giảng không giới hạn nhé!`,
+                );
+            } else {
+                setError('Bài học không tồn tại');
+            }
+        }
+    };
 
     if (loading) {
         return <Spinner />;
     }
 
-    const handleLessonClick = (lessonId) => {
-        localStorage.setItem('chapters', JSON.stringify(course.chapters));
-        navigate(`/lesson/${lessonId}`);
-    };
-
     return (
         <Fragment>
+            {error && <ErrorModal message={error} onClose={() => setError(null)} />} {/* Display error modal */}
             <Header title={course?.title || 'Loading...'} />
             <div className="pt-5">
                 <div className="container">
@@ -77,6 +101,11 @@ const Course = () => {
                     </div>
                 </div>
             </div>
+            {videoUrl && (
+                <div>
+                    <video controls src={videoUrl}></video>
+                </div>
+            )}
         </Fragment>
     );
 };

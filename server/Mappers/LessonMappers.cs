@@ -17,6 +17,21 @@ namespace server.Mappers
                 Id = lessonModel.Id,
                 Title = lessonModel.Title,
                 Description = lessonModel.Description,
+                isFree = lessonModel.isFree,
+                ChapterId = lessonModel.ChapterId,
+                Order = lessonModel.Order,
+                Comments = lessonModel.Comments.Select(c => c.ToCommentDto()).ToList(),
+                LessonCompletes = lessonModel.LessonCompletes.Select(c => c.ToLessonCompletedDto()).ToList(),
+            };
+        }
+
+        public static LessonDto ToLessonVideoDto(this Lesson lessonModel)
+        {
+            return new LessonDto
+            {
+                Id = lessonModel.Id,
+                Title = lessonModel.Title,
+                Description = lessonModel.Description,
                 VideoURL = lessonModel.VideoURL,
                 isFree = lessonModel.isFree,
                 ChapterId = lessonModel.ChapterId,
