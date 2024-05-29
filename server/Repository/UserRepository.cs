@@ -27,7 +27,7 @@ namespace server.Repository
 
         public async Task<(bool Succeeded, IEnumerable<IdentityError> Errors, NewUserDto User)> RegisterUserAsync(RegisterDto registerDto)
         {
-            var user = new User { UserName = registerDto.Email, Email = registerDto.Email };
+            var user = new User { UserName = registerDto.Email, Email = registerDto.Email, Name = registerDto.Name };
             var result = await _userManager.CreateAsync(user, registerDto.Password);
 
             if (!result.Succeeded)

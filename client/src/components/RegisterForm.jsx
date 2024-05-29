@@ -6,6 +6,7 @@ import PasswordInput from './PasswordInput';
 import { convertErrorsToCamelCase } from '~/utils/errorUtils';
 import PasswordConfirmInput from './PasswordConfirmInput';
 import SubmitButton from './SubmitButton';
+import NameInput from './NameInput';
 
 const RegisterForm = ({ switchToLogin, onClose }) => {
     const {
@@ -46,6 +47,7 @@ const RegisterForm = ({ switchToLogin, onClose }) => {
 
     return (
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+            <NameInput register={register} error={errors.name}/>
             <EmailInput register={register} error={errors.email} />
             <PasswordInput register={register} error={errors.password} />
             <PasswordConfirmInput register={register} error={errors.passwordConfirm} watch={watch} />

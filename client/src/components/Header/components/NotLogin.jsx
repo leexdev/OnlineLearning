@@ -1,9 +1,9 @@
-import { faUser, faX } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faX } from '@fortawesome/free-solid-svg-icons';
 import Modal from '../../Modal';
 import RegisterForm from '../../RegisterForm';
 import LoginForm from '../../LoginForm';
-import { useState } from 'react';
 
 const NotLogin = () => {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -12,7 +12,7 @@ const NotLogin = () => {
     const toggleModal = () => {
         setIsLoginOpen(!isLoginOpen);
         if (!isLoginOpen) {
-            setIsRegister(false); // Reset to login form when reopening modal
+            setIsRegister(false); // Đặt lại về form đăng nhập khi mở lại modal
         }
     };
 
@@ -31,8 +31,6 @@ const NotLogin = () => {
     return (
         <div>
             <button
-                data-modal-target="authentication-modal"
-                data-modal-toggle="authentication-modal"
                 className="block text-white bg-peach font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 type="button"
                 onClick={toggleModal}

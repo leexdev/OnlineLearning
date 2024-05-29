@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode as decode } from 'jwt-decode';
+import userApi from '~/api/userApi';
 
 const AuthContext = createContext();
 
@@ -9,11 +10,21 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem('jwtToken');
-        if (token) {
-            const decodedUser = decode(token);
-            setUser(decodedUser);
-        }
+        const fetchUserDetails = async () => {
+            const token = localStorage.getItem('jwtToken');
+            if (token) {
+                const decodedUser = decode(token);
+                try {
+                    const userDetails = await userApi.get(); // Gọi API để lấy thông tin chi tiết người dùng
+                    setUser({ ...decodedUser, ...userDetails });
+                } catch (error) {
+                    console.error('Error fetching user details:', error);
+                    setUser(decodedUser); // Trong trường hợp lỗi, chỉ sử dụng thông tin từ JWT
+                }
+            }
+        };
+
+        fetchUserDetails();
     }, []);
 
     const login = (token) => {

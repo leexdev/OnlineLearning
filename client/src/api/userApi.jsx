@@ -15,7 +15,11 @@ const userApi = {
         const url = '/Account/get-all';
         return await axiosClient.post(url);
     },
-};
 
+    async get() {
+        const url = '/Account/get-user';
+        return await axiosClient.get(url);
+    },
+};
 
 export default userApi;

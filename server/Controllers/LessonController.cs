@@ -42,6 +42,19 @@ namespace server.Controllers
             var lessonDto = lessons.Select(l => l.ToLessonDto());
             return Ok(lessonDto);
         }
+
+        [HttpGet("get-by-id/{id:int}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var lesson = await _lessonRepo.GetByIdAsync(id);
+            if (lesson == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(lesson.ToLessonDto());
+        }
+
         [HttpGet("{lessonId}/video")]
         public async Task<IActionResult> GetLessonVideo(int lessonId)
         {

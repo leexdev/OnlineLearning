@@ -1,6 +1,7 @@
 import React from 'react';
+import images from '~/assets/images';
 
-const UserButton = ({ onClick }) => {
+const UserButton = ({user ,onClick }) => {
     return (
         <button
             type="button"
@@ -11,12 +12,12 @@ const UserButton = ({ onClick }) => {
         >
             <img
                 className="w-8 h-8 md:mr-3 rounded-full border"
-                src="/docs/images/people/profile-picture-3.jpg"
+                src={(user.avatar) ? user.avatar : images.user }
                 alt="user photo"
             />
             <span className="hidden xl:block">
                 Chào em! <br />
-                Nguyễn Văn A
+                {user.name}
             </span>
         </button>
     );

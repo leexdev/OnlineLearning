@@ -4,7 +4,8 @@ import UserDropdown from './UserDropdown';
 import MobileMenuButton from './MobileMenuButton';
 import AuthContext from '~/context/AuthContext';
 
-const LoginSuccess = () => {
+const LoginSuccess = ({ user }) => {
+    console.log(user)
     const { logout } = useContext(AuthContext);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
@@ -28,8 +29,8 @@ const LoginSuccess = () => {
 
     return (
         <div className="relative flex md:block" ref={dropdownRef}>
-            <UserButton onClick={toggleDropdown} />
-            {dropdownOpen && <UserDropdown onLogout={logout} />}
+            <UserButton user={user} onClick={toggleDropdown} />
+            {dropdownOpen && <UserDropdown user={user} onLogout={logout} />}
             <MobileMenuButton />
         </div>
     );

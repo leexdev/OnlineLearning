@@ -16,7 +16,7 @@ const Header = () => {
                     <img src={images.logo} className="h-12 mb-3" alt="Logo" />
                 </Link>
                 <div className="flex items-center md:order-2 md:space-x-0 rtl:space-x-reverse">
-                    {user ? <LoginSuccess /> : <NotLogin />}
+                    {user ? <LoginSuccess user={user}/> : <NotLogin />}
                 </div>
                 <Navbar />
             </div>

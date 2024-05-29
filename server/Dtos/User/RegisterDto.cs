@@ -11,6 +11,8 @@ namespace server.Dtos.User
         [Required(ErrorMessage ="Địa chỉ Email không được để trống")]
         [EmailAddress(ErrorMessage = "Địa chỉ Email không hợp lệ")]
         public string? Email { get; set; }
+        [Required(ErrorMessage ="Họ tên không được để trống")]
+        public string? Name { get; set; }
         [Required(ErrorMessage ="Mật khẩu không được để trống")]
         [RegularExpression("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*\\W).{8,}$",
         ErrorMessage = "Mật khẩu phải bao gồm ít nhất một ký tự chữ hoa, một ký tự chữ thường, một số, một ký tự đặc biệt và ít nhất 8 ký tự.")]

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using server.Dtos.User;
 using server.Extensions;
 using server.Interfaces;
@@ -20,14 +21,14 @@ namespace server.Controllers
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository _userRepo;
         private readonly UserManager<User> _userManager;
         private readonly IFireBaseService _firebaseService;
         private readonly IFileService _fileService;
 
-        public AccountController(IUserRepository userRepository, UserManager<User> userManager, IFireBaseService firebaseService, IFileService fileService)
+        public AccountController(IUserRepository userRepo, UserManager<User> userManager, IFireBaseService firebaseService, IFileService fileService)
         {
-            _userRepository = userRepository;
+            _userRepo = userRepo;
             _userManager = userManager;
             _fileService = fileService;
             _firebaseService = firebaseService;
@@ -50,7 +51,7 @@ namespace server.Controllers
                 return BadRequest(new ValidationProblemDetails(this.ModelState));
             }
 
-            var (succeeded, error, userDto) = await _userRepository.CheckUserLoginAsync(loginDto);
+            var (succeeded, error, userDto) = await _userRepo.CheckUserLoginAsync(loginDto);
 
             if (!succeeded)
                 return Unauthorized(error);
@@ -68,7 +69,7 @@ namespace server.Controllers
                 return BadRequest(new ValidationProblemDetails(this.ModelState));
             }
 
-            var (succeeded, errors, userDto) = await _userRepository.RegisterUserAsync(registerDto);
+            var (succeeded, errors, userDto) = await _userRepo.RegisterUserAsync(registerDto);
 
             if (!succeeded)
             {
@@ -83,7 +84,7 @@ namespace server.Controllers
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
-            var users = await _userRepository.GetAllAsync();
+            var users = await _userRepo.GetAllAsync();
 
             var userDtos = new List<UserDto>();
 
@@ -95,6 +96,7 @@ namespace server.Controllers
                     Id = user.Id,
                     Email = user.Email,
                     PhoneNumber = user.PhoneNumber,
+                    Name = user.Name,
                     BirthDay = user.BirthDay,
                     Sex = user.Sex,
                     Avatar = user.Avatar,
@@ -109,7 +111,7 @@ namespace server.Controllers
         [HttpPost("changeroles/{id}")]
         public async Task<IActionResult> ChangeRoles(string id, [FromBody] string[] newRoles)
         {
-            var user = await _userRepository.GetUserByIdAsync(id);
+            var user = await _userRepo.GetUserByIdAsync(id);
 
             if (user == null)
             {
@@ -118,14 +120,14 @@ namespace server.Controllers
 
             foreach (var role in newRoles)
             {
-                var roleExists = await _userRepository.RoleExistsAsync(role);
+                var roleExists = await _userRepo.RoleExistsAsync(role);
                 if (!roleExists)
                 {
                     return BadRequest($"Vai trò '{role}' không tồn tại.");
                 }
             }
 
-            var result = await _userRepository.ChangeUserRolesAsync(user, newRoles);
+            var result = await _userRepo.ChangeUserRolesAsync(user, newRoles);
 
             if (result)
             {
@@ -137,10 +139,25 @@ namespace server.Controllers
             }
         }
 
+        [HttpGet("get-user")]
+        [Authorize]
+        public async Task<IActionResult> GetUser()
+        {
+            var userName = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(userName);
+            var userModel = await _userRepo.GetUserByIdAsync(user.Id);
+            if (userModel == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user.ToUserDto());
+        }
+
         [HttpPut("update/user{id:int}")]
         public async Task<IActionResult> Update(string id, UpdateUserDto userDto)
         {
-            var user = await _userRepository.UpdateAsync(id, userDto.ToUserFromUpdate());
+            var user = await _userRepo.UpdateAsync(id, userDto.ToUserFromUpdate());
             if (user == null)
             {
                 return NotFound();
@@ -155,7 +172,7 @@ namespace server.Controllers
         {
             var userName = User.GetUsername();
             var user = await _userManager.FindByNameAsync(userName);
-            var userModel = await _userRepository.UpdateAsync(user.Id, userDto.ToUserFromUpdate());
+            var userModel = await _userRepo.UpdateAsync(user.Id, userDto.ToUserFromUpdate());
             if (userModel == null)
             {
                 return NotFound();
@@ -167,7 +184,7 @@ namespace server.Controllers
         [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var user = await _userRepository.DeleteAsync(id);
+            var user = await _userRepo.DeleteAsync(id);
             if (user == null)
             {
                 return NotFound();
