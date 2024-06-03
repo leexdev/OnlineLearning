@@ -129,14 +129,25 @@ namespace server.Repository
                 return null;
             }
 
-            user.Email = userModel.Email;
             user.PhoneNumber = userModel.PhoneNumber;
             user.Name = userModel.Name;
             user.BirthDay = userModel.BirthDay;
             user.Sex = userModel.Sex;
-            user.Avatar = userModel.Avatar;
 
             await _userManager.UpdateAsync(user);
+            return user;
+        }
+
+        public async Task<User?> ChangePassword(string id, string currentPassword, string newPassword)
+        {
+            var user = await GetUserByIdAsync(id);
+            if (user == null)
+            {
+                return null;
+            }
+
+            await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
             return user;
         }
     }

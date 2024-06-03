@@ -214,12 +214,35 @@ namespace server.Controllers
                 user.Avatar = urlImage;
                 await _userManager.UpdateAsync(user);
 
-                return Ok(user.ToUserDto());
+                return Ok(new { avatar = urlImage });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Có lỗi xảy ra khi tải lên ảnh: {ex.Message}");
             }
         }
+
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto passwordDto)
+        {
+            var userName = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var updateResult = await _userRepo.ChangePassword(user.Id, passwordDto.CurrentPassword, passwordDto.Password);
+
+            if (updateResult == null)
+            {
+                return BadRequest("Mật khẩu hiện tại không chính xác");
+            }
+
+            return Ok("Thay đổi mật khẩu thành công");
+        }
+
     }
 }

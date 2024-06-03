@@ -32,17 +32,11 @@ public class FireBaseService : IFireBaseService
                 ThrowOnCancel = true,
             });
 
+        // Xóa tệp cũ không đồng bộ
         if (!string.IsNullOrEmpty(existingFileUrl))
         {
-            try
-            {
-                var relativePath = ConvertUrlToRelativePath(existingFileUrl);
-                await firebaseStorage.Child(relativePath).DeleteAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Có lỗi xảy ra khi xóa file cũ", ex);
-            }
+            var relativePath = ConvertUrlToRelativePath(existingFileUrl);
+            _ = DeleteFileAsync(firebaseStorage, relativePath);
         }
 
         var newFileName = $"{Guid.NewGuid()}_{newFile.FileName}";
@@ -59,6 +53,18 @@ public class FireBaseService : IFireBaseService
         }
     }
 
+    private async Task DeleteFileAsync(FirebaseStorage firebaseStorage, string relativePath)
+    {
+        try
+        {
+            await firebaseStorage.Child(relativePath).DeleteAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Lỗi khi xóa tệp cũ: {ex.Message}");
+        }
+    }
+
     public string ConvertUrlToRelativePath(string fileUrl)
     {
         var uri = new Uri(fileUrl);
@@ -69,6 +75,8 @@ public class FireBaseService : IFireBaseService
         }
 
         var relativePath = Uri.UnescapeDataString(pathSegments[1]);
+        Console.WriteLine($"Đường dẫn tương đối: {relativePath}");
         return relativePath;
     }
+
 }

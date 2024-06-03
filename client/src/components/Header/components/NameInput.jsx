@@ -1,5 +1,5 @@
 import React from 'react';
-import FormFieldError from './FormFieldError';
+import FormFieldError from '../../FormFieldError';
 
 const NameInput = ({ register, error }) => (
     <div>

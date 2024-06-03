@@ -43,7 +43,19 @@ namespace server.Controllers
             var course = await _courseRepo.GetByIdAsync(id);
             if (course == null)
             {
-                return NoContent();
+                return NotFound();
+            }
+
+            return Ok(course.ToCourseDto());
+        }
+
+        [HttpGet("simple/{id:int}")]
+        public async Task<IActionResult> GetCourseSimple([FromRoute] int id)
+        {
+            var course = await _courseRepo.GetCourseWithoutChildrenAsync(id);
+            if (course == null)
+            {
+                return NotFound();
             }
 
             return Ok(course.ToCourseDto());

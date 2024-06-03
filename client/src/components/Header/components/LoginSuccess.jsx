@@ -5,7 +5,6 @@ import MobileMenuButton from './MobileMenuButton';
 import AuthContext from '~/context/AuthContext';
 
 const LoginSuccess = ({ user }) => {
-    console.log(user)
     const { logout } = useContext(AuthContext);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);

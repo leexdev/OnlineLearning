@@ -17,6 +17,7 @@ namespace server.Interfaces
         Task<User?> GetUserByIdAsync(string userId);
         Task<bool> RoleExistsAsync(string roleName);
         Task<User?> UpdateAsync(string id, User user);
+        Task<User?> ChangePassword(string id, string currentPassword, string newPassword);
         Task<User?> DeleteAsync(string userId);
     }
 }

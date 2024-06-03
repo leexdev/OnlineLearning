@@ -1,3 +1,4 @@
+using Google.Cloud.TextToSpeech.V1;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +10,14 @@ using server.Interfaces;
 using server.Models;
 using server.Repository;
 using server.Service;
+using server.Service.TextToSpeech;
 using server.Service.VnPay;
-
 var builder = WebApplication.CreateBuilder(args);
+
+// Add logging configuration
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -36,8 +42,8 @@ builder.Services.AddSwaggerGen(option =>
             {
                 Reference = new OpenApiReference
                 {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
                 }
             },
             new string[]{}
@@ -94,6 +100,18 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddSingleton<TextToSpeechClient>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var credentialsPath = configuration["GoogleCloud:CredentialsPath"];
+    var clientBuilder = new TextToSpeechClientBuilder
+    {
+        CredentialsPath = credentialsPath
+    };
+    return clientBuilder.Build();
+});
+
+
 builder.Services.AddScoped<IGradeRepository, GradeRepository>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
@@ -115,6 +133,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IFireBaseService, FireBaseService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
+builder.Services.AddScoped<ITextToSpeechService, TextToSpeechService>();
 builder.Services.AddSingleton<VnPayLibrary>();
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -125,8 +144,8 @@ builder.Services.AddCors(options =>
                       policy =>
                       {
                           policy.WithOrigins("*")
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();;
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
                       });
 });
 

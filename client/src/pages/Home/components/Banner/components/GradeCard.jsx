@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const GradeCard = ({ title, subjects, bgColor }) => {
-
     return (
         <div className="thumbnail">
             <div className="max-w-sm mx-1 bg-white rounded-lg shadow-xl">
@@ -18,11 +17,7 @@ const GradeCard = ({ title, subjects, bgColor }) => {
                 {subjects.map((subject, index) => (
                     <Link 
                         to={`/subject/${subject.id}`} 
-                        state={{
-                            subjectName: subject.name,
-                            gradeName: title,
-                            subjectId: subject.id
-                        }}
+                        state={{ subjectName: subject.name, gradeName: title }}
                         key={subject.id}
                         className={`px-2 py-1 flex items-center justify-between text-xl font-bold text-gray-700 cursor-pointer ${index < subjects.length - 1 ? 'border-b-2' : ''}`}
                     >

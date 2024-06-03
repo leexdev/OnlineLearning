@@ -19,7 +19,7 @@ const UserDropdown = ({ user, onLogout }) => {
                     </div>
                 )}
                 <ul>
-                    <DropdownLink to="/my-profile">Thông tin cá nhân</DropdownLink>
+                    <DropdownLink to="/profile">Thông tin cá nhân</DropdownLink>
                     <DropdownLink to="/my-course">Khóa học của tôi</DropdownLink>
                     <DropdownLink to="/my-process">Quá trình học tập</DropdownLink>
                     <DropdownLink to="/" onClick={onLogout}>

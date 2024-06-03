@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Fragment, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Nav from './components/Navbar';
 import Info from './components/Info';
@@ -10,7 +10,9 @@ import lessonCompletedApi from '~/api/lessonCompletedApi';
 import Spinner from '../../components/Spinner';
 import Thumbnail from './components/Thumbnail';
 import AuthContext from '~/context/AuthContext';
-import ErrorModal from '~/components/ErrorModal';
+import MessageModal from '~/components/MessageModal';
+import userCourseApi from '~/api/userCourseApi';
+import images from '~/assets/images';
 
 const Course = () => {
     const { id } = useParams();
@@ -21,6 +23,7 @@ const Course = () => {
     const [completedLessons, setCompletedLessons] = useState([]);
     const [videoUrl, setVideoUrl] = useState(null);
     const [error, setError] = useState(null);
+    const [hasPurchased, setHasPurchased] = useState(false);
 
     useEffect(() => {
         const fetchCourse = async () => {
@@ -48,9 +51,24 @@ const Course = () => {
             }
         };
 
+        const fetchUserCourse = async () => {
+            if (!user) {
+                console.error('User not logged in');
+                return;
+            }
+            try {
+                const data = await userCourseApi.get();
+                const purchasedCourse = data.find((course) => course.id === parseInt(id, 10));
+                setHasPurchased(!!purchasedCourse);
+            } catch (error) {
+                console.error('Error fetching user courses:', error);
+            }
+        };
+
         fetchCourse();
         if (user) {
             fetchCompletedLessons();
+            fetchUserCourse();
         }
     }, [id, user]);
 
@@ -85,12 +103,12 @@ const Course = () => {
 
     return (
         <Fragment>
-            {error && <ErrorModal message={error} onClose={() => setError(null)} />} {/* Display error modal */}
+            {error && <MessageModal message={error} title="Lỗi" image={images.sadcat} onClose={() => setError(null)} />} {/* Display error modal */}
             <Header title={course?.title || 'Loading...'} />
             <div className="pt-5">
                 <div className="container">
-                    <Thumbnail course={course} />
-                    <div className="lg:w-2/3">
+                    {!hasPurchased && <Thumbnail course={course} />}
+                    <div className={`lg:w-2/3 ${hasPurchased ? 'w-full' : ''}`}>
                         <Nav />
                         <Info course={course} />
                         <Syllabus

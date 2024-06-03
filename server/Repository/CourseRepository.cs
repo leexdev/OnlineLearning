@@ -104,5 +104,10 @@ namespace server.Repository
             await _context.SaveChangesAsync();
             return course;
         }
+
+        public async Task<Course?> GetCourseWithoutChildrenAsync(int id)
+        {
+            return await _context.Courses.FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
+        }
     }
 }

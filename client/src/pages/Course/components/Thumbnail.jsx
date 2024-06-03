@@ -1,5 +1,6 @@
 import { faClock, faUserPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 
 const Thumbnail = ({ course }) => {
     return (
@@ -32,13 +33,13 @@ const Thumbnail = ({ course }) => {
                                 <span className="new-price text-5xl">{course.price.toLocaleString('vi-VN')}₫</span>
                             </div>
                         )}
-                        <a
-                            href="#!"
+                        <Link
+                            to={`/payment/${course.id}`}
                             className="action-btn mt-2 flex justify-center items-center text-white bg-peach py-2 md:px-10 rounded-xl shadow-lg font-bold uppercase text-md md:text-xl"
                         >
                             <FontAwesomeIcon className="mr-2 md:mr-4" icon={faUserPen}></FontAwesomeIcon>
                             <span>Đăng ký học</span>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>

@@ -14,7 +14,7 @@ const lessonApi = {
     getVideo(lessonId) {
         const url = `/Lesson/${lessonId}/video`;
         return axiosClient.get(url);
-    },
+    }, 
 
     update(data) {
         const url = `/Lesson/update/${data.id}`;

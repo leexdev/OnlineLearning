@@ -10,7 +10,8 @@ import Spinner from '~/components/Spinner';
 import commentApi from '~/api/commentApi';
 import AuthContext from '~/context/AuthContext';
 import lessonCompletedApi from '~/api/lessonCompletedApi';
-import ErrorModal from '~/components/ErrorModal';
+import MessageModal from '~/components/MessageModal';
+import images from '~/assets/images';
 
 const Lesson = () => {
     const { id } = useParams();
@@ -31,7 +32,6 @@ const Lesson = () => {
         const fetchLesson = async () => {
             try {
                 const data = await lessonApi.getVideo(id);
-                console.log(data);
                 if (data.status === 403) {
                     setError(
                         `Rất tiếc, bạn chưa thể xem được bài giảng này. Hãy đăng ký khóa học để xem tất cả các bài giảng không giới hạn nhé!`,
@@ -97,10 +97,7 @@ const Lesson = () => {
 
             if (!isCompleted) {
                 await lessonCompletedApi.add(param);
-                console.log('Lesson completed successfully');
                 setCompletedLessons((prev) => [...prev, param.lessonId]);
-            } else {
-                console.log('Lesson has already been completed');
             }
         } catch (error) {
             console.error('Error marking lesson as completed:', error);
@@ -144,7 +141,6 @@ const Lesson = () => {
     const handleLessonClick = async (lessonId) => {
         try {
             const data = await lessonApi.getVideo(lessonId);
-            console.log(data);
             if (data.status === 403) {
                 setError(
                     `Rất tiếc, bạn chưa thể xem được bài giảng này. Hãy đăng ký khóa học để xem tất cả các bài giảng không giới hạn nhé!`,
@@ -174,7 +170,7 @@ const Lesson = () => {
 
     return (
         <Fragment>
-            {error && <ErrorModal message={error} onClose={() => setError(null)} />} {/* Display error modal */}
+            {error && <MessageModal title="Lỗi" image={images.sadcat} message={error} onClose={() => setError(null)} />} {/* Display error modal */}
             <Sidebar
                 chapters={chapters}
                 activeLessonId={parseInt(id)}

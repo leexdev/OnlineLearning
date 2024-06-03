@@ -29,6 +29,11 @@ namespace server.Repository
             return await _context.Payments.ToListAsync();
         }
 
+        public async Task<UserCourse?> GetByCourseIdAndUserIdAsync(int courseId, string userId)
+        {
+            return await _context.UserCourses.FirstOrDefaultAsync(p => p.CourseId == courseId && p.UserId == userId && p.IsTeacher == false);
+        }
+
         public async Task<Payment?> GetByIdAsync(Guid id)
         {
             var payment = await _context.Payments.FirstOrDefaultAsync(p => p.Id == id);

@@ -1,16 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using server.Dtos.Payment;
 using server.Dtos.UserCourse;
 using server.Extensions;
 using server.Interfaces;
 using server.Mappers;
 using server.Models;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace server.Controllers
 {
@@ -23,7 +23,6 @@ namespace server.Controllers
         private readonly IUserCourseRepository _userCourseRepo;
         private readonly IVnPayService _vnPayService;
         private readonly UserManager<User> _userManager;
-
         public PaymentController(
             ICourseRepository courseRepo,
             IPaymentRepository paymentRepo,
@@ -31,11 +30,11 @@ namespace server.Controllers
             IVnPayService vnPayService,
             UserManager<User> userManager)
         {
-            _vnPayService = vnPayService;
             _courseRepo = courseRepo;
             _paymentRepo = paymentRepo;
-            _userManager = userManager;
             _userCourseRepo = userCourseRepo;
+            _vnPayService = vnPayService;
+            _userManager = userManager;
         }
 
         [HttpGet("get-all")]
@@ -74,6 +73,7 @@ namespace server.Controllers
             return Ok(new { PaymentUrl = paymentUrl });
         }
 
+        [HttpGet("process-payment-response")]
         [HttpPost("process-payment-response")]
         public async Task<IActionResult> ProcessPaymentResponse()
         {
@@ -81,7 +81,7 @@ namespace server.Controllers
 
             if (paymentResponse == null)
             {
-                return BadRequest(new { Error = "Invalid signature" });
+                return Redirect("http://localhost:5173/payment-failure");
             }
 
             if (paymentResponse.Vnp_ResponseCode == "00")
@@ -92,7 +92,7 @@ namespace server.Controllers
 
                 if (payment == null)
                 {
-                    return NotFound();
+                    return Redirect("http://localhost:5173/payment-failure");
                 }
 
                 var userCourse = new CreateUserCourseDto
@@ -104,12 +104,35 @@ namespace server.Controllers
                 await _paymentRepo.UpdateAsync(paymentId, status);
                 await _userCourseRepo.CreateAsync(userCourse.ToUserCourseFromCreate());
 
-                return Ok(new { Message = "Thanh toán thành công" });
+                return Redirect("http://localhost:5173/payment-success");
             }
             else
             {
-                return BadRequest(new { Error = "Thanh toán thất bại" });
+                return Redirect("http://localhost:5173/payment-failure");
             }
+        }
+
+        [HttpGet("check-payment-status/{courseId}")]
+        [Authorize]
+        public async Task<IActionResult> CheckPaymentStatus(int courseId)
+        {
+            var userName = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var userCourse = await _paymentRepo.GetByCourseIdAndUserIdAsync(courseId, user.Id);
+
+            if (userCourse == null)
+            {
+                return Ok(new { IsPaid = false });
+            }
+
+            var isPaid = true;
+            return Ok(new { IsPaid = isPaid });
         }
     }
 }

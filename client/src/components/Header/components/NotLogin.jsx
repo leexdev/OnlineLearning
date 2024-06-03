@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faX } from '@fortawesome/free-solid-svg-icons';
 import Modal from '../../Modal';
-import RegisterForm from '../../RegisterForm';
-import LoginForm from '../../LoginForm';
+import RegisterForm from './RegisterForm';
+import LoginForm from './LoginForm';
 
 const NotLogin = () => {
     const [isLoginOpen, setIsLoginOpen] = useState(false);

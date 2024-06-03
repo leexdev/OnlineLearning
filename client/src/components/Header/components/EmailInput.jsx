@@ -1,5 +1,6 @@
 import React from 'react';
-import FormFieldError from './FormFieldError';
+import FormFieldError from '~/components/FormFieldError';
+
 
 const EmailInput = ({ register, error }) => (
     <div>

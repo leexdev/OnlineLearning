@@ -32,5 +32,13 @@ namespace server.Mappers
                 Sex = userDto.Sex
             };
         }
+
+        public static User ToPasswordFromUpdate(this ChangePasswordDto userDto)
+        {
+            return new User
+            {
+                PasswordHash = userDto.Password
+            };
+        }
     }
 }

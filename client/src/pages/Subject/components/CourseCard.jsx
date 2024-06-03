@@ -52,9 +52,9 @@ const CourseCard = ({ course }) => {
                             >
                                 Xem thêm
                             </Link>
-                            <a href="#!" className="mr-3 shadow-md block bg-orange-600 p-2 xl:py-2 xl:px-7 rounded-xl">
+                            <Link to={`/payment/${course.id}`} className="mr-3 shadow-md block bg-orange-600 p-2 xl:py-2 xl:px-7 rounded-xl">
                                 Đăng ký
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>

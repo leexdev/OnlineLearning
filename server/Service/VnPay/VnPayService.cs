@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using server.Helpers;
@@ -36,25 +36,38 @@ namespace server.Service
             vnPayLibrary.AddRequestData("vnp_TxnRef", request.PaymentId.ToString());
 
             var paymentUrl = vnPayLibrary.CreateRequestUrl(_settings.VnpUrl, _settings.HashSecret);
-            return paymentUrl;
+            return await Task.FromResult(paymentUrl);
         }
 
         public async Task<PaymentResponse> ProcessPaymentResponseAsync(HttpContext httpContext)
         {
-            using (var reader = new StreamReader(httpContext.Request.Body))
+            var requestQuery = httpContext.Request.Query;
+            var response = new PaymentResponse
             {
-                var requestBody = await reader.ReadToEndAsync();
-                var responseData = JsonConvert.DeserializeObject<PaymentResponse>(requestBody);
+                Vnp_TxnRef = requestQuery["vnp_TxnRef"],
+                Vnp_Amount = long.Parse(requestQuery["vnp_Amount"]),
+                Vnp_OrderInfo = requestQuery["vnp_OrderInfo"],
+                Vnp_ResponseCode = requestQuery["vnp_ResponseCode"],
+                Vnp_TransactionNo = requestQuery["vnp_TransactionNo"],
+                PaymentId = Guid.Parse(requestQuery["vnp_TxnRef"])
+            };
 
-                // Validate signature
-                var vnPayLibrary = new VnPayLibrary();
-                if (!vnPayLibrary.ValidateSignature(httpContext.Request.Query["vnp_SecureHash"], _settings.HashSecret))
-                {
-                    httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    return null;
-                }
-                return responseData;
+            var vnPayLibrary = new VnPayLibrary();
+            foreach (var key in requestQuery.Keys)
+            {
+                vnPayLibrary.AddResponseData(key, requestQuery[key]);
             }
+
+            var receivedHash = requestQuery["vnp_SecureHash"]; ;
+
+            if (!vnPayLibrary.ValidateSignature(receivedHash, _settings.HashSecret))
+            {
+                httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                return null;
+            }
+
+            return await Task.FromResult(response);
         }
+
     }
 }

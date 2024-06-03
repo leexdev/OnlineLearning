@@ -1,11 +1,10 @@
-// Spinner.jsx
 import React from 'react';
 import { ClipLoader } from 'react-spinners';
 
-const Spinner = () => {
+const Spinner = ({opacity}) => {
     return (
-        <div className="fixed top-1/2 left-1/2 ">
-            <ClipLoader size={50} color={"#123abc"} loading={true} />
+        <div className={`fixed inset-0 flex items-center justify-center bg-opacity-50 z-50 ${opacity ? opacity : ""}`}>
+            <ClipLoader size={50} color={"#ccc"} loading={true} />
         </div>
     );
 };

@@ -11,6 +11,11 @@ const courseApi = {
         return axiosClient.get(url);
     },
 
+    getCourse(id) {
+        const url = `/Course/simple/${id}`;
+        return axiosClient.get(url);
+    },
+
     getBySubjectId(subjectId) {
         const url = `/Course/get-by-subjectId/${subjectId}`;
         return axiosClient.get(url);

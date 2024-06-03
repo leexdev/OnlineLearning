@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace server.Service.VnPay
 {
@@ -60,14 +59,18 @@ namespace server.Service.VnPay
 
         public bool ValidateSignature(string secureHash, string hashSecret)
         {
+            var checkHash = CalculateSignature(hashSecret);
+            return checkHash == secureHash;
+        }
+
+        public string CalculateSignature(string hashSecret)
+        {
             var data = string.Join("&", _responseData.Where(kvp => kvp.Key != "vnp_SecureHash").Select(kvp => $"{kvp.Key}={Uri.EscapeDataString(kvp.Value)}"));
             using (var hmac = new HMACSHA512(Encoding.UTF8.GetBytes(hashSecret)))
             {
                 var checkHashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(data));
-                var checkHash = BitConverter.ToString(checkHashBytes).Replace("-", "").ToLowerInvariant();
-                return checkHash == secureHash;
+                return BitConverter.ToString(checkHashBytes).Replace("-", "").ToLowerInvariant();
             }
         }
     }
-
 }
