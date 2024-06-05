@@ -25,7 +25,6 @@ const Lesson = () => {
     const [loading, setLoading] = useState(true);
     const [duration, setDuration] = useState(0);
     const [completedLessons, setCompletedLessons] = useState([]);
-    const [videoUrl, setVideoUrl] = useState(null);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -40,6 +39,7 @@ const Lesson = () => {
                     return;
                 }
                 setLesson(data);
+                console.log(data);
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
@@ -170,7 +170,8 @@ const Lesson = () => {
 
     return (
         <Fragment>
-            {error && <MessageModal title="Lỗi" image={images.sadcat} message={error} onClose={() => setError(null)} />} {/* Display error modal */}
+            {error && <MessageModal title="Lỗi" image={images.sadcat} message={error} onClose={() => setError(null)} />}{' '}
+            {/* Display error modal */}
             <Sidebar
                 chapters={chapters}
                 activeLessonId={parseInt(id)}
@@ -186,6 +187,8 @@ const Lesson = () => {
                             description={lesson.description}
                             duration={duration}
                             comments={lesson.comments}
+                            lessonId={parseInt(id)}
+                            courseId={chapters[0]?.courseId} // Truyền courseId từ chapters
                         />
                         <Comment
                             totalComments={lesson.comments.length}

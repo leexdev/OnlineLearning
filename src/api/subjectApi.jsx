@@ -1,29 +1,29 @@
 import axiosClient from './axiosClient';
 
 const subjectApi = {
-    getAll(params) {
+    async getAll(params) {
         const url = '/Subject/get-all';
-        return axiosClient.get(url, { params });
+        return await axiosClient.get(url, { params });
     },
 
-    get(id) {
+    async get(id) {
         const url = `/Subject/get-by-id/${id}`;
-        return axiosClient.get(url);
+        return await axiosClient.get(url);
     },
 
-    add(data) {
+    async add(data) {
         const url = '/Subject/create';
-        return axiosClient.post(url, data);
+        return await axiosClient.post(url, data);
     },
 
-    update(data) {
+    async update(data) {
         const url = `/Subject/update/${data.id}`;
-        return axiosClient.patch(url, data);
+        return await axiosClient.patch(url, data);
     },
 
-    delete(id) {
+    async delete(id) {
         const url = `/Subject/delete/${id}`;
-        return axiosClient.patch(url);
+        return await axiosClient.patch(url);
     },
 };
 

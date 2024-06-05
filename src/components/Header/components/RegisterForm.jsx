@@ -27,6 +27,7 @@ const RegisterForm = ({ switchToLogin, onClose }) => {
         }
         try {
             await userApi.register({
+                name: data.name,
                 email: data.email,
                 password: data.password,
             });

@@ -1,29 +1,29 @@
 import axiosClient from './axiosClient';
 
 const lessonApi = {
-    getAll(params) {
+    async getAll(params) {
         const url = '/Lesson/get-all';
-        return axiosClient.get(url, { params });
+        return await axiosClient.get(url, { params });
     },
 
-    get(id) {
+    async get(id) {
         const url = `/Lesson/get-by-id/${id}`;
-        return axiosClient.get(url);
+        return await axiosClient.get(url);
     },
 
-    getVideo(lessonId) {
+    async getVideo(lessonId) {
         const url = `/Lesson/${lessonId}/video`;
-        return axiosClient.get(url);
-    }, 
-
-    update(data) {
-        const url = `/Lesson/update/${data.id}`;
-        return axiosClient.patch(url, data);
+        return await axiosClient.get(url);
     },
 
-    delete(id) {
+    async update(data) {
+        const url = `/Lesson/update/${data.id}`;
+        return await axiosClient.patch(url, data);
+    },
+
+    async delete(id) {
         const url = `/Lesson/delete/${id}`;
-        return axiosClient.patch(url);
+        return await axiosClient.patch(url);
     },
 };
 

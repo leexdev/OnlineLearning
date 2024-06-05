@@ -1,10 +1,15 @@
 import axiosClient from './axiosClient';
 
 const userCourseApi = {
-    get() {
+    async get() {
         const url = '/UserCourse/get-by-userid';
-        return axiosClient.get(url);
-    }
+        return await axiosClient.get(url);
+    },
+
+    async hasAccess(courseId) {
+        const url = `/UserCourse/has-access/${courseId}`;
+        return await axiosClient.get(url);
+    },
 };
 
 export default userCourseApi;
