@@ -16,6 +16,7 @@ namespace server.Mappers
                 Id = questionModel.Id,
                 Content = questionModel.Content,
                 LessonId = questionModel.LessonId,
+                Explanation = questionModel.Explanation,
                 Answers = questionModel.Answers.Select(a => a.ToAnswerDto()).ToList(),
             };
         }
@@ -25,7 +26,8 @@ namespace server.Mappers
             return new Question
             {
                 Content = questionDto.Content,
-                LessonId = questionDto.LessonId
+                LessonId = questionDto.LessonId,
+                Explanation = questionDto.Explanation
             };
         }
 

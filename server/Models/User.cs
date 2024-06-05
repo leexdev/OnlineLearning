@@ -20,5 +20,6 @@ namespace server.Models
         public List<Rating> Ratings { get; set; } = new List<Rating>();
         public List<Comment> Comments { get; set; } = new List<Comment>();
         public List<LessonCompleted> LessonCompletes { get; set; } = new List<LessonCompleted>();
+        public List<UserAnswerHistory> UserAnswerHistories { get; set; } = new List<UserAnswerHistory>();
     }
 }

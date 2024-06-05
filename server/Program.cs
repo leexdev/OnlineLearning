@@ -129,6 +129,7 @@ builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<IAnswerRepository, AnswerRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<ILessonCompletedRepository, LessonCompletedRepository>();
+builder.Services.AddScoped<IUserAnswerHistoryRepository, UserAnswerHistoryRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IFireBaseService, FireBaseService>();
 builder.Services.AddScoped<IFileService, FileService>();

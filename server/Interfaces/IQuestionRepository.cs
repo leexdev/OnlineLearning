@@ -10,9 +10,10 @@ namespace server.Interfaces
     {
         Task<List<Question>> GetAllAsync();
         Task<Question?> GetByIdAsync(int id);
+        Task<List<Question>> GetByLessonId(int lessonId);
         Task<Question> CreateAsync(Question questionModel);
         Task<Question?> UpdateAsync(int id, Question questionModel);
-        Task<Question?> DeleAsync(int id);
+        Task<Question?> DeleteAsync(int id);
         Task<bool> QuestionExists(int id);
 
     }

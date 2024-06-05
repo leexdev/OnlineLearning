@@ -30,6 +30,7 @@ const Course = () => {
             try {
                 const data = await courseApi.get(id);
                 setCourse(data);
+                localStorage.setItem('chapters', JSON.stringify(data.chapters));
             } catch (error) {
                 console.error('Error fetching course:', error);
             } finally {
@@ -103,12 +104,13 @@ const Course = () => {
 
     return (
         <Fragment>
-            {error && <MessageModal message={error} title="Lỗi" image={images.sadcat} onClose={() => setError(null)} />} {/* Display error modal */}
+            {error && <MessageModal message={error} title="Lỗi" image={images.sadcat} onClose={() => setError(null)} />}{' '}
+            {/* Display error modal */}
             <Header title={course?.title || 'Loading...'} />
-            <div className="pt-5">
+            <div className="pt-5 pb-10">
                 <div className="container">
                     {!hasPurchased && <Thumbnail course={course} />}
-                    <div className={`lg:w-2/3 ${hasPurchased ? 'w-full' : ''}`}>
+                    <div className={`lg:w-2/3 lg:px-8 ${hasPurchased ? 'w-full' : ''}`}>
                         <Nav />
                         <Info course={course} />
                         <Syllabus

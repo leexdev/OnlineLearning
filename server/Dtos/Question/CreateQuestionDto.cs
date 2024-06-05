@@ -8,6 +8,7 @@ namespace server.Dtos.Question
     public class CreateQuestionDto
     {
         public string Content { get; set; } = string.Empty;
+        public string? Explanation { get; set; }
         public int LessonId { get; set; }
     }
 }

@@ -2,11 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using server.Dtos.Question;
+using server.Dtos.UserAnswerHistory;
+using server.Extensions;
 using server.Interfaces;
 using server.Mappers;
+using server.Models;
 
 namespace server.Controllers
 {
@@ -27,6 +32,14 @@ namespace server.Controllers
         public async Task<IActionResult> GetAll()
         {
             var questions = await _questionRepo.GetAllAsync();
+            var questionDto = questions.Select(q => q.ToQuestionDto());
+            return Ok(questionDto);
+        }
+
+        [HttpGet("get-by-lessonid/{lessonId:int}")]
+        public async Task<IActionResult> GetByLessonId(int lessonId)
+        {
+            var questions = await _questionRepo.GetByLessonId(lessonId);
             var questionDto = questions.Select(q => q.ToQuestionDto());
             return Ok(questionDto);
         }
@@ -74,7 +87,7 @@ namespace server.Controllers
         [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var question = await _questionRepo.DeleAsync(id);
+            var question = await _questionRepo.DeleteAsync(id);
             if (question == null)
             {
                 return NotFound();

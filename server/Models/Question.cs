@@ -11,8 +11,10 @@ namespace server.Models
     {
         public int Id { get; set; }
         public string Content { get; set; } = string.Empty;
+        public string? Explanation { get; set; }
         public int LessonId { get; set; }
         public Lesson? Lesson { get; set; }
         public List<Answer> Answers { get; set; } = new List<Answer>();
+        public List<UserAnswerHistory> UserAnswerHistories { get; set; } = new List<UserAnswerHistory>();
     }
 }

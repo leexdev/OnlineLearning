@@ -1,34 +1,34 @@
 import axiosClient from './axiosClient';
 
 const commentApi = {
-    getAll(params) {
+    async getAll(params) {
         const url = '/Lesson/get-all';
-        return axiosClient.get(url, { params });
+        return await axiosClient.get(url, { params });
     },
 
-    get(id) {
+    async get(id) {
         const url = `/Lesson/get-by-id/${id}`;
-        return axiosClient.get(url);
+        return await axiosClient.get(url);
     },
 
-    add(data) {
+    async add(data) {
         const url = '/Lesson/create';
-        return axiosClient.post(url, data);
+        return await axiosClient.post(url, data);
     },
 
-    update(data) {
+    async update(data) {
         const url = `/Lesson/update/${data.id}`;
-        return axiosClient.patch(url, data);
+        return await axiosClient.patch(url, data);
     },
 
-    delete(id) {
+    async delete(id) {
         const url = `/Lesson/delete/${id}`;
-        return axiosClient.patch(url);
+        return await axiosClient.patch(url);
     },
 
-    getComments(lessonId, page, pageSize = 5) {
+    async getComments(lessonId, page, pageSize = 5) {
         const url = `/Comment/get-by-lessonid`;
-        return axiosClient.get(url, { params: { lessonId, page, pageSize } });
+        return await axiosClient.get(url, { params: { lessonId, page, pageSize } });
     },
 };
 

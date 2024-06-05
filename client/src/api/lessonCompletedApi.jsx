@@ -1,20 +1,20 @@
 import axiosClient from './axiosClient';
 
 const lessonCompletedApi = {
-    getAll(params) {
+    async getAll(params) {
         const url = '/LessonCompleted/get-all';
-        return axiosClient.get(url, { params });
+        return await axiosClient.get(url, { params });
     },
 
-    get(params) {
+    async get(params) {
         const url = `/LessonCompleted/get-by-userid`;
-        return axiosClient.get(url, {params});
+        return await axiosClient.get(url, { params });
     },
 
-    add(data) {
+    async add(data) {
         const url = '/LessonCompleted/create';
-        return axiosClient.post(url, data);
-    }
+        return await axiosClient.post(url, data);
+    },
 };
 
 export default lessonCompletedApi;

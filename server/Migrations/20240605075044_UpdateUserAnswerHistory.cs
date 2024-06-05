@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace server.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class UpdateUserAnswerHistory : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -525,24 +525,70 @@ namespace server.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserAnswerHistories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    QuestionId = table.Column<int>(type: "int", nullable: false),
+                    IsCorrect = table.Column<bool>(type: "bit", nullable: false),
+                    QuestionId1 = table.Column<int>(type: "int", nullable: true),
+                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAnswerHistories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserAnswerHistories_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserAnswerHistories_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UserAnswerHistories_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UserAnswerHistories_Questions_QuestionId1",
+                        column: x => x.QuestionId1,
+                        principalTable: "Questions",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1e1370a2-5840-4214-89bb-79000080cdb2", null, "User", "USER" },
-                    { "3a50900a-1325-48ca-8ef4-c6e89f1f5b11", null, "Teacher", "TEACHER" },
-                    { "61357007-2ad0-48ce-a09b-ce7cccc7181f", null, "Admin", "ADMIN" }
+                    { "52c66016-c30c-4807-9f59-36b6f8c04360", null, "User", "USER" },
+                    { "dcaf3d7b-d83a-454f-a051-53c2d6ef8f6c", null, "Admin", "ADMIN" },
+                    { "f1575852-f793-49eb-9e65-885b5df2c43a", null, "Teacher", "TEACHER" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "Avatar", "BirthDay", "ConcurrencyStamp", "Email", "EmailConfirmed", "IsDeleted", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Sex", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "0bb7b44d-f20e-4aef-bedc-57b4b882df29", 0, null, null, "1399e129-66c5-4d77-bd55-afef3eb6edf4", "lepro2883@gmail.com", false, false, true, null, "Nguyễn Ngọc Lễ", "LEPRO2883@GMAIL.COM", "LEPRO2883@GMAIL.COM", "AQAAAAIAAYagAAAAEEHh3uTdVYFgLZ3+nWXxYERi430UvwZ9tTXiVNzF5KherzygSzTgVIOQ6Ee9uXEEaQ==", null, false, "OBRX4Y5MSYCTD66FFMSWJHQDVWVWYMIF", null, false, "lepro2883@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "Grades",
                 columns: new[] { "Id", "CreatedAt", "IsDeleted", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1668), false, "Tiền lớp 1", new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1684) },
-                    { 2, new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1687), false, "Lớp 1", new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1687) },
-                    { 3, new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1688), false, "Lớp 2", new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1689) }
+                    { 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4923), false, "Tiền lớp 1", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4935) },
+                    { 2, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4939), false, "Lớp 1", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4939) },
+                    { 3, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4940), false, "Lớp 2", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4941) }
                 });
 
             migrationBuilder.InsertData(
@@ -550,9 +596,9 @@ namespace server.Migrations
                 columns: new[] { "Id", "CreatedAt", "GradeId", "IsDeleted", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1833), 1, false, "Toán học", new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1834) },
-                    { 2, new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1837), 1, false, "Tiếng Việt", new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1838) },
-                    { 3, new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1839), 2, false, "Tiếng Anh", new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1839) }
+                    { 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4974), 1, false, "Toán học", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4975) },
+                    { 2, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4979), 1, false, "Tiếng Việt", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4979) },
+                    { 3, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4981), 2, false, "Tiếng Anh", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4981) }
                 });
 
             migrationBuilder.InsertData(
@@ -560,20 +606,36 @@ namespace server.Migrations
                 columns: new[] { "Id", "CreatedAt", "Description", "DiscountId", "ImageUrl", "IsDeleted", "Name", "NewPrice", "Price", "SubjectId", "Title", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1869), "Toán học tiền lớp 1", null, "https://example.com/course-image.jpg", false, "Toán học tiền lớp 1", 80, 100, 1, "Toán học tiền lớp 1", new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1869) },
-                    { 2, new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1876), "Tiếng Việt tiền lớp 1", null, "https://example.com/course-image1.jpg", false, "Tiếng Việt tiền lớp 1", 50, 100, 2, "Tiếng Việt tiền lớp 1", new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1876) },
-                    { 3, new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1878), "Tiếng Anh lớp 1", null, "https://example.com/course-image2.jpg", false, "Tiếng Anh lớp 1", 80, 200, 3, "Tiếng Anh lớp 1", new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1878) }
+                    { 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5014), "Toán học tiền lớp 1", null, "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/b91e_t12.png?alt=media&token=fb7719db-438e-4731-9a33-b85c8236e906", false, "Toán học tiền lớp 1", 80000, 100000, 1, "Toán học tiền lớp 1", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5015) },
+                    { 2, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5021), "Tiếng Việt tiền lớp 1", null, "https://example.com/course-image1.jpg", false, "Tiếng Việt tiền lớp 1", 50, 100, 2, "Tiếng Việt tiền lớp 1", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5021) },
+                    { 3, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5023), "Tiếng Anh lớp 1", null, "https://example.com/course-image2.jpg", false, "Tiếng Anh lớp 1", 80, 200, 3, "Tiếng Anh lớp 1", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5023) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Chapters",
                 columns: new[] { "Id", "CourseId", "CreatedAt", "IsDeleted", "Name", "UpdatedAt" },
-                values: new object[] { 1, 1, new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1909), false, "Đếm số 10", new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1910) });
+                values: new object[] { 1, 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5054), false, "Đếm số 10", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5054) });
 
             migrationBuilder.InsertData(
                 table: "Lessons",
                 columns: new[] { "Id", "ChapterId", "CreatedAt", "Description", "IsDeleted", "Order", "Title", "UpdatedAt", "VideoURL", "isFree" },
-                values: new object[] { 1, 1, new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1944), "", false, 0, "Số 2", new DateTime(2024, 5, 28, 13, 2, 34, 356, DateTimeKind.Local).AddTicks(1944), "String", true });
+                values: new object[] { 1, 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5077), "", false, 0, "Số 2", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5078), "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/video_lesson%2FY2meta.app-%C4%90%E1%BB%93ng%20h%E1%BB%93%20%C4%91%E1%BA%BFm%20ng%C6%B0%E1%BB%A3c%205s-(1080p).mp4?alt=media&token=e2a067d7-e061-479a-ae5b-71cba70441d0", true });
+
+            migrationBuilder.InsertData(
+                table: "Questions",
+                columns: new[] { "Id", "Content", "CreatedAt", "LessonId", "UpdatedAt" },
+                values: new object[] { 1, "Lập các phép cộng khác nhau của hai số ghi từ hai miếng bìa ghi số 6 và 9. Có tất cả bao nhiêu phép cộng?", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5104), 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5105) });
+
+            migrationBuilder.InsertData(
+                table: "Answers",
+                columns: new[] { "Id", "Content", "CreatedAt", "IsCorrect", "QuestionId", "UpdatedAt" },
+                values: new object[,]
+                {
+                    { 1, "2", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5137), true, 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5137) },
+                    { 2, "3", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5140), false, 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5141) },
+                    { 3, "4", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5142), false, 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5142) },
+                    { 4, "5", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5143), false, 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5144) }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Answers_QuestionId",
@@ -701,6 +763,26 @@ namespace server.Migrations
                 column: "GradeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserAnswerHistories_QuestionId",
+                table: "UserAnswerHistories",
+                column: "QuestionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAnswerHistories_QuestionId1",
+                table: "UserAnswerHistories",
+                column: "QuestionId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAnswerHistories_UserId",
+                table: "UserAnswerHistories",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAnswerHistories_UserId1",
+                table: "UserAnswerHistories",
+                column: "UserId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserCourses_CourseId",
                 table: "UserCourses",
                 column: "CourseId");
@@ -751,13 +833,16 @@ namespace server.Migrations
                 name: "Ratings");
 
             migrationBuilder.DropTable(
+                name: "UserAnswerHistories");
+
+            migrationBuilder.DropTable(
                 name: "UserCourses");
 
             migrationBuilder.DropTable(
-                name: "Questions");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -20,8 +20,6 @@ namespace server.Service.TextToSpeech
 
         public async Task<byte[]> ConvertTextToSpeechAsync(string text, string languageCode = "vi-VN")
         {
-            _logger.LogInformation("Converting text to speech: {Text}", text);
-
             var input = new SynthesisInput
             {
                 Text = text
@@ -30,23 +28,23 @@ namespace server.Service.TextToSpeech
             var voice = new VoiceSelectionParams
             {
                 LanguageCode = languageCode,
+                Name = "vi-VN-Wavenet-B",
                 SsmlGender = SsmlVoiceGender.Female
             };
 
             var audioConfig = new AudioConfig
             {
-                AudioEncoding = AudioEncoding.Mp3
+                AudioEncoding = AudioEncoding.Mp3,
+                SpeakingRate = 0.75
             };
 
             try
             {
                 var response = await _textToSpeechClient.SynthesizeSpeechAsync(input, voice, audioConfig);
-                _logger.LogInformation("Received audio content with length: {Length}", response.AudioContent.Length);
                 return response.AudioContent.ToByteArray();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while converting text to speech");
                 return null;
             }
         }

@@ -1,40 +1,35 @@
 import axiosClient from './axiosClient';
 
-const courseApi = {
+const questionApi = {
     async getAll(params) {
-        const url = '/Course/get-all';
+        const url = '/Question/get-all';
         return await axiosClient.get(url, { params });
     },
 
     async get(id) {
-        const url = `/Course/get-by-id/${id}`;
+        const url = `/Question/get-by-id/${id}`;
         return await axiosClient.get(url);
     },
 
-    async getCourse(id) {
-        const url = `/Course/simple/${id}`;
-        return await axiosClient.get(url);
-    },
-
-    async getBySubjectId(subjectId) {
-        const url = `/Course/get-by-subjectId/${subjectId}`;
+    async getByLessonId(lessonId) {
+        const url = `/Question/get-by-lessonid/${lessonId}`;
         return await axiosClient.get(url);
     },
 
     async add(data) {
-        const url = '/Course/create';
+        const url = '/Question/create';
         return await axiosClient.post(url, data);
     },
 
     async update(data) {
-        const url = `/Course/update/${data.id}`;
+        const url = `/Question/update/${data.id}`;
         return await axiosClient.patch(url, data);
     },
 
     async delete(id) {
-        const url = `/Course/delete/${id}`;
+        const url = `/Question/delete/${id}`;
         return await axiosClient.patch(url);
     },
 };
 
-export default courseApi;
+export default questionApi;

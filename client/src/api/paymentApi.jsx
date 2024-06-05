@@ -1,19 +1,19 @@
 import axiosClient from './axiosClient';
 
 const paymentApi = {
-    generatePaymentUrl(paymentDto) {
+    async generatePaymentUrl(paymentDto) {
         const url = '/Payment/generate-payment-url';
-        return axiosClient.post(url, paymentDto);
+        return await axiosClient.post(url, paymentDto);
     },
 
-    processPaymentResponse(paymentResponse) {
+    async processPaymentResponse(paymentResponse) {
         const url = '/Payment/process-payment-response';
-        return axiosClient.post(url, paymentResponse);
+        return await axiosClient.post(url, paymentResponse);
     },
 
-    checkPaymentStatus(courseId) {
+    async checkPaymentStatus(courseId) {
         const url = `/Payment/check-payment-status/${courseId}`;
-        return axiosClient.get(url);
+        return await axiosClient.get(url);
     },
 };
 

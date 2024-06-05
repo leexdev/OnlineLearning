@@ -19,7 +19,7 @@ const publicRoutes = [
     { path: '/profile', component: Profile },
     { path: '/my-course', component: MyCourse },
     { path: '/payment/:id', component: Payment },
-    { path: '/question', component: Question },
+    { path: '/lesson/:id/questions', component: Question },
     {
         path: '/payment-success',
         component: () => (

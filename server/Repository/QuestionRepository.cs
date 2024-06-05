@@ -23,7 +23,7 @@ namespace server.Repository
             return questionModel;
         }
 
-        public async Task<Question?> DeleAsync(int id)
+        public async Task<Question?> DeleteAsync(int id)
         {
             var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == id);
             if (question == null)
@@ -50,6 +50,11 @@ namespace server.Repository
             return question;
         }
 
+        public async Task<List<Question>> GetByLessonId(int lessonId)
+        {
+            return await _context.Questions.Include(q => q.Answers).Where(q => q.LessonId == lessonId).ToListAsync();
+        }
+
         public async Task<bool> QuestionExists(int id)
         {
             return await _context.Questions.AnyAsync(q => q.Id == id);
@@ -63,6 +68,7 @@ namespace server.Repository
                 return null;
             }
             question.Content = questionModel.Content;
+            question.Explanation = questionModel.Explanation;
             question.LessonId = questionModel.LessonId;
             await _context.SaveChangesAsync();
             return question;
