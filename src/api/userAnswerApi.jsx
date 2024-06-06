@@ -14,6 +14,11 @@ const userAnswerApi = {
     async getCorrectAnswers() {
         const url = '/UserAnswer/correct-answers';
         return await axiosClient.get(url);
+    },
+
+    async getUserAnswerHistory(courseId) {
+        const url = `/UserAnswer/history/course/${courseId}`;
+        return await axiosClient.get(url);
     }
 };
 

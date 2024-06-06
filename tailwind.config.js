@@ -6,7 +6,7 @@ module.exports = {
         'node_modules/flowbite-react/lib/esm/**/*.js',
         './node_modules/flowbite/**/*.js',
     ],
-
+    darkMode: false,
     theme: {
         extend: {
             colors: {
@@ -44,7 +44,7 @@ module.exports = {
                 '20vh': '20vh',
                 '30vh': '30vh',
                 '40vh': '40vh',
-            }
+            },
         },
     },
     // eslint-disable-next-line no-undef

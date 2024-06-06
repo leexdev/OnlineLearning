@@ -16,6 +16,11 @@ const questionApi = {
         return await axiosClient.get(url);
     },
 
+    async getByCourseId(courseId) {
+        const url = `/Question/get-by-course-id/${courseId}`;
+        return await axiosClient.get(url);
+    },
+
     async add(data) {
         const url = '/Question/create';
         return await axiosClient.post(url, data);
