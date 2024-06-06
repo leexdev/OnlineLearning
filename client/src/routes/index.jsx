@@ -10,6 +10,7 @@ import PaymentSuccess from '~/pages/PaymentSuccess';
 import PaymentFailure from '~/pages/PaymentFailure';
 import PaymentGuard from '~/components/PaymentGuard';
 import Question from '~/pages/Question';
+import MyProcess from '~/pages/MyProcess';
 
 const publicRoutes = [
     { path: '/', component: Home },
@@ -18,6 +19,7 @@ const publicRoutes = [
     { path: '/course/:id', component: Course },
     { path: '/profile', component: Profile },
     { path: '/my-course', component: MyCourse },
+    { path: '/my-process', component: MyProcess },
     { path: '/payment/:id', component: Payment },
     { path: '/lesson/:id/questions', component: Question },
     {

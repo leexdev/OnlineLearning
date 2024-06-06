@@ -34,7 +34,7 @@ const SidebarUser = ({ user, previewSrc, loadFile }) => {
                         </li>
                         <li className="p-3 !mt-0">
                             <NavLink
-                                to="/learning-progress"
+                                to="/my-process"
                                 className={({ isActive }) => `p-3 uppercase ${isActive ? 'border-2 border-peach rounded-lg font-bold text-peach' : 'hover:text-peach hover:font-bold'}`}
                                 style={({ isActive }) => isActive ? { padding: 'calc(0.75rem - 2px)' } : {}}
                             >
