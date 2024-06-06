@@ -33,9 +33,7 @@ const Info = ({ title, description, duration, comments, lessonId, courseId }) =>
         if (accessResponse.hasAccess) {
             navigate(`/lesson/${lessonId}/questions`, { state: { lessonId, courseId } });
         } else {
-            setError(
-                `Bạn chưa mua khóa học này. Hãy đăng ký khóa học để làm bài tập!`,
-            );
+            setError(`Bạn chưa mua khóa học này. Hãy đăng ký khóa học để làm bài tập!`);
         }
     };
 

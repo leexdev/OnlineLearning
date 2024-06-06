@@ -21,7 +21,7 @@ const Question = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [showExplanation, setShowExplanation] = useState(false);
     const [showAnswer, setShowAnswer] = useState(false);
-    const [correctAnswer, setCorrectAnswer] = useState(null); // Thêm trạng thái correctAnswer
+    const [correctAnswer, setCorrectAnswer] = useState(null);
     const audioRef = useRef(null);
     const location = useLocation();
     const { lessonId } = location.state || {};
