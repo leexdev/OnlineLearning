@@ -44,6 +44,14 @@ namespace server.Controllers
             return Ok(questionDto);
         }
 
+        [HttpGet("get-by-course-id/{courseId:int}")]
+        public async Task<IActionResult> GetByCourseId(int courseId)
+        {
+            var questions = await _questionRepo.GetByCourseIdAsync(courseId);
+            var questionDtos = questions.Select(q => q.ToQuestionDto());
+            return Ok(questionDtos);
+        }
+
         [HttpGet("get-by-id/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {

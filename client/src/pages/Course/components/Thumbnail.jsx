@@ -1,8 +1,24 @@
+import React, { useContext, useState } from 'react';
 import { faClock, faUserPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthContext from '~/context/AuthContext';
+import MessageModal from '~/components/MessageModal';
+import images from '~/assets/images';
 
 const Thumbnail = ({ course }) => {
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const [error, setError] = useState(null);
+
+    const handleRegisterClick = () => {
+        if (!user) {
+            setError('Bạn cần đăng nhập để đăng ký khóa học');
+        } else {
+            navigate(`/payment/${course.id}`);
+        }
+    };
+
     return (
         <div className="w-full lg:w-1/3 float-right grid grid-cols-1 mb-10 lg:z-50 top-16">
             <div className="px-1">
@@ -33,16 +49,17 @@ const Thumbnail = ({ course }) => {
                                 <span className="new-price text-5xl">{course.price.toLocaleString('vi-VN')}₫</span>
                             </div>
                         )}
-                        <Link
-                            to={`/payment/${course.id}`}
-                            className="action-btn mt-2 flex justify-center items-center text-white bg-peach py-2 md:px-10 rounded-xl shadow-lg font-bold uppercase text-md md:text-xl"
+                        <button
+                            onClick={handleRegisterClick}
+                            className="action-btn mt-2 flex justify-center items-center text-white bg-peach py-2 md:px-10 rounded-xl shadow-lg font-bold uppercase text-md md:text-xl w-full"
                         >
                             <FontAwesomeIcon className="mr-2 md:mr-4" icon={faUserPen}></FontAwesomeIcon>
                             <span>Đăng ký học</span>
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </div>
+            {error && <MessageModal message={error} title="Lỗi" image={images.sadcat} onClose={() => setError(null)} />}
         </div>
     );
 };

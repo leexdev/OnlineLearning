@@ -69,6 +69,14 @@ namespace server.Controllers
             return Ok(courseDto);
         }
 
+        [HttpGet("get-by-subjectname/{subjectName}")]
+        public async Task<IActionResult> GetBySubjectName([FromRoute] string subjectName)
+        {
+            var courses = await _courseRepo.GetBySubjectName(subjectName);
+            var courseDto = courses.Select(c => c.ToCourseDto()).ToList();
+            return Ok(courseDto);
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> Create(CreateCourseDto courseDto, IFormFile imageFile)
         {

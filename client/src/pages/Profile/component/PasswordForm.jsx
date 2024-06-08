@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import userApi from '~/api/userApi';
 import { Spinner } from 'flowbite-react';
@@ -6,6 +6,7 @@ import MessageModal from '~/components/MessageModal';
 import images from '~/assets/images';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { Helmet } from 'react-helmet';
 
 const PasswordForm = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +47,10 @@ const PasswordForm = () => {
     };
 
     return (
-        <div>
+        <Fragment>
+            <Helmet>
+                <title>Đổi mật khẩu</title>
+            </Helmet>
             {error && <MessageModal title="Lỗi" image={images.sadcat} message={error} onClose={() => setError(null)} />}
             {success && (
                 <MessageModal
@@ -150,7 +154,7 @@ const PasswordForm = () => {
                     Đổi mật khẩu
                 </button>
             </form>
-        </div>
+        </Fragment>
     );
 };
 

@@ -10,12 +10,10 @@ namespace server.Service.TextToSpeech
     public class TextToSpeechService : ITextToSpeechService
     {
         private readonly TextToSpeechClient _textToSpeechClient;
-        private readonly ILogger<TextToSpeechService> _logger;
 
-        public TextToSpeechService(TextToSpeechClient textToSpeechClient, ILogger<TextToSpeechService> logger)
+        public TextToSpeechService(TextToSpeechClient textToSpeechClient)
         {
             _textToSpeechClient = textToSpeechClient ?? throw new ArgumentNullException(nameof(textToSpeechClient));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<byte[]> ConvertTextToSpeechAsync(string text, string languageCode = "vi-VN")

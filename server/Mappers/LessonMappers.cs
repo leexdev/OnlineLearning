@@ -33,6 +33,7 @@ namespace server.Mappers
                 Title = lessonModel.Title,
                 Description = lessonModel.Description,
                 VideoURL = lessonModel.VideoURL,
+                CourseId = lessonModel.Chapter.CourseId,
                 isFree = lessonModel.isFree,
                 ChapterId = lessonModel.ChapterId,
                 Order = lessonModel.Order,

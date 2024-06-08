@@ -13,6 +13,6 @@ namespace server.Dtos.Comment
         public int LessonId { get; set; }
         public string Content { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public UserDto? UserDto { get; set; }
+        public UserCommentDto? UserDto { get; set; }
     }
 }

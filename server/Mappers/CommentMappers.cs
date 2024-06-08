@@ -14,10 +14,9 @@ namespace server.Mappers
             return new CommentDto
             {
                 Id = commentModel.Id,
-                LessonId = commentModel.LessonId,
-                UserId = commentModel.UserId,
                 Content = commentModel.Content,
-                UserDto = commentModel.User.ToUserDto()
+                CreatedAt = commentModel.CreatedAt,
+                UserDto = commentModel.User.ToUserCommentDto()
             };
         }
 

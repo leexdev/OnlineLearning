@@ -11,5 +11,9 @@ namespace server.Dtos.UserAnswerHistory
         public string UserId { get; set; } = string.Empty;
         public int QuestionId { get; set; }
         public bool IsCorrect { get; set; }
+        public int LessonId { get; set; }
+        public string? LessonTitle { get; set; }
+        public string? QuestionContent { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

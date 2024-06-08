@@ -16,7 +16,11 @@ namespace server.Mappers
                 Id = userAnswer.Id,
                 UserId = userAnswer.UserId,
                 QuestionId = userAnswer.QuestionId,
-                IsCorrect = userAnswer.IsCorrect
+                IsCorrect = userAnswer.IsCorrect,
+                CreatedAt = userAnswer.CreatedAt,
+                LessonId = userAnswer.Question.Lesson.Id,
+                LessonTitle = userAnswer.Question.Lesson.Title,
+                QuestionContent = userAnswer.Question.Content
             };
         }
 

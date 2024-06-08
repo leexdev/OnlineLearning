@@ -22,6 +22,14 @@ namespace server.Mappers
                 Avatar = userModel.Avatar
             };
         }
+        public static UserCommentDto ToUserCommentDto(this User userModel)
+        {
+            return new UserCommentDto
+            {
+                Name = userModel.Name,
+                Avatar = userModel.Avatar
+            };
+        }
         public static User ToUserFromUpdate(this UpdateUserDto userDto)
         {
             return new User

@@ -10,6 +10,7 @@ namespace server.Interfaces
     {
         Task<List<Lesson>> GetAllAsync();
         Task<Lesson?> GetByIdAsync(int id);
+        Task<List<Lesson>> GetByCourseIdAsync(int courseId);
         Task<Lesson> CreateAsync(Lesson lessonModel);
         Task<Lesson?> UpdateAsync(int id, Lesson lessonModel);
         Task<Lesson?> DeleteAsync(int id);

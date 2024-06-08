@@ -37,18 +37,6 @@ namespace server.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<UserAnswerHistory>()
-                .HasOne(uah => uah.User)
-                .WithMany()
-                .HasForeignKey(uah => uah.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<UserAnswerHistory>()
-                .HasOne(uah => uah.Question)
-                .WithMany()
-                .HasForeignKey(uah => uah.QuestionId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             List<IdentityRole> roles = new List<IdentityRole>{
             new IdentityRole
             {
@@ -138,7 +126,7 @@ namespace server.Data
             );
 
             builder.Entity<Lesson>().HasData(
-                new Lesson { Id = 1, Title = "Số 2", VideoURL = "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/video_lesson%2FY2meta.app-%C4%90%E1%BB%93ng%20h%E1%BB%93%20%C4%91%E1%BA%BFm%20ng%C6%B0%E1%BB%A3c%205s-(1080p).mp4?alt=media&token=e2a067d7-e061-479a-ae5b-71cba70441d0", isFree = true, ChapterId = 1 }
+                new Lesson { Id = 1, Title = "Số 2", VideoURL = "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/video_lesson%2FY2meta.app-%C4%90%E1%BB%93ng%20h%E1%BB%93%20%C4%91%E1%BA%BFm%20ng%C6%B0%E1%BB%A3c%205s-(1080p).mp4?alt=media&token=e2a067d7-e061-479a-ae5b-71cba70441d0", isFree = true, ChapterId = 1, Order = 1 }
             );
 
             builder.Entity<Question>().HasData(

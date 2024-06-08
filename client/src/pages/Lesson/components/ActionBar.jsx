@@ -1,6 +1,7 @@
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
+import ScrollToTopButton from '~/components/ScrollToTopButton';
 
 const ActionBar = ({ previousLesson, nextLesson, handleLessonClick }) => {
     return (

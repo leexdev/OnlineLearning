@@ -7,6 +7,7 @@ import images from '~/assets/images';
 import { Spinner } from 'flowbite-react';
 import MessageModal from '~/components/MessageModal';
 import FormFieldError from '~/components/FormFieldError';
+import { Helmet } from 'react-helmet';
 
 const ProfileForm = ({ user }) => {
     const { setUser } = useContext(AuthContext);
@@ -50,6 +51,9 @@ const ProfileForm = ({ user }) => {
 
     return (
         <Fragment>
+            <Helmet>
+                <title>Thông tin cá nhân</title>
+            </Helmet>
             {error && <MessageModal title="Lỗi" image={images.sadcat} message={error} onClose={() => setError(null)} />}
             {success && (
                 <MessageModal
@@ -128,13 +132,7 @@ const ProfileForm = ({ user }) => {
                             <input
                                 type="date"
                                 id="birthDay"
-                                {...register('birthDay', {
-                                    validate: {
-                                        validDate: (value) =>
-                                            new Date(value) <= new Date() ||
-                                            'Ngày sinh không thể lớn hơn ngày hiện tại',
-                                    },
-                                })}
+                                {...register('birthDay')}
                                 className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-peach focus:border-peach block w-full p-2.5 ${
                                     errors.birthDay ? 'border-red-500' : ''
                                 }`}
@@ -151,7 +149,7 @@ const ProfileForm = ({ user }) => {
                             <input
                                 type="radio"
                                 value="male"
-                                {...register('sex', { required: 'Giới tính là bắt buộc' })}
+                                {...register('sex')}
                                 className="form-radio text-peach focus:ring-peach"
                             />
                             <span className="ml-2">Nam</span>

@@ -15,11 +15,18 @@ const CourseCard = ({ course }) => {
                 <p className="text-gray-700">{course.description}</p>
             </div>
             <div className="p-4 flex justify-between">
-                <button className="bg-green-500 text-white xl:py-2 xl:px-7 p-2 rounded hover:bg-green-600">
+                <Link
+                    to="/my-course/my-process"
+                    state={{ courseId: course.id, courseName: course.name }}
+                    className="bg-green-500 text-white xl:py-2 xl:px-7 p-2 rounded hover:bg-green-600"
+                >
                     <FontAwesomeIcon className="md:mr-3" icon={faChartPie} />
                     <span>TIẾN ĐỘ</span>
-                </button>
-                <Link to={`/course/${course.id}`} className="bg-red-500 text-white xl:py-2 xl:px-7 p-2 rounded hover:bg-red-600">
+                </Link>
+                <Link
+                    to={`/course/${course.id}`}
+                    className="bg-red-500 text-white xl:py-2 xl:px-7 p-2 rounded hover:bg-red-600"
+                >
                     <span>VÀO HỌC</span>
                     <FontAwesomeIcon className="md:ml-3" icon={faAngleRight} />
                 </Link>

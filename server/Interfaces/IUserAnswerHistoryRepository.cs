@@ -13,5 +13,7 @@ namespace server.Interfaces
         Task<UserAnswerHistory> AddAsync(UserAnswerHistory userAnswerHistory);
         Task<UserLastAnswerResultDto> GetUserLastAnswerAsync(string userId, int questionId);
         Task<Dictionary<int, bool>> GetLastCorrectAnswersAsync(string userId);
+        Task<List<UserAnswerHistory>> GetHistoryByCourseAsync(string userId, int courseId, DateTime startDate, DateTime endDate);
+        Task<List<UserAnswerHistory>> GetRecentUncorrectedWrongAnswersAsync(int courseId, string userId, int pageNumber, int pageSize);
     }
 }

@@ -13,6 +13,8 @@ import AuthContext from '~/context/AuthContext';
 import MessageModal from '~/components/MessageModal';
 import userCourseApi from '~/api/userCourseApi';
 import images from '~/assets/images';
+import { Helmet } from 'react-helmet';
+import { data } from 'autoprefixer';
 
 const Course = () => {
     const { id } = useParams();
@@ -30,7 +32,6 @@ const Course = () => {
             try {
                 const data = await courseApi.get(id);
                 setCourse(data);
-                localStorage.setItem('chapters', JSON.stringify(data.chapters));
             } catch (error) {
                 console.error('Error fetching course:', error);
             } finally {
@@ -104,9 +105,12 @@ const Course = () => {
 
     return (
         <Fragment>
+            <Helmet>
+                <title>{course.name}</title>
+            </Helmet>
             {error && <MessageModal message={error} title="Lỗi" image={images.sadcat} onClose={() => setError(null)} />}{' '}
             {/* Display error modal */}
-            <Header title={course?.title || 'Loading...'} />
+            <Header name={course?.name || 'Loading...'} />
             <div className="pt-5 pb-10">
                 <div className="container">
                     {!hasPurchased && <Thumbnail course={course} />}

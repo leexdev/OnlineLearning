@@ -487,6 +487,7 @@ namespace server.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Explanation = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LessonId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -534,8 +535,6 @@ namespace server.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     QuestionId = table.Column<int>(type: "int", nullable: false),
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false),
-                    QuestionId1 = table.Column<int>(type: "int", nullable: true),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -547,23 +546,13 @@ namespace server.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_UserAnswerHistories_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserAnswerHistories_Questions_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_UserAnswerHistories_Questions_QuestionId1",
-                        column: x => x.QuestionId1,
-                        principalTable: "Questions",
-                        principalColumn: "Id");
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -571,24 +560,24 @@ namespace server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "52c66016-c30c-4807-9f59-36b6f8c04360", null, "User", "USER" },
-                    { "dcaf3d7b-d83a-454f-a051-53c2d6ef8f6c", null, "Admin", "ADMIN" },
-                    { "f1575852-f793-49eb-9e65-885b5df2c43a", null, "Teacher", "TEACHER" }
+                    { "305a174b-b0db-4cf8-bd42-8aff83723704", null, "User", "USER" },
+                    { "65930a85-4faa-461d-b791-83a284a77339", null, "Teacher", "TEACHER" },
+                    { "a43959ed-36d2-44f6-83b9-329e00b54b7b", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Avatar", "BirthDay", "ConcurrencyStamp", "Email", "EmailConfirmed", "IsDeleted", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Sex", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "0bb7b44d-f20e-4aef-bedc-57b4b882df29", 0, null, null, "1399e129-66c5-4d77-bd55-afef3eb6edf4", "lepro2883@gmail.com", false, false, true, null, "Nguyễn Ngọc Lễ", "LEPRO2883@GMAIL.COM", "LEPRO2883@GMAIL.COM", "AQAAAAIAAYagAAAAEEHh3uTdVYFgLZ3+nWXxYERi430UvwZ9tTXiVNzF5KherzygSzTgVIOQ6Ee9uXEEaQ==", null, false, "OBRX4Y5MSYCTD66FFMSWJHQDVWVWYMIF", null, false, "lepro2883@gmail.com" });
+                values: new object[] { "1a753d29-62b3-421e-8803-9073de73befd", 0, null, null, "1399e129-66c5-4d77-bd55-afef3eb6edf4", "lepro2883@gmail.com", false, false, true, null, "Nguyễn Ngọc Lễ", "LEPRO2883@GMAIL.COM", "LEPRO2883@GMAIL.COM", "AQAAAAIAAYagAAAAEEHh3uTdVYFgLZ3+nWXxYERi430UvwZ9tTXiVNzF5KherzygSzTgVIOQ6Ee9uXEEaQ==", null, false, "OBRX4Y5MSYCTD66FFMSWJHQDVWVWYMIF", null, false, "lepro2883@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "Grades",
                 columns: new[] { "Id", "CreatedAt", "IsDeleted", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4923), false, "Tiền lớp 1", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4935) },
-                    { 2, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4939), false, "Lớp 1", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4939) },
-                    { 3, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4940), false, "Lớp 2", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4941) }
+                    { 1, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(232), false, "Tiền lớp 1", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(248) },
+                    { 2, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(254), false, "Lớp 1", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(255) },
+                    { 3, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(256), false, "Lớp 2", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(257) }
                 });
 
             migrationBuilder.InsertData(
@@ -596,9 +585,9 @@ namespace server.Migrations
                 columns: new[] { "Id", "CreatedAt", "GradeId", "IsDeleted", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4974), 1, false, "Toán học", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4975) },
-                    { 2, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4979), 1, false, "Tiếng Việt", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4979) },
-                    { 3, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4981), 2, false, "Tiếng Anh", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(4981) }
+                    { 1, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(302), 1, false, "Toán học", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(303) },
+                    { 2, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(307), 1, false, "Tiếng Việt", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(307) },
+                    { 3, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(309), 2, false, "Tiếng Anh", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(309) }
                 });
 
             migrationBuilder.InsertData(
@@ -606,35 +595,35 @@ namespace server.Migrations
                 columns: new[] { "Id", "CreatedAt", "Description", "DiscountId", "ImageUrl", "IsDeleted", "Name", "NewPrice", "Price", "SubjectId", "Title", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5014), "Toán học tiền lớp 1", null, "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/b91e_t12.png?alt=media&token=fb7719db-438e-4731-9a33-b85c8236e906", false, "Toán học tiền lớp 1", 80000, 100000, 1, "Toán học tiền lớp 1", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5015) },
-                    { 2, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5021), "Tiếng Việt tiền lớp 1", null, "https://example.com/course-image1.jpg", false, "Tiếng Việt tiền lớp 1", 50, 100, 2, "Tiếng Việt tiền lớp 1", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5021) },
-                    { 3, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5023), "Tiếng Anh lớp 1", null, "https://example.com/course-image2.jpg", false, "Tiếng Anh lớp 1", 80, 200, 3, "Tiếng Anh lớp 1", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5023) }
+                    { 1, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(354), "Toán học tiền lớp 1", null, "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/b91e_t12.png?alt=media&token=fb7719db-438e-4731-9a33-b85c8236e906", false, "Toán học tiền lớp 1", 80000, 100000, 1, "Toán học tiền lớp 1", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(355) },
+                    { 2, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(364), "Tiếng Việt tiền lớp 1", null, "https://example.com/course-image1.jpg", false, "Tiếng Việt tiền lớp 1", 50, 100, 2, "Tiếng Việt tiền lớp 1", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(365) },
+                    { 3, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(367), "Tiếng Anh lớp 1", null, "https://example.com/course-image2.jpg", false, "Tiếng Anh lớp 1", 80, 200, 3, "Tiếng Anh lớp 1", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(368) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Chapters",
                 columns: new[] { "Id", "CourseId", "CreatedAt", "IsDeleted", "Name", "UpdatedAt" },
-                values: new object[] { 1, 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5054), false, "Đếm số 10", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5054) });
+                values: new object[] { 1, 1, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(424), false, "Đếm số 10", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(424) });
 
             migrationBuilder.InsertData(
                 table: "Lessons",
                 columns: new[] { "Id", "ChapterId", "CreatedAt", "Description", "IsDeleted", "Order", "Title", "UpdatedAt", "VideoURL", "isFree" },
-                values: new object[] { 1, 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5077), "", false, 0, "Số 2", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5078), "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/video_lesson%2FY2meta.app-%C4%90%E1%BB%93ng%20h%E1%BB%93%20%C4%91%E1%BA%BFm%20ng%C6%B0%E1%BB%A3c%205s-(1080p).mp4?alt=media&token=e2a067d7-e061-479a-ae5b-71cba70441d0", true });
+                values: new object[] { 1, 1, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(461), "", false, 0, "Số 2", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(462), "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/video_lesson%2FY2meta.app-%C4%90%E1%BB%93ng%20h%E1%BB%93%20%C4%91%E1%BA%BFm%20ng%C6%B0%E1%BB%A3c%205s-(1080p).mp4?alt=media&token=e2a067d7-e061-479a-ae5b-71cba70441d0", true });
 
             migrationBuilder.InsertData(
                 table: "Questions",
-                columns: new[] { "Id", "Content", "CreatedAt", "LessonId", "UpdatedAt" },
-                values: new object[] { 1, "Lập các phép cộng khác nhau của hai số ghi từ hai miếng bìa ghi số 6 và 9. Có tất cả bao nhiêu phép cộng?", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5104), 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5105) });
+                columns: new[] { "Id", "Content", "CreatedAt", "Explanation", "LessonId", "UpdatedAt" },
+                values: new object[] { 1, "Lập các phép cộng khác nhau của hai số ghi từ hai miếng bìa ghi số 6 và 9. Có tất cả bao nhiêu phép cộng?", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(540), null, 1, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(541) });
 
             migrationBuilder.InsertData(
                 table: "Answers",
                 columns: new[] { "Id", "Content", "CreatedAt", "IsCorrect", "QuestionId", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, "2", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5137), true, 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5137) },
-                    { 2, "3", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5140), false, 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5141) },
-                    { 3, "4", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5142), false, 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5142) },
-                    { 4, "5", new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5143), false, 1, new DateTime(2024, 6, 5, 14, 50, 44, 42, DateTimeKind.Local).AddTicks(5144) }
+                    { 1, "2", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(586), true, 1, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(587) },
+                    { 2, "3", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(589), false, 1, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(590) },
+                    { 3, "4", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(592), false, 1, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(592) },
+                    { 4, "5", new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(594), false, 1, new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(595) }
                 });
 
             migrationBuilder.CreateIndex(
@@ -768,19 +757,9 @@ namespace server.Migrations
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserAnswerHistories_QuestionId1",
-                table: "UserAnswerHistories",
-                column: "QuestionId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserAnswerHistories_UserId",
                 table: "UserAnswerHistories",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserAnswerHistories_UserId1",
-                table: "UserAnswerHistories",
-                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserCourses_CourseId",

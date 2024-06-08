@@ -64,5 +64,28 @@ namespace server.Controllers
             var correctAnswers = await _userAnswerRepo.GetLastCorrectAnswersAsync(user.Id);
             return Ok(correctAnswers);
         }
+
+        [HttpGet("history/course/{courseId}")]
+        public async Task<IActionResult> GetHistoryByCourse(int courseId, DateTime startDate, DateTime endDate)
+        {
+            var userName = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(userName);
+            var history = await _userAnswerRepo.GetHistoryByCourseAsync(user.Id, courseId, startDate, endDate);
+            var historyDto = history.Select(uah => uah.ToUserAnswerDto());
+            return Ok(historyDto);
+        }
+
+
+        [HttpGet("recent-wrong-answers")]
+        [Authorize]
+        public async Task<IActionResult> GetRecentWrongAnswers(int courseId, int pageNumber = 1, int pageSize = 10)
+        {
+            var userName = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(userName);
+            var wrongAnswers = await _userAnswerRepo.GetRecentUncorrectedWrongAnswersAsync(courseId, user.Id, pageNumber, pageSize);
+            var wrongAnswersDto = wrongAnswers.Select(uah => uah.ToUserAnswerDto());
+            return Ok(wrongAnswersDto);
+        }
+
     }
 }

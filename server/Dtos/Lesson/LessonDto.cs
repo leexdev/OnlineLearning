@@ -18,9 +18,9 @@ namespace server.Dtos.Lesson
         public bool isFree { get; set; } = false;
         public int ChapterId { get; set; }
         public int Order { get; set; }
+        public int CourseId { get; set; }
         public List<QuestionDto> Questions { get; set; } = new List<QuestionDto>();
         public List<CommentDto> Comments { get; set; } = new List<CommentDto>();
         public List<LessonCompletedDto> LessonCompletes { get; set; } = new List<LessonCompletedDto>();
-
     }
 }

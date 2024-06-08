@@ -11,6 +11,11 @@ const lessonApi = {
         return await axiosClient.get(url);
     },
 
+    async getByCourseId(courseId) {
+        const url = `/Lesson/get-by-course-id/${courseId}`;
+        return await axiosClient.get(url);
+    },
+
     async getVideo(lessonId) {
         const url = `/Lesson/${lessonId}/video`;
         return await axiosClient.get(url);

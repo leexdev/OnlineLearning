@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Azure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,6 @@ namespace server.Controllers
             return Ok(commentDto);
         }
 
-
         [HttpPost("create")]
         [Authorize]
         public async Task<IActionResult> Create(CreateCommentDto commentDto)
@@ -64,7 +64,7 @@ namespace server.Controllers
             }
             else
             {
-                return Created();
+                return CreatedAtAction(nameof(GetByLessonId), new { lessonId = commentModel.LessonId, page = 1, pageSize = 10 }, commentModel.ToCommentDto());
             }
         }
 

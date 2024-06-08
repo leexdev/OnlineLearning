@@ -22,7 +22,7 @@ const Navbar = () => {
                 </li>
                 <li className="hover:bg-peach rounded md:bg-transparent md:hover:opacity-100">
                     <NavLink
-                        to="/subject"
+                        to="/news"
                         className={({ isActive }) => `py-2 px-3 uppercase rounded md:p-0 flex items-center ${isActive ? 'md:opacity-100' : 'md:opacity-70'}`}
                     >
                         <FontAwesomeIcon className="text-xl mr-1" icon={faSquarePen} />
@@ -31,7 +31,7 @@ const Navbar = () => {
                 </li>
                 <li className="hover:bg-peach rounded md:bg-transparent md:hover:opacity-100">
                     <NavLink
-                        to="/course"
+                        to="/pose"
                         className={({ isActive }) => `py-2 px-3 uppercase md:p-0 flex items-center ${isActive ? 'md:opacity-100' : 'md:opacity-70'}`}
                     >
                         <FontAwesomeIcon className="text-xl mr-1" icon={faMessage} />

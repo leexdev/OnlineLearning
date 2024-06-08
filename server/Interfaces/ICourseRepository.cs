@@ -10,6 +10,7 @@ namespace server.Interfaces
     {
         Task<List<Course>> GetAllAsync();
         Task<List<Course>> GetBySubjectId(int subjectId);
+        Task<List<Course>> GetBySubjectName(string subjectName);
         Task<Course?> GetByIdAsync(int id);
         Task<Course> CreateAsync(Course courseModel);
         Task<Course?> UpdateAsync(int id, Course courseModel);

@@ -55,5 +55,51 @@ namespace server.Repository
 
             return lastCorrectAnswers;
         }
+
+        public async Task<List<UserAnswerHistory>> GetHistoryByCourseAsync(string userId, int courseId, DateTime startDate, DateTime endDate)
+        {
+            var history = await _context.UserAnswerHistories
+                .Include(uah => uah.Question)
+                .ThenInclude(q => q.Lesson)
+                .ThenInclude(l => l.Chapter)
+                .Where(uah => uah.UserId == userId
+                           && uah.Question.Lesson.Chapter.CourseId == courseId
+                           && uah.CreatedAt.Date >= startDate.Date
+                           && uah.CreatedAt.Date <= endDate.Date)
+                .ToListAsync();
+
+            return history;
+        }
+
+        public async Task<List<UserAnswerHistory>> GetRecentUncorrectedWrongAnswersAsync(int courseId, string userId, int pageNumber = 1, int pageSize = 10)
+        {
+            var userAnswers = await _context.UserAnswerHistories
+                .Include(uah => uah.Question)
+                    .ThenInclude(q => q.Lesson)
+                        .ThenInclude(l => l.Chapter)  // Đảm bảo chúng ta bao gồm Chapter ở đây
+                .Where(uah => uah.UserId == userId && uah.Question.Lesson.Chapter.CourseId == courseId)
+                .OrderBy(uah => uah.CreatedAt)
+                .ToListAsync();
+
+            var recentWrongAnswers = userAnswers
+                .GroupBy(uah => uah.QuestionId)
+                .Select(g =>
+                {
+                    var lastWrongAnswer = g.LastOrDefault(uah => !uah.IsCorrect);
+                    var lastAnswer = g.LastOrDefault();
+
+                    if (lastWrongAnswer != null && lastWrongAnswer.CreatedAt == lastAnswer.CreatedAt)
+                    {
+                        return lastWrongAnswer;
+                    }
+                    return null;
+                })
+                .Where(uah => uah != null)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return recentWrongAnswers;
+        }
     }
 }

@@ -44,13 +44,6 @@ const Payment = () => {
     const handlePaymentResponse = async () => {
         try {
             const paymentResponse = await paymentApi.processPaymentResponse(window.location.search);
-            if (paymentResponse.success) {
-                sessionStorage.setItem('paymentStatus', 'success');
-                navigate('/payment-success');
-            } else {
-                sessionStorage.setItem('paymentStatus', 'failure');
-                navigate('/payment-failure');
-            }
         } catch (error) {
             sessionStorage.setItem('paymentStatus', 'failure');
             navigate('/payment-failure');

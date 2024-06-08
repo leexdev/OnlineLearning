@@ -51,7 +51,7 @@ namespace server.Repository
 
         public async Task<Comment?> GetByIdAsync(int id)
         {
-            var comment = await _context.Comments.Include(c => c.User).FirstOrDefaultAsync(c => c.Id == id);
+            var comment = await _context.Comments.Include(c => c.User).OrderByDescending(c => c.CreatedAt).FirstOrDefaultAsync(c => c.Id == id);
             if (comment == null)
             {
                 return null;
@@ -60,19 +60,18 @@ namespace server.Repository
             return comment;
         }
 
-        public async Task<List<Comment>> GetByLessonId(int lessonId, int page = 1, int pageSize = 5)
+        public async Task<List<Comment>> GetByLessonId(int lessonId, int page = 1, int pageSize = 10)
         {
             var comments = await _context.Comments
                 .Include(c => c.User)
                 .Where(c => c.LessonId == lessonId)
-                .OrderBy(c => c.CreatedAt) 
+                .OrderByDescending(c => c.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
             return comments;
         }
-
 
         public async Task<Comment?> UpdateAsync(int id, Comment commentModel)
         {

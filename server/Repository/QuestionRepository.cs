@@ -50,6 +50,17 @@ namespace server.Repository
             return question;
         }
 
+        public async Task<List<Question>> GetByCourseIdAsync(int courseId)
+        {
+            var question = await _context.Questions.Include(q => q.Lesson).ThenInclude(l => l.Chapter).Where(l => l.Lesson.Chapter.CourseId == courseId).ToListAsync();
+            if (question == null)
+            {
+                return null;
+            }
+
+            return question;
+        }
+
         public async Task<List<Question>> GetByLessonId(int lessonId)
         {
             return await _context.Questions.Include(q => q.Answers).Where(q => q.LessonId == lessonId).ToListAsync();

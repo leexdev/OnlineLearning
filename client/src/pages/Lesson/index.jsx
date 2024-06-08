@@ -12,37 +12,38 @@ import AuthContext from '~/context/AuthContext';
 import lessonCompletedApi from '~/api/lessonCompletedApi';
 import MessageModal from '~/components/MessageModal';
 import images from '~/assets/images';
+import courseApi from '~/api/courseApi';
 
 const Lesson = () => {
     const { id } = useParams();
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
-    const [chapters, setChapters] = useState(() => {
-        const savedChapters = localStorage.getItem('chapters');
-        return savedChapters ? JSON.parse(savedChapters) : [];
-    });
+    const [chapters, setChapters] = useState(null);
     const [lesson, setLesson] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [duration, setDuration] = useState(0);
     const [completedLessons, setCompletedLessons] = useState([]);
     const [error, setError] = useState(null);
+    const [totalComments, setTotalComments] = useState(0);
+    const [comments, setComments] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
 
     useEffect(() => {
-        const fetchLesson = async () => {
+        const fetchLessonAndChapters = async () => {
+            setError(null);
             try {
-                const data = await lessonApi.getVideo(id);
-                if (data.status === 403) {
+                const lessonData = await lessonApi.getVideo(id);
+                if (lessonData.status === 403) {
                     setError(
                         `Rất tiếc, bạn chưa thể xem được bài giảng này. Hãy đăng ký khóa học để xem tất cả các bài giảng không giới hạn nhé!`,
                     );
-                    setLoading(false);
                     return;
                 }
-                setLesson(data);
-                console.log(data);
-                setLoading(false);
+                setLesson(lessonData);
+                setTotalComments(lessonData.comments.length);
+                setComments(lessonData.comments.slice(0, 5));
+                const course = await courseApi.get(lessonData.courseId);
+                setChapters(course.chapters);
             } catch (error) {
-                setLoading(false);
                 if (error.response) {
                     setError(
                         `Rất tiếc, bạn chưa thể xem được bài giảng này. Hãy đăng ký khóa học để xem tất cả các bài giảng không giới hạn nhé!`,
@@ -52,7 +53,8 @@ const Lesson = () => {
                 }
             }
         };
-        fetchLesson();
+
+        fetchLessonAndChapters();
     }, [id]);
 
     useEffect(() => {
@@ -80,9 +82,13 @@ const Lesson = () => {
     const fetchMoreComments = async (page) => {
         try {
             const newComments = await commentApi.getComments(id, page);
+            if (newComments.length === 0) {
+                setHasMore(false);
+            }
             return newComments;
         } catch (error) {
             console.error('Error fetching comments:', error);
+            setHasMore(false);
             return [];
         }
     };
@@ -105,7 +111,7 @@ const Lesson = () => {
     };
 
     const getPreviousLesson = () => {
-        if (!lesson) return null;
+        if (!lesson || !chapters) return null;
         const currentChapter = chapters.find((chapter) => chapter.id === lesson.chapterId);
         if (!currentChapter) return null;
         const currentLesson = currentChapter.lessons.find((les) => les.id === parseInt(id));
@@ -115,7 +121,7 @@ const Lesson = () => {
     };
 
     const getNextLesson = () => {
-        if (!lesson) return null;
+        if (!lesson || !chapters) return null;
         const currentChapter = chapters.find((chapter) => chapter.id === lesson.chapterId);
         if (!currentChapter) return null;
         const currentLesson = currentChapter.lessons.find((les) => les.id === parseInt(id));
@@ -138,6 +144,7 @@ const Lesson = () => {
             navigate(`/lesson/${previousLesson.id}`);
         }
     };
+
     const handleLessonClick = async (lessonId) => {
         try {
             const data = await lessonApi.getVideo(lessonId);
@@ -148,12 +155,13 @@ const Lesson = () => {
                 setLoading(false);
                 return;
             }
-            navigate(`/lesson/${lessonId}`);
             setLesson(data);
-            setLoading(false);
+            setTotalComments(data.comments.length);
+            setComments(data.comments.slice(0, 5));
+            setHasMore(data.comments.length > 5);
+            navigate(`/lesson/${lessonId}`);
         } catch (error) {
             console.error('Error fetching lesson:', error);
-            setLoading(false);
             if (error.response) {
                 setError(
                     `Rất tiếc, bạn chưa thể xem được bài giảng này. Hãy đăng ký khóa học để xem tất cả các bài giảng không giới hạn nhé!`,
@@ -164,20 +172,27 @@ const Lesson = () => {
         }
     };
 
-    if (loading) {
-        return <Spinner />;
-    }
+    const handleNewComment = (newComment) => {
+        setTotalComments((prevTotal) => prevTotal + 1);
+        setComments((prevComments) => {
+            if (!prevComments.some((comment) => comment.id === newComment.id)) {
+                return [newComment, ...prevComments];
+            }
+            return prevComments;
+        });
+    };
 
     return (
         <Fragment>
-            {error && <MessageModal title="Lỗi" image={images.sadcat} message={error} onClose={() => setError(null)} />}{' '}
-            {/* Display error modal */}
-            <Sidebar
-                chapters={chapters}
-                activeLessonId={parseInt(id)}
-                completedLessons={completedLessons}
-                handleLessonClick={handleLessonClick}
-            />
+            {error && <MessageModal title="Lỗi" image={images.sadcat} message={error} onClose={() => setError(null)} />}
+            {chapters && (
+                <Sidebar
+                    chapters={chapters}
+                    activeLessonId={parseInt(id)}
+                    completedLessons={completedLessons}
+                    handleLessonClick={handleLessonClick}
+                />
+            )}
             <div className="md:mr-64 xl:mr-96">
                 {lesson && (
                     <>
@@ -188,12 +203,14 @@ const Lesson = () => {
                             duration={duration}
                             comments={lesson.comments}
                             lessonId={parseInt(id)}
-                            courseId={chapters[0]?.courseId} // Truyền courseId từ chapters
+                            courseId={lesson.courseId}
                         />
                         <Comment
-                            totalComments={lesson.comments.length}
-                            initialComments={lesson.comments.slice(0, 5)}
+                            totalComments={totalComments}
+                            initialComments={comments}
                             fetchMoreComments={fetchMoreComments}
+                            lessonId={parseInt(id)}
+                            onNewComment={handleNewComment}
                         />
                     </>
                 )}
