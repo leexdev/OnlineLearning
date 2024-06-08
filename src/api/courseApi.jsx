@@ -21,6 +21,11 @@ const courseApi = {
         return await axiosClient.get(url);
     },
 
+    async getBySubjectName(subjectName) {
+        const url = `/Course/get-by-subjectName/${subjectName}`;
+        return await axiosClient.get(url);
+    },
+
     async add(data) {
         const url = '/Course/create';
         return await axiosClient.post(url, data);

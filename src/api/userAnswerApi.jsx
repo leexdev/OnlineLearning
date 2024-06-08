@@ -1,4 +1,5 @@
-import axiosClient from "./axiosClient";
+// userAnswerApi.jsx
+import axiosClient from './axiosClient';
 
 const userAnswerApi = {
     async saveUserAnswerHistory(data) {
@@ -16,10 +17,17 @@ const userAnswerApi = {
         return await axiosClient.get(url);
     },
 
-    async getUserAnswerHistory(courseId) {
-        const url = `/UserAnswer/history/course/${courseId}`;
+    async getUserAnswerHistory(courseId, start, end) {
+        const url = `/UserAnswer/history/course/${courseId}?startDate=${encodeURIComponent(
+            start,
+        )}&endDate=${encodeURIComponent(end)}`;
         return await axiosClient.get(url);
-    }
+    },
+
+    async getRecentUncorrectedWrongAnswers(courseId, pageNumber = 1, pageSize = 3) {
+        const url = `/UserAnswer/recent-wrong-answers?courseId=${courseId}&pageNumber=${pageNumber}&pageSize=${pageSize}`;
+        return await axiosClient.get(url);
+    },
 };
 
 export default userAnswerApi;

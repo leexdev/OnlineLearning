@@ -1,15 +1,18 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const PaymentGuard = ({ children }) => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const paymentStatus = sessionStorage.getItem('paymentStatus');
-        if (!paymentStatus) {
-            navigate('/'); // Redirect to home if payment status is not in session storage
+        console.log(paymentStatus);
+        const currentPath = location.pathname;
+        if (!paymentStatus && currentPath !== '/payment-failure') {
+            navigate('/');
         }
-    }, [navigate]);
+    }, [navigate, location]);
 
     return children;
 };

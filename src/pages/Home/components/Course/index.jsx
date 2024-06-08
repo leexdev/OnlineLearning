@@ -2,18 +2,32 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import CourseList from './components/CourseList';
 import courseApi from '~/api/courseApi';
+import userCourseApi from '~/api/userCourseApi';
 import Spinner from '~/components/Spinner';
 
-const Course = ({ title }) => {
+const Course = ({ title, subjectName }) => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [userCourseIds, setUserCourseIds] = useState(new Set());
 
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const data = await courseApi.getAll();
-                setCourses(data);
+                const [courseData, userCourseData] = await Promise.all([
+                    courseApi.getBySubjectName(subjectName),
+                    userCourseApi.get()
+                ]);
+
+                console.log(courseData);
+                console.log(userCourseData);
+
+                const userCourseIdSet = new Set(userCourseData.map(course => course.id));
+                setUserCourseIds(userCourseIdSet);
+
+                const filteredCourses = courseData.filter(course => !userCourseIdSet.has(course.id));
+
+                setCourses(filteredCourses);
                 setLoading(false);
             } catch (error) {
                 console.error('Failed to fetch courses', error);
@@ -23,7 +37,7 @@ const Course = ({ title }) => {
         };
 
         fetchCourses();
-    }, []);
+    }, [subjectName]);
 
     if (loading) {
         return <Spinner />;
@@ -31,6 +45,10 @@ const Course = ({ title }) => {
 
     if (error) {
         return <div className="error">{error}</div>;
+    }
+
+    if (courses.length === 0) {
+        return <div className="no-courses"></div>;
     }
 
     return (
@@ -47,6 +65,7 @@ const Course = ({ title }) => {
 
 Course.propTypes = {
     title: PropTypes.string.isRequired,
+    subjectName: PropTypes.string.isRequired,
 };
 
 export default Course;

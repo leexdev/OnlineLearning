@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import SidebarUser from '~/components/SidebarUser';
 import AuthContext from '~/context/AuthContext';
 import Spinner from '~/components/Spinner';
@@ -15,16 +15,18 @@ const Account = () => {
     }
 
     return (
-        <div className="container md:p-10 text-center">
-            <div className="md:grid lg:grid-cols-3 md:gap-6">
-                <SidebarUser user={user} />
-                <div className="profile lg:col-span-2">
-                    <div className="bg-white rounded-lg shadow-md">
-                        <Profile />
+        <Fragment>
+            <div className="container md:p-10 text-center">
+                <div className="md:grid lg:grid-cols-3 md:gap-6">
+                    <SidebarUser user={user} />
+                    <div className="profile lg:col-span-2">
+                        <div className="bg-white rounded-lg shadow-md">
+                            <Profile />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </Fragment>
     );
 };
 

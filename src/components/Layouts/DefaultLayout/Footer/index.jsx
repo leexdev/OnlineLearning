@@ -46,7 +46,7 @@ const Footer = () => {
                     </div>
                     <div className="item">
                         <h6 className="mb-4 flex items-center justify-center font-semibold uppercase md:justify-start">
-                            <span className="uppercase text-xl text-sky-700">CHÍNH SÁCH CỦA CHÚNG TÔI</span>
+                            <span className="uppercase text-xl text-sky-700">HỎI ĐÁP</span>
                         </h6>
                         <p className="mb-2">
                             <a href="#!">Bảng tin</a>

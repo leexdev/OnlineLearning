@@ -28,20 +28,23 @@ const CourseList = () => {
     if (loading) {
         return <Spinner />;
     }
-    
-    if (error) return <MessageModal image={images.sadcat} title="Lỗi" message={error} onClose={setError(null)}/>;
+
+    if (error) return <MessageModal image={images.sadcat} title="Lỗi" message={error} onClose={() => setError(null)} />;
 
     return (
         <div className="container mx-auto p-3 md:p-6">
             <h1 className="text-3xl font-bold mb-4">KHÓA HỌC CỦA TÔI</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                {courses.map((course, index) => (
-                    <CourseCard
-                        key={index}
-                        course={course}
-                    />
-                ))}
-            </div>
+            {courses.length === 0 ? (
+                <p className="text-center mt-2">
+                    <b>Bạn chưa mua khóa học nào</b>
+                </p>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    {courses.map((course, index) => (
+                        <CourseCard key={index} course={course} />
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

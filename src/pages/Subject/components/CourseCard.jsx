@@ -6,12 +6,12 @@ import images from '~/assets/images';
 
 const CourseCard = ({ course }) => {
     return (
-        <div className="relative top-0 flex justify-center">
+        <div className="relative top-10 flex justify-center">
             <div className="content xl:absolute w-3/4 right-0 bottom-24">
                 <div className="box bg-peach border rounded-3xl p-1 shadow-md">
-                    <div className="title text-white text-lg px-5 py-2 text-center">{course.title}</div>
+                    <div className="title text-white text-lg px-5 py-2 text-center">{course.name}</div>
                     <div className="content bg-white md:line-clamp-5 px-5 py-2 rounded-b-3xl">
-                        <span className="line-clamp-5">{course.description}</span>
+                        <span className="line-clamp-5">{course.title}</span>
                         <div className="grid grid-cols-1 md:grid-cols-2">
                             <div className="time">
                                 <FontAwesomeIcon className="mr-1 text-gray-500" icon={faClock} />

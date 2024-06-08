@@ -8,7 +8,6 @@ import MyCourse from '~/pages/MyCourse';
 import Payment from '~/pages/Payment';
 import PaymentSuccess from '~/pages/PaymentSuccess';
 import PaymentFailure from '~/pages/PaymentFailure';
-import PaymentGuard from '~/components/PaymentGuard';
 import Question from '~/pages/Question';
 import MyProcess from '~/pages/MyProcess';
 
@@ -19,25 +18,11 @@ const publicRoutes = [
     { path: '/course/:id', component: Course },
     { path: '/profile', component: Profile },
     { path: '/my-course', component: MyCourse },
-    { path: '/my-process', component: MyProcess },
+    { path: '/my-course/my-process', component: MyProcess },
     { path: '/payment/:id', component: Payment },
     { path: '/lesson/:id/questions', component: Question },
-    {
-        path: '/payment-success',
-        component: () => (
-            <PaymentGuard>
-                <PaymentSuccess />
-            </PaymentGuard>
-        )
-    },
-    {
-        path: '/payment-failure',
-        component: () => (
-            <PaymentGuard>
-                <PaymentFailure />
-            </PaymentGuard>
-        )
-    },
+    { path: '/payment-success', component: PaymentSuccess },
+    { path: '/payment-failure', component: PaymentFailure },
 ];
 
 const privateRoutes = [];

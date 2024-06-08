@@ -5,6 +5,7 @@ import { faCircle, faCirclePlay } from '@fortawesome/free-solid-svg-icons';
 
 const LessonItem = ({ lesson, onLessonClick, completedLessons }) => {
     const isCompleted = completedLessons.includes(lesson.id);
+
     return (
         <li>
             <button

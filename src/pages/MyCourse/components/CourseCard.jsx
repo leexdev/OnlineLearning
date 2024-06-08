@@ -16,8 +16,8 @@ const CourseCard = ({ course }) => {
             </div>
             <div className="p-4 flex justify-between">
                 <Link
-                    to="/my-process"
-                    state={{ courseId: course.id }}
+                    to="/my-course/my-process"
+                    state={{ courseId: course.id, courseName: course.name }}
                     className="bg-green-500 text-white xl:py-2 xl:px-7 p-2 rounded hover:bg-green-600"
                 >
                     <FontAwesomeIcon className="md:mr-3" icon={faChartPie} />

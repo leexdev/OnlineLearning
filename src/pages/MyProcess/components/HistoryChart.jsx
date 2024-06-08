@@ -8,20 +8,14 @@ import {
     LineElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    Filler,
 } from 'chart.js';
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 const HistoryChart = ({ data }) => {
+
     console.log(data);
     const chartData = {
         labels: data.labels,
@@ -46,31 +40,39 @@ const HistoryChart = ({ data }) => {
                 borderColor: '#48bb78',
                 backgroundColor: 'rgba(72, 187, 120, 0.2)',
                 fill: true,
-            }
-        ]
+            },
+        ],
     };
 
     const options = {
+        plugins: {
+            filler: {
+                propagate: true, // hoặc false
+            },
+        },
         responsive: true,
         maintainAspectRatio: false,
         scales: {
             x: {
                 title: {
                     display: true,
-                    text: 'Ngày'
-                }
+                    text: 'Ngày',
+                },
             },
             y: {
                 title: {
                     display: true,
-                    text: 'Số câu'
-                }
-            }
-        }
+                    text: 'Số câu',
+                },
+                ticks: {
+                    stepSize: 1,
+                },
+            },
+        },
     };
 
     return (
-        <div className="relative h-96">
+        <div className="relative h-96 mt-5">
             <Line data={chartData} options={options} />
         </div>
     );

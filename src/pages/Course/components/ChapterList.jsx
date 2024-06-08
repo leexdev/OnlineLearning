@@ -33,7 +33,7 @@ const ChapterList = ({ chapters, onLessonClick, completedLessons }) => {
                                     key={lessonIndex} 
                                     lesson={lesson} 
                                     onLessonClick={onLessonClick} 
-                                    completedLessons={completedLessons} 
+                                    completedLessons={completedLessons}
                                 />
                             ))}
                         </ul>
