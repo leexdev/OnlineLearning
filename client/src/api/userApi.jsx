@@ -13,7 +13,7 @@ const userApi = {
 
     async getAll() {
         const url = '/Account/get-all';
-        return await axiosClient.post(url);
+        return await axiosClient.get(url);
     },
 
     async get() {
@@ -40,6 +40,11 @@ const userApi = {
     async changePassword(data) {
         const url = '/Account/change-password';
         return await axiosClient.post(url, data);
+    },
+
+    async contact() {
+        const url = '/Account/contacts';
+        return await axiosClient.get(url);
     },
 };
 

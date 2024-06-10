@@ -13,6 +13,7 @@ namespace server.Interfaces
         Task<(bool Succeeded, IEnumerable<IdentityError> Errors, NewUserDto User)> RegisterUserAsync(RegisterDto registerDto);
         Task<(bool Succeeded, string Error, NewUserDto User)> CheckUserLoginAsync(LoginDto loginDto);
         Task<List<User>> GetAllAsync();
+        Task<List<User>> GetAllExceptCurrentAsync(string userId);
         Task<bool> ChangeUserRolesAsync(User user, string[] newRoles);
         Task<User?> GetUserByIdAsync(string userId);
         Task<bool> RoleExistsAsync(string roleName);

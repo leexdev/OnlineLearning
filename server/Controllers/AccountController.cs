@@ -25,13 +25,15 @@ namespace server.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IFireBaseService _firebaseService;
         private readonly IFileService _fileService;
+        private readonly IChatMessageRepository _chatMessageRepository;
 
-        public AccountController(IUserRepository userRepo, UserManager<User> userManager, IFireBaseService firebaseService, IFileService fileService)
+        public AccountController(IUserRepository userRepo, UserManager<User> userManager, IFireBaseService firebaseService, IFileService fileService, IChatMessageRepository chatMessageRepository)
         {
             _userRepo = userRepo;
             _userManager = userManager;
             _fileService = fileService;
             _firebaseService = firebaseService;
+            _chatMessageRepository = chatMessageRepository;
         }
 
         [HttpPost("login")]
@@ -242,6 +244,36 @@ namespace server.Controllers
             }
 
             return Ok("Thay đổi mật khẩu thành công");
+        }
+
+        [HttpGet("contacts")]
+        [Authorize]
+        public async Task<IActionResult> GetContacts()
+        {
+            var userName = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(userName);
+            var users = await _userRepo.GetAllExceptCurrentAsync(user.Id);
+            var userDtos = new List<UserDto>();
+
+            foreach (var userItem in users)
+            {
+                var conversations = user.UserConversations.Select(uc => uc.ConversationId).ToList();
+                var lastMessages = await Task.WhenAll(conversations.Select(id => _chatMessageRepository.GetLastMessageByConversationIdAsync(id)));
+
+                var lastMessage = lastMessages
+                    .OrderByDescending(m => m?.CreatedAt)
+                    .FirstOrDefault();
+
+                userDtos.Add(new UserDto
+                {
+                    Id = userItem.Id,
+                    Name = userItem.Name,
+                    Avatar = userItem.Avatar,
+                    LastMessage = lastMessage?.Message
+                });
+            }
+
+            return Ok(userDtos);
         }
 
     }

@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
             if (token) {
                 const decodedUser = decode(token);
                 try {
-                    const userDetails = await userApi.get(); // Gọi API để lấy thông tin chi tiết người dùng
+                    const userDetails = await userApi.get();
                     setUser({ ...decodedUser, ...userDetails });
                 } catch (error) {
                     console.error('Error fetching user details:', error);

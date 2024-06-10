@@ -47,11 +47,11 @@ namespace server.Controllers
 
         [HttpGet("get-by-userid")]
         [Authorize]
-        public async Task<IActionResult> GetByUserId()
+        public async Task<IActionResult> GetByUserId(int courseId)
         {
             var userName = User.GetUsername();
             var user = await _userManager.FindByNameAsync(userName);
-            var lessonCompletes = await _lessonCompletedRepo.GetByUserIdAsync(user.Id);
+            var lessonCompletes = await _lessonCompletedRepo.GetByUserIdAsync(user.Id, courseId);
             var lessonCompletedDto = lessonCompletes.Select(lc => lc.ToLessonCompletedDto());
             return Ok(lessonCompletedDto);
         }

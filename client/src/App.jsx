@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import { publicRoutes } from '~/routes';
-import DefaultLayout from '~/components/Layouts/DefaultLayout';
+import DefaultLayout from '~/components/Common/Layouts/DefaultLayout';
 import { AuthProvider } from './context/AuthContext';
-import ScrollToTop from './components/ScrollToTop';
+import ScrollToTop from './components/Common/ScrollToTop';
 
 function App() {
     return (

@@ -29,9 +29,9 @@ namespace server.Repository
             return await _context.LessonCompletes.ToListAsync();
         }
 
-        public async Task<List<LessonCompleted>> GetByUserIdAsync(string userId)
+        public async Task<List<LessonCompleted>> GetByUserIdAsync(string userId, int courseId)
         {
-            return await _context.LessonCompletes.Where(l => l.UserId == userId).ToListAsync();
+            return await _context.LessonCompletes.Include(lc => lc.Lesson).ThenInclude(l => l.Chapter).Where(lc => lc.UserId == userId && lc.Lesson.Chapter.CourseId == courseId).ToListAsync();
         }
     }
 }

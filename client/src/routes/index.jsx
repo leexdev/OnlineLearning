@@ -1,15 +1,17 @@
-import Course from '~/pages/Course';
-import Home from '~/pages/Home';
-import Lesson from '~/pages/Lesson';
-import Subject from '~/pages/Subject';
-import CustomLayout from '~/components/Layouts/CustomLayout';
-import Profile from '~/pages/Profile';
-import MyCourse from '~/pages/MyCourse';
-import Payment from '~/pages/Payment';
-import PaymentSuccess from '~/pages/PaymentSuccess';
-import PaymentFailure from '~/pages/PaymentFailure';
-import Question from '~/pages/Question';
-import MyProcess from '~/pages/MyProcess';
+import Course from '~/pages/Public/Course';
+import Home from '~/pages/Public/Home';
+import Lesson from '~/pages/Public/Lesson';
+import Subject from '~/pages/Public/Subject';
+import CustomLayout from '~/components/Common/Layouts/CustomLayout';
+import Profile from '~/pages/Public/Profile';
+import MyCourse from '~/pages/Public/MyCourse';
+import Payment from '~/pages/Public/Payment';
+import PaymentSuccess from '~/pages/Public/PaymentSuccess';
+import PaymentFailure from '~/pages/Public/PaymentFailure';
+import Question from '~/pages/Public/Question';
+import MyProcess from '~/pages/Public/MyProcess';
+import AdviseFrom from '~/pages/Public/Course/components/AdviseFrom';
+import Chat from '~/pages/Public/Chat';
 
 const publicRoutes = [
     { path: '/', component: Home },
@@ -17,12 +19,14 @@ const publicRoutes = [
     { path: '/lesson/:id', component: Lesson, layout: CustomLayout },
     { path: '/course/:id', component: Course },
     { path: '/profile', component: Profile },
+    { path: '/AdviseFrom', component: AdviseFrom },
     { path: '/my-course', component: MyCourse },
     { path: '/my-course/my-process', component: MyProcess },
     { path: '/payment/:id', component: Payment },
     { path: '/lesson/:id/questions', component: Question },
     { path: '/payment-success', component: PaymentSuccess },
     { path: '/payment-failure', component: PaymentFailure },
+    { path: '/chat', component: Chat, layout: CustomLayout },
 ];
 
 const privateRoutes = [];

@@ -47,26 +47,6 @@ namespace server.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "a43959ed-36d2-44f6-83b9-329e00b54b7b",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "65930a85-4faa-461d-b791-83a284a77339",
-                            Name = "Teacher",
-                            NormalizedName = "TEACHER"
-                        },
-                        new
-                        {
-                            Id = "305a174b-b0db-4cf8-bd42-8aff83723704",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -204,44 +184,6 @@ namespace server.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("Answers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Content = "2",
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(586),
-                            IsCorrect = true,
-                            QuestionId = 1,
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(587)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Content = "3",
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(589),
-                            IsCorrect = false,
-                            QuestionId = 1,
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(590)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Content = "4",
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(592),
-                            IsCorrect = false,
-                            QuestionId = 1,
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(592)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Content = "5",
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(594),
-                            IsCorrect = false,
-                            QuestionId = 1,
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(595)
-                        });
                 });
 
             modelBuilder.Entity("server.Models.Banner", b =>
@@ -299,17 +241,38 @@ namespace server.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Chapters");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CourseId = 1,
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(424),
-                            IsDeleted = false,
-                            Name = "Đếm số 10",
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(424)
-                        });
+            modelBuilder.Entity("server.Models.ChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ConversationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatMessages");
                 });
 
             modelBuilder.Entity("server.Models.Comment", b =>
@@ -343,6 +306,25 @@ namespace server.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("server.Models.Conversation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Conversation");
                 });
 
             modelBuilder.Entity("server.Models.Course", b =>
@@ -397,50 +379,6 @@ namespace server.Migrations
                     b.HasIndex("SubjectId");
 
                     b.ToTable("Courses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(354),
-                            Description = "Toán học tiền lớp 1",
-                            ImageUrl = "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/b91e_t12.png?alt=media&token=fb7719db-438e-4731-9a33-b85c8236e906",
-                            IsDeleted = false,
-                            Name = "Toán học tiền lớp 1",
-                            NewPrice = 80000,
-                            Price = 100000,
-                            SubjectId = 1,
-                            Title = "Toán học tiền lớp 1",
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(355)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(364),
-                            Description = "Tiếng Việt tiền lớp 1",
-                            ImageUrl = "https://example.com/course-image1.jpg",
-                            IsDeleted = false,
-                            Name = "Tiếng Việt tiền lớp 1",
-                            NewPrice = 50,
-                            Price = 100,
-                            SubjectId = 2,
-                            Title = "Tiếng Việt tiền lớp 1",
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(365)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(367),
-                            Description = "Tiếng Anh lớp 1",
-                            ImageUrl = "https://example.com/course-image2.jpg",
-                            IsDeleted = false,
-                            Name = "Tiếng Anh lớp 1",
-                            NewPrice = 80,
-                            Price = 200,
-                            SubjectId = 3,
-                            Title = "Tiếng Anh lớp 1",
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(368)
-                        });
                 });
 
             modelBuilder.Entity("server.Models.Discount", b =>
@@ -490,43 +428,14 @@ namespace server.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Grades");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(232),
-                            IsDeleted = false,
-                            Name = "Tiền lớp 1",
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(248)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(254),
-                            IsDeleted = false,
-                            Name = "Lớp 1",
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(255)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(256),
-                            IsDeleted = false,
-                            Name = "Lớp 2",
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(257)
-                        });
                 });
 
             modelBuilder.Entity("server.Models.Lesson", b =>
@@ -571,21 +480,6 @@ namespace server.Migrations
                     b.HasIndex("ChapterId");
 
                     b.ToTable("Lessons");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ChapterId = 1,
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(461),
-                            Description = "",
-                            IsDeleted = false,
-                            Order = 0,
-                            Title = "Số 2",
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(462),
-                            VideoURL = "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/video_lesson%2FY2meta.app-%C4%90%E1%BB%93ng%20h%E1%BB%93%20%C4%91%E1%BA%BFm%20ng%C6%B0%E1%BB%A3c%205s-(1080p).mp4?alt=media&token=e2a067d7-e061-479a-ae5b-71cba70441d0",
-                            isFree = true
-                        });
                 });
 
             modelBuilder.Entity("server.Models.LessonCompleted", b =>
@@ -701,16 +595,6 @@ namespace server.Migrations
                     b.HasIndex("LessonId");
 
                     b.ToTable("Questions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Content = "Lập các phép cộng khác nhau của hai số ghi từ hai miếng bìa ghi số 6 và 9. Có tất cả bao nhiêu phép cộng?",
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(540),
-                            LessonId = 1,
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(541)
-                        });
                 });
 
             modelBuilder.Entity("server.Models.Rating", b =>
@@ -774,35 +658,6 @@ namespace server.Migrations
                     b.HasIndex("GradeId");
 
                     b.ToTable("Subjects");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(302),
-                            GradeId = 1,
-                            IsDeleted = false,
-                            Name = "Toán học",
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(303)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(307),
-                            GradeId = 1,
-                            IsDeleted = false,
-                            Name = "Tiếng Việt",
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(307)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(309),
-                            GradeId = 2,
-                            IsDeleted = false,
-                            Name = "Tiếng Anh",
-                            UpdatedAt = new DateTime(2024, 6, 7, 12, 27, 52, 363, DateTimeKind.Local).AddTicks(309)
-                        });
                 });
 
             modelBuilder.Entity("server.Models.User", b =>
@@ -883,26 +738,6 @@ namespace server.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1a753d29-62b3-421e-8803-9073de73befd",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "1399e129-66c5-4d77-bd55-afef3eb6edf4",
-                            Email = "lepro2883@gmail.com",
-                            EmailConfirmed = false,
-                            IsDeleted = false,
-                            LockoutEnabled = true,
-                            Name = "Nguyễn Ngọc Lễ",
-                            NormalizedEmail = "LEPRO2883@GMAIL.COM",
-                            NormalizedUserName = "LEPRO2883@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEHh3uTdVYFgLZ3+nWXxYERi430UvwZ9tTXiVNzF5KherzygSzTgVIOQ6Ee9uXEEaQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "OBRX4Y5MSYCTD66FFMSWJHQDVWVWYMIF",
-                            TwoFactorEnabled = false,
-                            UserName = "lepro2883@gmail.com"
-                        });
                 });
 
             modelBuilder.Entity("server.Models.UserAnswerHistory", b =>
@@ -936,6 +771,35 @@ namespace server.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserAnswerHistories");
+                });
+
+            modelBuilder.Entity("server.Models.UserConversation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ConversationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserConversations");
                 });
 
             modelBuilder.Entity("server.Models.UserCourse", b =>
@@ -1042,6 +906,23 @@ namespace server.Migrations
                         .IsRequired();
 
                     b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("server.Models.ChatMessage", b =>
+                {
+                    b.HasOne("server.Models.Conversation", "Conversation")
+                        .WithMany("ChatMessages")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("server.Models.User", "User")
+                        .WithMany("ChatMessages")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("server.Models.Comment", b =>
@@ -1192,6 +1073,23 @@ namespace server.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("server.Models.UserConversation", b =>
+                {
+                    b.HasOne("server.Models.Conversation", "Conversation")
+                        .WithMany("UserConversations")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("server.Models.User", "User")
+                        .WithMany("UserConversations")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("server.Models.UserCourse", b =>
                 {
                     b.HasOne("server.Models.Course", "Course")
@@ -1214,6 +1112,13 @@ namespace server.Migrations
             modelBuilder.Entity("server.Models.Chapter", b =>
                 {
                     b.Navigation("Lessons");
+                });
+
+            modelBuilder.Entity("server.Models.Conversation", b =>
+                {
+                    b.Navigation("ChatMessages");
+
+                    b.Navigation("UserConversations");
                 });
 
             modelBuilder.Entity("server.Models.Course", b =>
@@ -1260,6 +1165,8 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.User", b =>
                 {
+                    b.Navigation("ChatMessages");
+
                     b.Navigation("Comments");
 
                     b.Navigation("LessonCompletes");
@@ -1269,6 +1176,8 @@ namespace server.Migrations
                     b.Navigation("Ratings");
 
                     b.Navigation("UserAnswerHistories");
+
+                    b.Navigation("UserConversations");
 
                     b.Navigation("UserCourses");
                 });

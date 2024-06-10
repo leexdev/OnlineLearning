@@ -9,7 +9,7 @@ namespace server.Interfaces
     public interface ILessonCompletedRepository
     {
         Task<List<LessonCompleted>> GetAllAsync();
-        Task<List<LessonCompleted>> GetByUserIdAsync(string userId);
+        Task<List<LessonCompleted>> GetByUserIdAsync(string userId, int courseId);
         Task<LessonCompleted> CreateAsync(LessonCompleted lessonComplete);
     }
 }

@@ -16,8 +16,8 @@ const lessonCompletedApi = {
         return await axiosClient.post(url, data);
     },
 
-    async getLessonCompletedByUser () {
-        const url = '/LessonCompleted/get-by-userid';
+    async getLessonCompletedByUser (courseId) {
+        const url = `/LessonCompleted/get-by-userid?courseId=${courseId}`;
         return await axiosClient.get(url);
     },
 };

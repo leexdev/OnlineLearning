@@ -70,6 +70,11 @@ namespace server.Repository
             return await _userManager.Users.Where(u => !u.IsDeleted).ToListAsync();
         }
 
+        public async Task<List<User>> GetAllExceptCurrentAsync(string userId)
+        {
+            return await _userManager.Users.Where(u => u.Id != userId && !u.IsDeleted).ToListAsync();
+        }
+
         public async Task<User?> DeleteAsync(string userId)
         {
             var user = await GetUserByIdAsync(userId);

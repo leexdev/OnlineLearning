@@ -12,6 +12,8 @@ using server.Repository;
 using server.Service;
 using server.Service.TextToSpeech;
 using server.Service.VnPay;
+using server.Dtos.Message;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add logging configuration
@@ -19,10 +21,12 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
-builder.Services.AddControllers();
+// Add services to the container.
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Learning Online", Version = "v1" });
@@ -49,11 +53,6 @@ builder.Services.AddSwaggerGen(option =>
             new string[]{}
         }
     });
-});
-
-builder.Services.AddControllers().AddNewtonsoftJson(options =>
-{
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -83,7 +82,6 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme =
     options.DefaultSignInScheme =
     options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
-
 }).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -98,9 +96,23 @@ builder.Services.AddAuthentication(options =>
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
         )
     };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chatHub"))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
-builder.Services.AddSingleton<TextToSpeechClient>(provider =>
+builder.Services.AddSingleton(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
     var credentialsPath = configuration["GoogleCloud:CredentialsPath"];
@@ -110,7 +122,6 @@ builder.Services.AddSingleton<TextToSpeechClient>(provider =>
     };
     return clientBuilder.Build();
 });
-
 
 builder.Services.AddScoped<IGradeRepository, GradeRepository>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
@@ -122,7 +133,6 @@ builder.Services.AddScoped<IChapterRepository, ChapterRepository>();
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 builder.Services.AddScoped<ILessonRepository, LessonRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 builder.Services.AddScoped<INewsRepository, NewsRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
@@ -135,6 +145,8 @@ builder.Services.AddScoped<IFireBaseService, FireBaseService>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 builder.Services.AddScoped<ITextToSpeechService, TextToSpeechService>();
+builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddSingleton<VnPayLibrary>();
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -144,16 +156,20 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("*")
+                          policy.WithOrigins("http://localhost:5173", "https://localhost:5173")
                                 .AllowAnyHeader()
-                                .AllowAnyMethod();
+                                .AllowAnyMethod()
+                                .AllowCredentials(); // Allow credentials
                       });
 });
+
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
@@ -166,5 +182,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Configure the SignalR hub endpoint
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

@@ -21,5 +21,7 @@ namespace server.Models
         public List<Comment> Comments { get; set; } = new List<Comment>();
         public List<LessonCompleted> LessonCompletes { get; set; } = new List<LessonCompleted>();
         public List<UserAnswerHistory> UserAnswerHistories { get; set; } = new List<UserAnswerHistory>();
+        public List<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
+        public List<UserConversation> UserConversations { get; set; } = new List<UserConversation>();
     }
 }
