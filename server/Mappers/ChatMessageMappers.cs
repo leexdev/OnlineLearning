@@ -14,6 +14,7 @@ namespace server.Mappers
         {
             return new ChatMessageDto
             {
+                Id = chatMessage.Id,
                 Name = chatMessage.User.Name,
                 Email = chatMessage.User.Email,
                 Message = chatMessage.Message,

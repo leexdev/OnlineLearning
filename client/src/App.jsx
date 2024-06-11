@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom';
 import { publicRoutes } from '~/routes';
 import DefaultLayout from '~/components/Common/Layouts/DefaultLayout';
 import { AuthProvider } from './context/AuthContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import ScrollToTop from './components/Common/ScrollToTop';
 
 function App() {
@@ -26,6 +28,7 @@ function App() {
                         );
                     })}
                 </Routes>
+                <ToastContainer />
             </div>
         </AuthProvider>
     );

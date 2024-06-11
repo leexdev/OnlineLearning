@@ -1,10 +1,23 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import images from '~/assets/images';
+import AuthContext from '~/context/AuthContext';
+import MessageModal from '~/components/Common/MessageModal';
 
 const CourseCard = ({ course }) => {
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const [error, setError] = useState(null);
+
+    const handleRegisterClick = () => {
+        if (!user) {
+            setError('Bạn cần đăng nhập để đăng ký khóa học');
+        } else {
+            navigate(`/payment/${course.id}`);
+        }
+    };
     return (
         <div className="relative top-10 flex justify-center">
             <div className="content xl:absolute w-3/4 right-0 bottom-24">
@@ -52,9 +65,12 @@ const CourseCard = ({ course }) => {
                             >
                                 Xem thêm
                             </Link>
-                            <Link to={`/payment/${course.id}`} className="mr-3 shadow-md block bg-orange-600 p-2 xl:py-2 xl:px-7 rounded-xl">
+                            <button
+                                onClick={handleRegisterClick}
+                                className="mr-3 shadow-md block bg-orange-600 p-2 xl:py-2 xl:px-7 rounded-xl"
+                            >
                                 Đăng ký
-                            </Link>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -64,6 +80,7 @@ const CourseCard = ({ course }) => {
                     className="cat-act hidden xl:block xl:h-20vh absolute xl:-bottom-16 xl:-left-32"
                 />
             </div>
+            {error && <MessageModal message={error} title="Lỗi" image={images.sadcat} onClose={() => setError(null)} />}
         </div>
     );
 };

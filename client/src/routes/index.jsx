@@ -10,16 +10,16 @@ import PaymentSuccess from '~/pages/Public/PaymentSuccess';
 import PaymentFailure from '~/pages/Public/PaymentFailure';
 import Question from '~/pages/Public/Question';
 import MyProcess from '~/pages/Public/MyProcess';
-import AdviseFrom from '~/pages/Public/Course/components/AdviseFrom';
 import Chat from '~/pages/Public/Chat';
+import NotFound from '~/components/Common/NotFound';
 
 const publicRoutes = [
+    { path: '*', component: NotFound },
     { path: '/', component: Home },
     { path: '/subject/:id', component: Subject },
     { path: '/lesson/:id', component: Lesson, layout: CustomLayout },
     { path: '/course/:id', component: Course },
     { path: '/profile', component: Profile },
-    { path: '/AdviseFrom', component: AdviseFrom },
     { path: '/my-course', component: MyCourse },
     { path: '/my-course/my-process', component: MyProcess },
     { path: '/payment/:id', component: Payment },

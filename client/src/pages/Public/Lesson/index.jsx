@@ -44,6 +44,11 @@ const Lesson = () => {
                 setComments(lessonData.comments.slice(0, 5));
                 const course = await courseApi.get(lessonData.courseId);
                 setChapters(course.chapters);
+
+                if (user) {
+                    const completedData = await lessonCompletedApi.getLessonCompletedByUser(lessonData.courseId);
+                    setCompletedLessons(completedData.map((item) => item.lessonId));
+                }
             } catch (error) {
                 if (error.response) {
                     setError(
@@ -56,19 +61,7 @@ const Lesson = () => {
         };
 
         fetchLessonAndChapters();
-    }, [id]);
-
-    useEffect(() => {
-        const fetchCompletedLessons = async () => {
-            try {
-                const data = await lessonCompletedApi.get();
-                setCompletedLessons(data.map((item) => item.lessonId));
-            } catch (error) {
-                console.error('Error fetching completed lessons:', error);
-            }
-        };
-        fetchCompletedLessons();
-    }, []);
+    }, [id, user]);
 
     useEffect(() => {
         if (lesson && lesson.videoURL) {
@@ -96,11 +89,11 @@ const Lesson = () => {
 
     const handleVideoEnded = async () => {
         try {
-            const completedLessons = await lessonCompletedApi.get();
+            const completedData = await lessonCompletedApi.getLessonCompletedByUser(lesson.courseId);
             const param = {
                 lessonId: parseInt(id),
             };
-            const isCompleted = completedLessons.some((completion) => completion.lessonId === param.lessonId);
+            const isCompleted = completedData.some((completion) => completion.lessonId === param.lessonId);
 
             if (!isCompleted) {
                 await lessonCompletedApi.add(param);
@@ -113,22 +106,38 @@ const Lesson = () => {
 
     const getPreviousLesson = () => {
         if (!lesson || !chapters) return null;
-        const currentChapter = chapters.find((chapter) => chapter.id === lesson.chapterId);
-        if (!currentChapter) return null;
-        const currentLesson = currentChapter.lessons.find((les) => les.id === parseInt(id));
-        if (!currentLesson) return null;
-        const previousLessonOrder = currentLesson.order - 1;
-        return currentChapter.lessons.find((les) => les.order === previousLessonOrder) || null;
+
+        let currentChapterIndex = chapters.findIndex((chapter) => chapter.id === lesson.chapterId);
+        let currentLessonIndex = chapters[currentChapterIndex].lessons.findIndex((les) => les.id === parseInt(id));
+
+        if (currentLessonIndex > 0) {
+            return chapters[currentChapterIndex].lessons[currentLessonIndex - 1];
+        }
+
+        if (currentChapterIndex > 0) {
+            let previousChapter = chapters[currentChapterIndex - 1];
+            return previousChapter.lessons[previousChapter.lessons.length - 1];
+        }
+
+        return null;
     };
 
     const getNextLesson = () => {
         if (!lesson || !chapters) return null;
-        const currentChapter = chapters.find((chapter) => chapter.id === lesson.chapterId);
-        if (!currentChapter) return null;
-        const currentLesson = currentChapter.lessons.find((les) => les.id === parseInt(id));
-        if (!currentLesson) return null;
-        const nextLessonOrder = currentLesson.order + 1;
-        return currentChapter.lessons.find((les) => les.order === nextLessonOrder) || null;
+
+        let currentChapterIndex = chapters.findIndex((chapter) => chapter.id === lesson.chapterId);
+        let currentLessonIndex = chapters[currentChapterIndex].lessons.findIndex((les) => les.id === parseInt(id));
+
+        if (currentLessonIndex < chapters[currentChapterIndex].lessons.length - 1) {
+            return chapters[currentChapterIndex].lessons[currentLessonIndex + 1];
+        }
+
+        if (currentChapterIndex < chapters.length - 1) {
+            let nextChapter = chapters[currentChapterIndex + 1];
+            return nextChapter.lessons[0];
+        }
+
+        return null;
     };
 
     const previousLesson = getPreviousLesson();
@@ -199,7 +208,7 @@ const Lesson = () => {
                 />
             )}
             <div className="md:mr-64 xl:mr-96">
-                {lesson && (
+                {lesson ? (
                     <>
                         <Video videoURL={lesson.videoURL} onEnded={handleVideoEnded} />
                         <Info
@@ -218,6 +227,8 @@ const Lesson = () => {
                             onNewComment={handleNewComment}
                         />
                     </>
+                ) : (
+                    <Spinner />
                 )}
             </div>
             <ActionBar

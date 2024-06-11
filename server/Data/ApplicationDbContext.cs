@@ -35,6 +35,7 @@ namespace server.Data
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<UserConversation> UserConversations { get; set; }
+        public DbSet<Advise> Advises { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

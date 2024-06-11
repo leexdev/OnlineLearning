@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace server.Models
 {
+    [Table("ChatMessages")]
     public class ChatMessage : BaseModel
     {
         public int Id { get; set; }
         public string? UserId { get; set; }
         public User? User { get; set; }
         public int ConversationId { get; set; }
+        public bool IsRead { get; set; }
         public Conversation? Conversation { get; set; }
         public string? Message { get; set; }
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.Chat;
@@ -59,11 +60,41 @@ namespace server.Controllers
         }
 
         [HttpGet("conversation/{conversationId}/messages")]
-        public async Task<IActionResult> GetMessages(int conversationId)
+        public async Task<IActionResult> GetMessages(int conversationId, int page = 1, int pageSize = 15)
         {
-            var messages = await _chatMessageRepository.GetMessagesByConversationIdAsync(conversationId);
+            var messages = await _chatMessageRepository.GetMessagesByConversationIdAsync(conversationId, page, pageSize);
             var messageDtos = messages.Select(m => m.ToChatMessageDto()).ToList();
             return Ok(messageDtos);
         }
+
+        [HttpPost("messages/{messageId}/read")]
+        [Authorize]
+        public async Task<IActionResult> MarkMessageAsRead(int messageId)
+        {
+            var userName = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            var message = await _chatMessageRepository.GetMessageByIdAsync(messageId);
+            if (message == null)
+            {
+                return NotFound("Message not found.");
+            }
+
+            // Kiểm tra xem người dùng có quyền đánh dấu tin nhắn này là đã đọc hay không
+            if (!message.Conversation.UserConversations.Any(uc => uc.UserId == user.Id))
+            {
+                return Forbid("You are not allowed to read this message.");
+            }
+
+            message.IsRead = true;
+            await _chatMessageRepository.UpdateMessageAsync(message);
+
+            return NoContent();
+        }
+
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace server.Models
 {
-    [Table("Conversation")]
+    [Table("Conversations")]
     public class Conversation : BaseModel
     {
         public int Id { get; set; }

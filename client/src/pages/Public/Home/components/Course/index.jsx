@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import CourseList from './components/CourseList';
 import courseApi from '~/api/courseApi';
 import userCourseApi from '~/api/userCourseApi';
 import Spinner from '~/components/Common/Spinner';
+import AuthContext from '~/context/AuthContext';
 
 const Course = ({ title, subjectName }) => {
+    const { user } = useContext(AuthContext);
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -14,20 +16,18 @@ const Course = ({ title, subjectName }) => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const [courseData, userCourseData] = await Promise.all([
-                    courseApi.getBySubjectName(subjectName),
-                    userCourseApi.get(),
-                ]);
+                const courseData = await courseApi.getBySubjectName(subjectName);
 
-                console.log(courseData);
-                console.log(userCourseData);
+                if (user) {
+                    const userCourseData = await userCourseApi.get();
+                    const userCourseIdSet = new Set(userCourseData.map((course) => course.id));
+                    setUserCourseIds(userCourseIdSet);
+                    const filteredCourses = courseData.filter((course) => !userCourseIdSet.has(course.id));
+                    setCourses(filteredCourses);
+                } else {
+                    setCourses(courseData);
+                }
 
-                const userCourseIdSet = new Set(userCourseData.map((course) => course.id));
-                setUserCourseIds(userCourseIdSet);
-
-                const filteredCourses = courseData.filter((course) => !userCourseIdSet.has(course.id));
-
-                setCourses(filteredCourses);
                 setLoading(false);
             } catch (error) {
                 console.error('Failed to fetch courses', error);
@@ -37,7 +37,7 @@ const Course = ({ title, subjectName }) => {
         };
 
         fetchCourses();
-    }, [subjectName]);
+    }, [subjectName, user]);
 
     if (loading) {
         return <Spinner />;

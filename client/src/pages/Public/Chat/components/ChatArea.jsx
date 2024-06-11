@@ -1,108 +1,168 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import images from '~/assets/images';
 import SignalRService from '~/service/signalrService';
 
 const ChatArea = ({ selectedContact, currentUserEmail }) => {
-    const [messages, setMessages] = useState(selectedContact.messages || []);
+    const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
+    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(1);
+    const scrollableDivRef = useRef(null);
+
+    const fetchMoreMessages = async () => {
+        try {
+            const nextPage = page + 1;
+            const response = await SignalRService.getChatHistory(selectedContact.conversationId, nextPage);
+
+            if (response.length < 15) setHasMore(false);
+
+            const newMessages = response.filter(
+                (msg) => !messages.some((existingMsg) => existingMsg.createdAt === msg.createdAt),
+            );
+
+            const previousScrollHeight = scrollableDivRef.current.scrollHeight;
+            const previousScrollTop = scrollableDivRef.current.scrollTop;
+
+            const sortedMessages = [...newMessages, ...messages].sort(
+                (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+            );
+            setMessages(sortedMessages);
+            setPage(nextPage);
+
+            const newScrollHeight = scrollableDivRef.current.scrollHeight;
+            const newScrollTop = previousScrollTop + (newScrollHeight - previousScrollHeight);
+
+            setTimeout(() => {
+                scrollableDivRef.current.scrollTop = newScrollTop;
+            }, 0);
+        } catch (error) {
+            console.error('Error fetching more messages: ', error);
+        }
+    };
 
     useEffect(() => {
         const handleMessageReceive = (user, message, email) => {
-            console.log(`Received message from ${user}: ${message}`);
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                { name: user, message: message, email: email, createdAt: new Date() },
-            ]);
+            setMessages((prevMessages) => {
+                const newMessages = [...prevMessages, { name: user, message, email, createdAt: new Date() }];
+                return newMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            });
         };
 
         SignalRService.addReceiveMessageListener(handleMessageReceive);
-        console.log('Listener registered for receiving messages.');
 
         return () => {
             SignalRService.removeReceiveMessageListener(handleMessageReceive);
-            console.log('Listener unregistered.');
         };
     }, []);
 
     useEffect(() => {
-        if (selectedContact?.messages) {
-            setMessages(selectedContact.messages);
-        } else {
-            setMessages([]); // Reset messages nếu không có dữ liệu
-        }
-    }, [selectedContact?.messages]);
+        const sortedMessages = (selectedContact.messages || []).sort(
+            (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+        );
+        setMessages(sortedMessages);
+        setPage(1);
+        setHasMore(true);
+    }, [selectedContact]);
 
     useEffect(() => {
-        setMessages(selectedContact.messages || []);
+        scrollableDivRef.current.scrollTop = scrollableDivRef.current.scrollHeight;
     }, [selectedContact]);
 
     const handleSendMessage = async () => {
-        if (!newMessage.trim()) {
-            console.error('Message is empty');
-            return;
-        }
-
+        if (!newMessage.trim()) return;
         try {
-            console.log('Sending message:', newMessage);
             await SignalRService.sendMessage(newMessage, selectedContact.conversationId);
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                { name: 'Me', message: newMessage, email: currentUserEmail, createdAt: new Date() },
-            ]);
+
+            // Cập nhật state `messages` sau khi gửi thành công
+            const newSentMessage = {
+                name: currentUserEmail, // Giả định rằng name là email của người dùng hiện tại
+                message: newMessage,
+                email: currentUserEmail,
+                createdAt: new Date(),
+            };
+            setMessages((prevMessages) => [...prevMessages, newSentMessage]);
+
             setNewMessage('');
         } catch (error) {
             console.error('Error sending message: ', error);
         }
     };
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') handleSendMessage();
+    };
+
     return (
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col overflow-hidden">
             <header className="bg-white p-4 text-gray-700">
                 <h1 className="text-2xl font-semibold">{selectedContact.name}</h1>
             </header>
 
-            <div className="flex-1 overflow-y-auto p-4">
-                {messages.map((message, index) => (
-                    <div key={index} className={`flex mb-4 ${message.email === currentUserEmail ? 'justify-end' : ''}`}>
-                        {message.email !== currentUserEmail && (
-                            <div className="w-9 h-9 rounded-full flex items-center justify-center mr-2">
-                                <img src={selectedContact.avatar} alt="User Avatar" className="w-8 h-8 rounded-full" />
-                            </div>
-                        )}
+            <div
+                className="flex-1 overflow-y-auto p-4"
+                id="scrollableDiv"
+                ref={scrollableDivRef}
+                style={{ display: 'flex', flexDirection: 'column-reverse', height: '400px' }}
+            >
+                <InfiniteScroll
+                    dataLength={messages.length}
+                    next={fetchMoreMessages}
+                    hasMore={hasMore}
+                    inverse={true}
+                    scrollableTarget="scrollableDiv"
+                >
+                    {messages.map((message, index) => (
                         <div
-                            className={`flex max-w-96 ${
-                                message.email === currentUserEmail
-                                    ? 'bg-indigo-500 text-white'
-                                    : 'bg-white text-gray-700'
-                            } rounded-lg p-3 gap-3`}
+                            key={index}
+                            className={`flex mb-4 ${message.email === currentUserEmail ? 'justify-end' : ''}`}
                         >
-                            <p>{message.message}</p>
-                        </div>
-                        {message.email === currentUserEmail && (
-                            <div className="w-9 h-9 rounded-full flex items-center justify-center ml-2">
-                                <img
-                                    src="https://placehold.co/200x/b7a8ff/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
-                                    alt="My Avatar"
-                                    className="w-8 h-8 rounded-full"
-                                />
+                            {message.email !== currentUserEmail && (
+                                <div className="w-9 h-9 rounded-full flex items-center justify-center mr-2">
+                                    <img
+                                        src={selectedContact.avatar ? selectedContact.avatar : images.user}
+                                        alt="User Avatar"
+                                        className="w-8 h-8 rounded-full"
+                                    />
+                                </div>
+                            )}
+                            <div
+                                className={`max-w-xs md:max-w-md break-words p-2 rounded-lg ${
+                                    message.email === currentUserEmail
+                                        ? 'bg-teal-400 text-white'
+                                        : 'bg-gray-200 text-gray-700'
+                                }`}
+                            >
+                                <p className="text-lg">{message.message}</p>
+                                <span
+                                    className={`text-xs text-gray-500 ${
+                                        message.email === currentUserEmail ? ' text-white' : ' text-gray-700'
+                                    }`}
+                                >
+                                    {new Date(message.createdAt).toLocaleTimeString([], {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: false,
+                                    })}
+                                </span>
                             </div>
-                        )}
-                    </div>
-                ))}
+                        </div>
+                    ))}
+                </InfiniteScroll>
             </div>
 
-            <footer className="bg-white border-t border-gray-300 p-4">
-                <div className="flex items-center">
-                    <input
-                        type="text"
-                        placeholder="Nhập tin nhắn..."
-                        className="w-full p-2 rounded-md border border-gray-400 focus:outline-none focus:border-peach focus:ring-peach"
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                    />
-                    <button onClick={handleSendMessage} className="bg-peach text-white px-4 py-2 rounded-md ml-2">
-                        Gửi
-                    </button>
-                </div>
+            <footer className="bg-white p-4 flex">
+                <input
+                    type="text"
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    placeholder="Nhập tin nhắn..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                />
+                <button onClick={handleSendMessage} className="bg-teal-500 text-white p-2 ml-2 rounded-md">
+                    Gửi
+                </button>
             </footer>
         </div>
     );

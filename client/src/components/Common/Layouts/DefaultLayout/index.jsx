@@ -10,7 +10,7 @@ const DefaultLayout = ({ children }) => {
             <div className="header overflow-hidden">
                 <Header />
             </div>
-            <div className="content mt-[56px] lg:min-h-screen bg-content">{children}</div>
+            <div className="content mt-[56px] lg:min-h-screen bg-content h-[calc(100vh-56px)]">{children}</div>
             <div className="footer">
                 <Footer />
             </div>

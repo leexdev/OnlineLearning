@@ -15,10 +15,13 @@ public class ChatMessageRepository : IChatMessageRepository
         _context = context;
     }
 
-    public async Task<List<ChatMessage>> GetMessagesByConversationIdAsync(int conversationId)
+    public async Task<List<ChatMessage>> GetMessagesByConversationIdAsync(int conversationId, int page, int pageSize)
     {
         var chatMessages = await _context.ChatMessages
             .Where(m => m.ConversationId == conversationId)
+            .OrderByDescending(m => m.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .Include(m => m.User)
             .ToListAsync();
 
@@ -34,8 +37,24 @@ public class ChatMessageRepository : IChatMessageRepository
     public async Task<ChatMessage> GetLastMessageByConversationIdAsync(int conversationId)
     {
         return await _context.ChatMessages
+            .Include(c => c.Conversation).ThenInclude(c => c.UserConversations)
             .Where(m => m.ConversationId == conversationId)
             .OrderByDescending(m => m.CreatedAt)
             .FirstOrDefaultAsync();
     }
+
+    public async Task<ChatMessage> GetMessageByIdAsync(int messageId)
+    {
+        return await _context.ChatMessages
+            .Include(m => m.Conversation)
+            .ThenInclude(c => c.UserConversations)
+            .FirstOrDefaultAsync(m => m.Id == messageId);
+    }
+
+    public async Task UpdateMessageAsync(ChatMessage message)
+    {
+        _context.ChatMessages.Update(message);
+        await _context.SaveChangesAsync();
+    }
+
 }

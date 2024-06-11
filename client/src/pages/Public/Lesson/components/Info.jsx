@@ -44,15 +44,14 @@ const Info = ({ title, description, duration, comments = [], lessonId, courseId 
 
             navigate(`/lesson/${lessonId}/questions`, { state: { lessonId, courseId } });
         } catch (error) {
-            setError('Có lỗi xảy ra. Vui lòng thử lại sau.');
-            console.error('Error checking access or fetching exercises:', error);
+            setError('Bạn chưa mua khóa học này. Hãy đăng ký khóa học để làm bài tập!');
         }
     };
 
     return (
         <Fragment>
             {error && <MessageModal title="Lỗi" image={images.sadcat} message={error} onClose={() => setError(null)} />}
-            <div className="px-5 md:px-10 xl:px-64 py-2">
+            <div className="px-5 md:px-10 xl:px-64 py-2 md:pb-10">
                 <h4 className="title text-2xl font-bold mb-2">{title}</h4>
                 <div className="info flex">
                     <div className="time">

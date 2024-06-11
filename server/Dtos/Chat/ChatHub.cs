@@ -42,26 +42,11 @@ namespace server.Dtos.Message
             {
                 UserId = user.Id,
                 Message = message,
-                ConversationId = conversationId,
-                CreatedAt = DateTime.UtcNow
+                ConversationId = conversationId
             };
             await _chatMessageRepository.AddMessageAsync(chatMessage);
 
-            // Log thông tin gửi đi
-            Console.WriteLine($"Sending message to group {conversationId}: {user.Name} - {message}");
-
-            await Clients.Group(conversationId.ToString()).SendAsync("ReceiveMessage", user.Name, message, user.Email)
-                .ContinueWith(task =>
-                {
-                    if (task.IsCompletedSuccessfully)
-                    {
-                        Console.WriteLine($"Message successfully sent to group {conversationId}");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Failed to send message to group {conversationId}: {task.Exception}");
-                    }
-                });
+            await Clients.Group(conversationId.ToString()).SendAsync("ReceiveMessage", user.Name, message, user.Email);
         }
 
 

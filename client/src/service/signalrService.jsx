@@ -1,9 +1,7 @@
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import chatApi from '~/api/chatApi';
 
-const getJwtToken = () => {
-    return localStorage.getItem('jwtToken');
-};
+const getJwtToken = () => localStorage.getItem('jwtToken');
 
 class SignalRService {
     constructor() {
@@ -11,19 +9,24 @@ class SignalRService {
         this.receiveMessageListeners = [];
     }
 
-    startConnection = async () => {
+    startConnection = async (userToken) => {
         if (!this.connection) {
-            const token = getJwtToken();
+            const token = userToken || getJwtToken();
             this.connection = new HubConnectionBuilder()
-                .withUrl('https://localhost:5032/chatHub', {
-                    accessTokenFactory: () => token,
-                    withCredentials: true,
+                .withUrl('http://localhost:5032/chatHub', { 
+                    accessTokenFactory: () => token, 
+                    withCredentials: true 
                 })
                 .configureLogging(LogLevel.Information)
                 .build();
 
             this.connection.onclose(async () => {
-                await this.startConnection();
+                console.log('SignalR connection closed, attempting to reconnect...');
+                await this.startConnection(userToken);
+            });
+
+            this.connection.on('ReceiveMessage', (user, message, email) => {
+                this.receiveMessageListeners.forEach(callback => callback(user, message, email));
             });
 
             try {
@@ -31,26 +34,17 @@ class SignalRService {
                 console.log('SignalR connection established');
             } catch (error) {
                 console.error('SignalR connection error: ', error);
-                setTimeout(this.startConnection, 5000); // Thử kết nối lại sau 5 giây
+                setTimeout(() => this.startConnection(userToken), 5000);
             }
         }
     };
 
     addReceiveMessageListener = (callback) => {
-        if (this.connection) {
-            this.connection.on('ReceiveMessage', callback);
-            console.log('Callback registered:', callback);
-            this.receiveMessageListeners.push(callback);
-        } else {
-            console.log('Connection not established yet.');
-        }
+        this.receiveMessageListeners.push(callback);
     };
 
     removeReceiveMessageListener = (callback) => {
-        if (this.connection) {
-            this.connection.off('ReceiveMessage', callback);
-            this.receiveMessageListeners = this.receiveMessageListeners.filter((listener) => listener !== callback);
-        }
+        this.receiveMessageListeners = this.receiveMessageListeners.filter(listener => listener !== callback);
     };
 
     sendMessage = async (message, conversationId) => {
@@ -85,10 +79,9 @@ class SignalRService {
     };
 
     getChatHistory = chatApi.getChatHistory;
-
     getConversationWithContact = chatApi.getConversationWithContact;
-
     createConversation = chatApi.createConversation;
+    markMessageAsRead = chatApi.markMessageAsRead;
 }
 
 export default new SignalRService();

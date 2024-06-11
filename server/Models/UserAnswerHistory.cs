@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace server.Models
 {
+    [Table("UserAnswerHistories")]
     public class UserAnswerHistory : BaseModel
     {
         public int Id { get; set; }

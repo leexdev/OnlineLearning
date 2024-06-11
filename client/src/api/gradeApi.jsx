@@ -1,10 +1,9 @@
 import axiosClient from './axiosClient';
 
 const gradeApi = {
-    async getAll(params) {
+    async getAll() {
         const url = '/Grade/get-all';
-        const token = localStorage.getItem('jwtToken');
-        return await axiosClient.get(url, { params, headers: { Authorization: `Bearer ${token}`} });
+        return await axiosClient.get(url);
     },
 
     async get(id) {

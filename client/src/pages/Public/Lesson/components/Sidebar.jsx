@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import { faBars, faChevronDown, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,7 @@ import AuthContext from '~/context/AuthContext';
 
 const Sidebar = ({ chapters, activeLessonId, completedLessons, handleLessonClick }) => {
     const navigate = useNavigate();
+    const sidebarRef = useRef(null);
 
     const getDefaultOpenChapters = () => {
         const openChapters = {};
@@ -18,6 +19,7 @@ const Sidebar = ({ chapters, activeLessonId, completedLessons, handleLessonClick
     };
 
     const [openChapters, setOpenChapters] = useState(getDefaultOpenChapters());
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const handleToggle = (index) => {
         setOpenChapters((prev) => ({
@@ -26,9 +28,31 @@ const Sidebar = ({ chapters, activeLessonId, completedLessons, handleLessonClick
         }));
     };
 
+    const handleSidebarToggle = () => {
+        setIsSidebarOpen((prev) => !prev);
+    };
+
+    const handleClickOutside = (event) => {
+        if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+            setIsSidebarOpen(false);
+        }
+    };
+
     useEffect(() => {
         setOpenChapters(getDefaultOpenChapters());
     }, [activeLessonId, chapters]);
+
+    useEffect(() => {
+        if (isSidebarOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isSidebarOpen]);
 
     const getCompletedLessonsCount = (chapter) => {
         return chapter.lessons.filter((lesson) => completedLessons.includes(lesson.id)).length;
@@ -36,19 +60,24 @@ const Sidebar = ({ chapters, activeLessonId, completedLessons, handleLessonClick
 
     return (
         <Fragment>
-            <button
-                data-drawer-target="sidebar-multi-level-sidebar"
-                data-drawer-toggle="sidebar-multi-level-sidebar"
-                aria-controls="sidebar-multi-level-sidebar"
-                type="button"
-                className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
-            >
-                <span className="sr-only">Open sidebar</span>
-                <FontAwesomeIcon icon={faBars} />
-            </button>
+            <div className="md:hidden text-right flex justify-end items-center">
+                <span className='font-bold'>Danh sách bài học</span>
+                <button
+                    onClick={handleSidebarToggle}
+                    aria-controls="sidebar-multi-level-sidebar"
+                    type="button"
+                    className="inline-flex right-0 items-center p-4 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                >
+                    <span className="sr-only">Open sidebar</span>
+                    <FontAwesomeIcon icon={faBars} />
+                </button>
+            </div>
             <aside
+                ref={sidebarRef}
                 id="sidebar-multi-level-sidebar"
-                className="fixed top-0 h-screen left-auto right-0 z-40 w-52 sm:w-64 md:w-64 xl:w-96 transition-transform translate-x-full sm:translate-x-0 pt-[60px]"
+                className={`fixed top-0 h-screen left-auto right-0 z-40 w-52 sm:w-64 md:w-64 xl:w-96 transition-transform transform ${
+                    isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
+                } sm:translate-x-0 pt-[60px]`}
                 aria-label="Sidebar"
             >
                 <h4 className="p-3 text-lg md:text-xl font-bold bg-white">Nội dung khóa học</h4>

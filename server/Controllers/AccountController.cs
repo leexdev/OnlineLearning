@@ -252,26 +252,44 @@ namespace server.Controllers
         {
             var userName = User.GetUsername();
             var user = await _userManager.FindByNameAsync(userName);
+            var userCurrent = await _userRepo.GetUserByIdAsync(user.Id);
             var users = await _userRepo.GetAllExceptCurrentAsync(user.Id);
             var userDtos = new List<UserDto>();
 
             foreach (var userItem in users)
             {
-                var conversations = user.UserConversations.Select(uc => uc.ConversationId).ToList();
-                var lastMessages = await Task.WhenAll(conversations.Select(id => _chatMessageRepository.GetLastMessageByConversationIdAsync(id)));
+                var conversations = userCurrent.UserConversations.Select(uc => uc.ConversationId).ToList();
+                ChatMessage lastMessageOverall = null;
 
-                var lastMessage = lastMessages
-                    .OrderByDescending(m => m?.CreatedAt)
-                    .FirstOrDefault();
+                foreach (var id in conversations)
+                {
+                    var lastMessage = await _chatMessageRepository.GetLastMessageByConversationIdAsync(id);
+                    if (lastMessage != null)
+                    {
+                        // Chỉ lấy tin nhắn nếu người gửi hoặc người nhận là userItem
+                        if (lastMessage.UserId == userItem.Id || lastMessage.Conversation.UserConversations.Any(uc => uc.UserId == userItem.Id))
+                        {
+                            if (lastMessageOverall == null || lastMessage.CreatedAt > lastMessageOverall.CreatedAt)
+                            {
+                                lastMessageOverall = lastMessage;
+                            }
+                        }
+                    }
+                }
 
                 userDtos.Add(new UserDto
                 {
                     Id = userItem.Id,
                     Name = userItem.Name,
                     Avatar = userItem.Avatar,
-                    LastMessage = lastMessage?.Message
+                    LastMessage = lastMessageOverall?.Message,
+                    LastMessageTime = lastMessageOverall?.CreatedAt,
+                    LastMessageIsRead = lastMessageOverall?.IsRead
                 });
             }
+
+            // Sắp xếp danh sách người dùng theo thời gian tin nhắn cuối cùng
+            userDtos = userDtos.OrderByDescending(u => u.LastMessageTime).ToList();
 
             return Ok(userDtos);
         }

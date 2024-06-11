@@ -111,7 +111,7 @@ namespace server.Repository
 
         public async Task<User?> GetUserByIdAsync(string userId)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId && !u.IsDeleted);
+            var user = await _userManager.Users.Include(u => u.UserConversations).FirstOrDefaultAsync(u => u.Id == userId && !u.IsDeleted);
             if (user == null)
             {
                 return null;

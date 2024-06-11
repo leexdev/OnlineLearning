@@ -24,5 +24,6 @@ namespace server.Models
         public List<Chapter> Chapters { get; set; } = new List<Chapter>();
         public List<UserCourse> UserCourses { get; set; } = new List<UserCourse>();
         public List<Payment> Payments { get; set; } = new List<Payment>();
+        public List<Advise> Advises { get; set; } = new List<Advise>();
     }
 }

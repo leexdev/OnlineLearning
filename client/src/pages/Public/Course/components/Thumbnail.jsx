@@ -5,13 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import AuthContext from '~/context/AuthContext';
 import MessageModal from '~/components/Common/MessageModal';
 import images from '~/assets/images';
-import AdviseForm from './AdviseFrom';
+import AdviseForm from './AdviseForm';
 
-const Thumbnail = ({ course }) => {
-    const { user } = useContext(AuthContext);
+const Thumbnail = ({ course, setAdviseSuccess, user }) => {
     const navigate = useNavigate();
     const [error, setError] = useState(null);
-    const [showAdviseForm, setShowAdviseForm] = useState(false); // State to manage AdviseForm visibility
+    const [showAdviseForm, setShowAdviseForm] = useState(false);
 
     const handleRegisterClick = () => {
         if (!user) {
@@ -27,6 +26,10 @@ const Thumbnail = ({ course }) => {
 
     const closeAdviseForm = () => {
         setShowAdviseForm(false);
+    };
+
+    const handleSetAdviseSuccess = (message) => {
+        setAdviseSuccess(message);
     };
 
     return (
@@ -77,7 +80,7 @@ const Thumbnail = ({ course }) => {
                 </div>
             </div>
             {error && <MessageModal message={error} title="Lỗi" image={images.sadcat} onClose={() => setError(null)} />}
-            {showAdviseForm && <AdviseForm onClose={closeAdviseForm} />}
+            {showAdviseForm && <AdviseForm courseId={course.id} onClose={closeAdviseForm} setAdviseSuccess={handleSetAdviseSuccess} />}
         </div>
     );
 };

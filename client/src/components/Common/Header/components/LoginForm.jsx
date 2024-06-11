@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import userApi from '~/api/userApi';
 import EmailInput from './EmailInput';
 import PasswordInput from './PasswordInput';
@@ -25,7 +26,7 @@ const LoginForm = ({ switchToRegister, onClose }) => {
             });
             const token = response.token;
             localStorage.setItem('jwtToken', token);
-            alert('Đăng nhập thành công');
+            toast.success('Đăng nhập thành công');
             login(token);
             onClose();
         } catch (error) {
@@ -36,7 +37,7 @@ const LoginForm = ({ switchToRegister, onClose }) => {
                     setError(key, { type: 'manual', message: errorData[key] })
                 );
             } else {
-                alert('Đã xảy ra lỗi khi đăng nhập.');
+                toast.error('Đã xảy ra lỗi khi đăng nhập.');
             }
         }
     };

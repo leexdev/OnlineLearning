@@ -1,13 +1,14 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode as decode } from 'jwt-decode';
-import userApi from '~/api/userApi'; // Đảm bảo đường dẫn chính xác
+import userApi from '~/api/userApi';
+import { toast } from 'react-toastify';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true); // Trạng thái tải
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -20,10 +21,10 @@ export const AuthProvider = ({ children }) => {
                     setUser({ ...decodedUser, ...userDetails });
                 } catch (error) {
                     console.error('Error fetching user details:', error);
-                    setUser(decodedUser); // Trong trường hợp lỗi, chỉ sử dụng thông tin từ JWT
+                    setUser(decodedUser)
                 }
             }
-            setLoading(false); // Kết thúc trạng thái tải
+            setLoading(false);
         };
 
         fetchUserDetails();
@@ -35,7 +36,6 @@ export const AuthProvider = ({ children }) => {
         try {
             const userDetails = await userApi.get();
             setUser({ ...decodedUser, ...userDetails });
-            navigate('/'); // Chuyển hướng sau khi lấy thông tin chi tiết thành công
         } catch (error) {
             console.error('Error fetching user details:', error);
             setUser(decodedUser);
@@ -45,6 +45,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         localStorage.removeItem('jwtToken');
+        toast.success("Đăng xuất thành công");
         setUser(null);
         navigate('/');
     };

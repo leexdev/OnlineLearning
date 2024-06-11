@@ -15,7 +15,8 @@ namespace server.Dtos.User
         public string? Sex { get; set; }
         public string? Avatar { get; set; }
         public IList<string> Roles { get; set; } = new List<string>();
-
         public string? LastMessage { get; set; }
+        public DateTime? LastMessageTime { get; set; }
+        public bool? LastMessageIsRead { get; set; }
     }
 }

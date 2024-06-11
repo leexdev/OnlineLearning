@@ -155,6 +155,42 @@ namespace server.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("server.Models.Advise", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Academic")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BirthDay")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("courseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("courseId");
+
+                    b.ToTable("Advises");
+                });
+
             modelBuilder.Entity("server.Models.Answer", b =>
                 {
                     b.Property<int>("Id")
@@ -257,6 +293,9 @@ namespace server.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
@@ -324,7 +363,7 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Conversation");
+                    b.ToTable("Conversations");
                 });
 
             modelBuilder.Entity("server.Models.Course", b =>
@@ -886,6 +925,17 @@ namespace server.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("server.Models.Advise", b =>
+                {
+                    b.HasOne("server.Models.Course", "Course")
+                        .WithMany("Advises")
+                        .HasForeignKey("courseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+                });
+
             modelBuilder.Entity("server.Models.Answer", b =>
                 {
                     b.HasOne("server.Models.Question", "Question")
@@ -1123,6 +1173,8 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.Course", b =>
                 {
+                    b.Navigation("Advises");
+
                     b.Navigation("Chapters");
 
                     b.Navigation("Payments");

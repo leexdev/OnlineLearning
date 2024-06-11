@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Fragment, useContext } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import Nav from './components/Navbar';
 import Info from './components/Info';
@@ -14,7 +14,6 @@ import MessageModal from '~/components/Common/MessageModal';
 import userCourseApi from '~/api/userCourseApi';
 import images from '~/assets/images';
 import { Helmet } from 'react-helmet';
-import { data } from 'autoprefixer';
 
 const Course = () => {
     const { id } = useParams();
@@ -25,56 +24,41 @@ const Course = () => {
     const [completedLessons, setCompletedLessons] = useState([]);
     const [videoUrl, setVideoUrl] = useState(null);
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
     const [hasPurchased, setHasPurchased] = useState(false);
 
     useEffect(() => {
-        const fetchCourse = async () => {
+        const fetchCourseData = async () => {
+            setLoading(true);
+            setError(null);
+            setSuccess(null);
+
             try {
-                const data = await courseApi.get(id);
-                setCourse(data);
+                const courseData = await courseApi.get(id);
+                setCourse(courseData);
+
+                if (user) {
+                    const completedData = await lessonCompletedApi.getLessonCompletedByUser(courseData.id);
+                    const completedLessonIds = completedData.map((lesson) => lesson.lessonId);
+                    setCompletedLessons(completedLessonIds);
+
+                    const userCourses = await userCourseApi.get();
+                    const purchasedCourse = userCourses.find((userCourse) => userCourse.id === parseInt(id, 10));
+                    setHasPurchased(!!purchasedCourse);
+                }
             } catch (error) {
-                console.error('Error fetching course:', error);
+                console.error('Error fetching course data:', error);
+                setError('Có lỗi xảy ra khi tải dữ liệu khóa học');
             } finally {
                 setLoading(false);
             }
         };
 
-        const fetchCompletedLessons = async () => {
-            if (!user) {
-                console.error('User not logged in');
-                return;
-            }
-            try {
-                const data = await lessonCompletedApi.get();
-                const completedLessonIds = data.map((lesson) => lesson.lessonId);
-                setCompletedLessons(completedLessonIds);
-            } catch (error) {
-                console.error('Error fetching completed lessons:', error);
-            }
-        };
-
-        const fetchUserCourse = async () => {
-            if (!user) {
-                console.error('User not logged in');
-                return;
-            }
-            try {
-                const data = await userCourseApi.get();
-                const purchasedCourse = data.find((course) => course.id === parseInt(id, 10));
-                setHasPurchased(!!purchasedCourse);
-            } catch (error) {
-                console.error('Error fetching user courses:', error);
-            }
-        };
-
-        fetchCourse();
-        if (user) {
-            fetchCompletedLessons();
-            fetchUserCourse();
-        }
+        fetchCourseData();
     }, [id, user]);
 
     const handleLessonClick = async (lessonId) => {
+        setLoading(true);
         try {
             const data = await lessonApi.getVideo(lessonId);
             if (data.status === 403) {
@@ -106,14 +90,23 @@ const Course = () => {
     return (
         <Fragment>
             <Helmet>
-                <title>{course.name}</title>
+                <title>{course ? course.name : 'Loading...'}</title>
             </Helmet>
-            {error && <MessageModal message={error} title="Lỗi" image={images.sadcat} onClose={() => setError(null)} />}{' '}
-            {/* Display error modal */}
+            {error && (
+                <MessageModal message={error} title="Thông báo" image={images.sadcat} onClose={() => setError(null)} />
+            )}
+            {success && (
+                <MessageModal
+                    message={success}
+                    title="Thông báo"
+                    image={images.funnycat}
+                    onClose={() => setSuccess(null)}
+                />
+            )}
             <Header name={course?.name || 'Loading...'} />
             <div className="pt-5 pb-10">
                 <div className="container">
-                    {!hasPurchased && <Thumbnail course={course} />}
+                    {!hasPurchased && <Thumbnail user={user} course={course} setAdviseSuccess={setSuccess} />}
                     <div className={`lg:w-2/3 lg:px-8 ${hasPurchased ? 'w-full' : ''}`}>
                         <Nav />
                         <Info course={course} />
