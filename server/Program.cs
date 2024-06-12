@@ -13,6 +13,9 @@ using server.Service;
 using server.Service.TextToSpeech;
 using server.Service.VnPay;
 using server.Dtos.Message;
+using Google.Cloud.Language.V1;
+using server.Service.CloudNaturalLanguage;
+using server.Service.SpeechToText;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -123,6 +126,18 @@ builder.Services.AddSingleton(provider =>
     return clientBuilder.Build();
 });
 
+builder.Services.AddSingleton(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var credentialsPath = configuration["GoogleCloud:CredentialsPath"];
+    var clientBuilder = new LanguageServiceClientBuilder
+    {
+        CredentialsPath = credentialsPath
+    };
+    return clientBuilder.Build();
+});
+
+
 builder.Services.AddScoped<IGradeRepository, GradeRepository>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
@@ -148,6 +163,9 @@ builder.Services.AddScoped<IVnPayService, VnPayService>();
 builder.Services.AddScoped<ITextToSpeechService, TextToSpeechService>();
 builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
+builder.Services.AddScoped<ITextAnalysisService, TextAnalysisService>();
+builder.Services.AddScoped<ISpeechToTextService, SpeechToTextService>();
+
 builder.Services.AddSingleton<VnPayLibrary>();
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

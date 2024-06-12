@@ -4,18 +4,19 @@ import chatApi from '~/api/chatApi';
 const getJwtToken = () => localStorage.getItem('jwtToken');
 
 class SignalRService {
-    constructor() {
+     constructor() {
         this.connection = null;
         this.receiveMessageListeners = [];
+        this.isListenerAdded = false; // Chuyển biến trạng thái ra ngoài hàm
     }
 
     startConnection = async (userToken) => {
-        if (!this.connection) {
+        if (!this.connection || this.connection.state !== 'Connected') {
             const token = userToken || getJwtToken();
             this.connection = new HubConnectionBuilder()
-                .withUrl('http://localhost:5032/chatHub', { 
-                    accessTokenFactory: () => token, 
-                    withCredentials: true 
+                .withUrl('https://localhost:5032/chatHub', {
+                    accessTokenFactory: () => token,
+                    withCredentials: true,
                 })
                 .configureLogging(LogLevel.Information)
                 .build();
@@ -25,26 +26,37 @@ class SignalRService {
                 await this.startConnection(userToken);
             });
 
-            this.connection.on('ReceiveMessage', (user, message, email) => {
-                this.receiveMessageListeners.forEach(callback => callback(user, message, email));
-            });
+            if (!this.isListenerAdded) { // Kiểm tra nếu sự kiện đã được đăng ký
+                this.connection.on('ReceiveMessage', (user, message, email) => {
+                    console.log('ReceiveMessage event triggered');
+                    this.receiveMessageListeners.forEach((callback) => {
+                        console.log('Executing callback with message:', message);
+                        callback(user, message, email);
+                    });
+                });
+                this.isListenerAdded = true; // Đánh dấu là sự kiện đã được đăng ký
+            }
 
             try {
                 await this.connection.start();
                 console.log('SignalR connection established');
             } catch (error) {
-                console.error('SignalR connection error: ', error);
+                console.error('SignalR connection error:', error);
                 setTimeout(() => this.startConnection(userToken), 5000);
             }
         }
     };
 
     addReceiveMessageListener = (callback) => {
-        this.receiveMessageListeners.push(callback);
+        console.log('Adding receive message listener:', callback);
+        if (!this.receiveMessageListeners.includes(callback)) {
+            this.receiveMessageListeners.push(callback);
+        }
     };
 
     removeReceiveMessageListener = (callback) => {
-        this.receiveMessageListeners = this.receiveMessageListeners.filter(listener => listener !== callback);
+        console.log('Removing receive message listener:', callback);
+        this.receiveMessageListeners = this.receiveMessageListeners.filter((listener) => listener !== callback);
     };
 
     sendMessage = async (message, conversationId) => {
@@ -56,7 +68,7 @@ class SignalRService {
             await this.connection.send('SendMessage', message, conversationId);
             console.log(`Message sent to conversation ${conversationId}`);
         } catch (error) {
-            console.error('Error sending message: ', error);
+            console.error('Error sending message:', error);
         }
     };
 
@@ -65,7 +77,7 @@ class SignalRService {
             await this.connection.invoke('JoinConversation', conversationId);
             console.log(`Joined conversation ${conversationId}`);
         } catch (error) {
-            console.error('Error joining conversation: ', error);
+            console.error('Error joining conversation:', error);
         }
     };
 
@@ -74,7 +86,7 @@ class SignalRService {
             await this.connection.invoke('LeaveConversation', conversationId);
             console.log(`Left conversation ${conversationId}`);
         } catch (error) {
-            console.error('Error leaving conversation: ', error);
+            console.error('Error leaving conversation:', error);
         }
     };
 

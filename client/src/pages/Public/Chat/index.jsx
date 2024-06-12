@@ -28,37 +28,36 @@ const Chat = () => {
             SignalRService.startConnection(userToken);
             console.log('SignalR connection started with user token');
 
-            SignalRService.addReceiveMessageListener((message) => {
+            const handleReceiveMessage = (user2, message, email) => {
                 setContacts((prevContacts) => {
                     return prevContacts.map((contact) => {
-                        if (contact.id === message.senderId) {
+                        if (contact.id === user2.id) {
                             return {
                                 ...contact,
-                                lastMessage: message.content,
-                                lastMessageTime: message.timestamp,
-                                lastMessageIsRead: false,
+                                lastMessage: message,
+                                lastMessageTime: new Date(),
+                                lastMessageIsRead: email !== user.email,
                             };
                         }
                         return contact;
                     });
                 });
 
-                // Nếu người gửi tin nhắn là người dùng hiện tại đang được chọn, cập nhật `selectedContact`
-                if (selectedContact && selectedContact.id === message.senderId) {
+                if (selectedContact && selectedContact.id === user2.id) {
                     setSelectedContact((prevSelected) => ({
                         ...prevSelected,
-                        messages: [...prevSelected.messages, message],
+                        messages: [...prevSelected.messages, { user: user2, message, email, createdAt: new Date() }],
                     }));
                 }
-            });
-        }
+            };
 
-        return () => {
-            SignalRService.receiveMessageListeners.forEach((listener) => {
-                SignalRService.removeReceiveMessageListener(listener);
-            });
-        };
-    }, [user, selectedContact]);
+            SignalRService.addReceiveMessageListener(handleReceiveMessage);
+
+            return () => {
+                SignalRService.removeReceiveMessageListener(handleReceiveMessage);
+            };
+        }
+    }, [user]);
 
     const handleSelectContact = async (contact) => {
         setSelectedContact(contact);
@@ -75,7 +74,7 @@ const Chat = () => {
                 for (const message of history) {
                     if (!message.isRead) {
                         await SignalRService.markMessageAsRead(message.id);
-                        console.log('đã xem');
+                        console.log('Message marked as read');
                     }
                 }
             } else {
@@ -96,7 +95,7 @@ const Chat = () => {
 
     return (
         <div className="flex h-[calc(100vh-56px)]">
-            <Sidebar contacts={contacts} onSelectContact={handleSelectContact} />
+            <Sidebar contacts={contacts} onSelectContact={handleSelectContact} selectedContact={selectedContact} />
             {selectedContact && <ChatArea selectedContact={selectedContact} currentUserEmail={user.email} />}
         </div>
     );

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar, faGraduationCap, faPhone, faUser, faXmark } from '@fortawesome/free-solid-svg-icons';
 import adviseApi from '~/api/adviseApi';
 
-const AdviseForm = ({ courseId, onClose, setAdviseSuccess    }) => {
+const AdviseForm = ({ courseId, onClose, setAdviseSuccess }) => {
     const [focusedInput, setFocusedInput] = useState(null);
     const {
         register,
@@ -76,7 +76,6 @@ const AdviseForm = ({ courseId, onClose, setAdviseSuccess    }) => {
                                         <FontAwesomeIcon icon={faUser} />
                                     </span>
                                     <input
-                                        value={user.name}
                                         type="text"
                                         className="w-full px-3 py-2 border-none focus:outline-none focus:ring-0"
                                         placeholder="Họ và tên"

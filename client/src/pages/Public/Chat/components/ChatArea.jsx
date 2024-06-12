@@ -9,6 +9,7 @@ const ChatArea = ({ selectedContact, currentUserEmail }) => {
     const [hasMore, setHasMore] = useState(true);
     const [page, setPage] = useState(1);
     const scrollableDivRef = useRef(null);
+    const isListenerAdded = useRef(false); // Sử dụng useRef để theo dõi trạng thái listener
 
     const fetchMoreMessages = async () => {
         try {
@@ -20,6 +21,8 @@ const ChatArea = ({ selectedContact, currentUserEmail }) => {
             const newMessages = response.filter(
                 (msg) => !messages.some((existingMsg) => existingMsg.createdAt === msg.createdAt),
             );
+
+            console.log('newMessages', newMessages);
 
             const previousScrollHeight = scrollableDivRef.current.scrollHeight;
             const previousScrollTop = scrollableDivRef.current.scrollTop;
@@ -41,20 +44,31 @@ const ChatArea = ({ selectedContact, currentUserEmail }) => {
         }
     };
 
-    useEffect(() => {
-        const handleMessageReceive = (user, message, email) => {
-            setMessages((prevMessages) => {
-                const newMessages = [...prevMessages, { name: user, message, email, createdAt: new Date() }];
-                return newMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-            });
-        };
+    const handleMessageReceive = (user, message, email) => {
+        console.log('Message received:', message);
+        setMessages((prevMessages) => {
+            // Kiểm tra xem tin nhắn đã tồn tại trong danh sách chưa
+            if (prevMessages.some(msg => msg.createdAt === message.createdAt)) {
+                return prevMessages;
+            }
+            const newMessages = [...prevMessages, { user, message, email, createdAt: new Date() }];
+            return newMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        });
+    };
 
-        SignalRService.addReceiveMessageListener(handleMessageReceive);
+    useEffect(() => {
+        if (!isListenerAdded.current) {
+            SignalRService.addReceiveMessageListener(handleMessageReceive);
+            isListenerAdded.current = true; // Đánh dấu là listener đã được thêm
+        }
 
         return () => {
-            SignalRService.removeReceiveMessageListener(handleMessageReceive);
+            if (isListenerAdded.current) {
+                SignalRService.removeReceiveMessageListener(handleMessageReceive);
+                isListenerAdded.current = false; // Đánh dấu là listener đã được loại bỏ
+            }
         };
-    }, []);
+    }, []); // Chỉ chạy một lần khi component được mount
 
     useEffect(() => {
         const sortedMessages = (selectedContact.messages || []).sort(
@@ -72,20 +86,13 @@ const ChatArea = ({ selectedContact, currentUserEmail }) => {
     const handleSendMessage = async () => {
         if (!newMessage.trim()) return;
         try {
+            console.log('newMessage', newMessage);
+            console.log('selectedContact.conversationId', selectedContact.conversationId);
             await SignalRService.sendMessage(newMessage, selectedContact.conversationId);
-
-            // Cập nhật state `messages` sau khi gửi thành công
-            const newSentMessage = {
-                name: currentUserEmail, // Giả định rằng name là email của người dùng hiện tại
-                message: newMessage,
-                email: currentUserEmail,
-                createdAt: new Date(),
-            };
-            setMessages((prevMessages) => [...prevMessages, newSentMessage]);
 
             setNewMessage('');
         } catch (error) {
-            console.error('Error sending message: ', error);
+            console.error('Error sending message:', error);
         }
     };
 

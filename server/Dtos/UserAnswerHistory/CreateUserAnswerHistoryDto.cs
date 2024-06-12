@@ -9,5 +9,6 @@ namespace server.Dtos.UserAnswerHistory
     {
         public int QuestionId { get; set; }
         public bool IsCorrect { get; set; }
+        public double Accuracy { get; set; }
     }
 }

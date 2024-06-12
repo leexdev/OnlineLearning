@@ -24,12 +24,7 @@ namespace server.Controllers
         [HttpPost("convert")]
         public async Task<IActionResult> ConvertTextToSpeech([FromBody] TextToSpeechRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.Text))
-            {
-                return BadRequest("Text cannot be empty");
-            }
-
-            var audioContent = await _textToSpeechService.ConvertTextToSpeechAsync(request.Text);
+            var audioContent = await _textToSpeechService.ConvertTextToSpeechAsync(request.Text, request.Language);
             if (audioContent == null || audioContent.Length == 0)
             {
                 return StatusCode(500, "Failed to generate audio content");

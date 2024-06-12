@@ -1,9 +1,9 @@
 import axiosClient from './axiosClient';
 
 const textToSpeechApi = {
-    async convertTextToSpeech(text) {
+    async convertTextToSpeech(text, language) {
         const url = '/TextToSpeech/convert';
-        return await axiosClient.post(url, { text }, { responseType: 'arraybuffer' });
+        return await axiosClient.post(url, { text, language }, { responseType: 'arraybuffer' });
     }
 };
 

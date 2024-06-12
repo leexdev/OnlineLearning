@@ -12,6 +12,7 @@ namespace server.Dtos.Question
         public string Content { get; set; } = string.Empty;
         public string? Explanation { get; set; }
         public int LessonId { get; set; }
+        public string Language { get; set; } = "vi";
         public List<AnswerDto> Answers { get; set; } = new List<AnswerDto>();
     }
 }

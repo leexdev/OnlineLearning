@@ -26,13 +26,7 @@ namespace server.Dtos.Message
         public async Task SendMessage(string message, int conversationId)
         {
             var userName = Context.User.GetUsername();
-            if (string.IsNullOrEmpty(userName))
-            {
-                throw new HubException("User is not authenticated");
-            }
-
             var user = await _userManager.FindByNameAsync(userName);
-
             if (user == null)
             {
                 throw new HubException("User not found");
@@ -46,10 +40,10 @@ namespace server.Dtos.Message
             };
             await _chatMessageRepository.AddMessageAsync(chatMessage);
 
+            Console.WriteLine($"Sending message: {message} from {user.Name} in conversation {conversationId}");
+
             await Clients.Group(conversationId.ToString()).SendAsync("ReceiveMessage", user.Name, message, user.Email);
         }
-
-
 
         [Authorize]
         public async Task JoinConversation(int conversationId)
@@ -64,6 +58,4 @@ namespace server.Dtos.Message
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, conversationId.ToString());
         }
     }
-
-
 }

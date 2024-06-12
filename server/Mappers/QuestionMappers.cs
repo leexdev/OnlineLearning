@@ -17,6 +17,7 @@ namespace server.Mappers
                 Content = questionModel.Content,
                 LessonId = questionModel.LessonId,
                 Explanation = questionModel.Explanation,
+                Language = questionModel.Language,
                 Answers = questionModel.Answers.Select(a => a.ToAnswerDto()).ToList(),
             };
         }
@@ -27,7 +28,8 @@ namespace server.Mappers
             {
                 Content = questionDto.Content,
                 LessonId = questionDto.LessonId,
-                Explanation = questionDto.Explanation
+                Explanation = questionDto.Explanation,
+                Language = questionDto.Language
             };
         }
 
@@ -36,7 +38,8 @@ namespace server.Mappers
             return new Question
             {
                 Content = questionDto.Content,
-                LessonId = questionDto.LessonId
+                LessonId = questionDto.LessonId,
+                Language = questionDto.Language
             };
         }
     }

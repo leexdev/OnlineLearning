@@ -35,6 +35,15 @@ const questionApi = {
         const url = `/Question/delete/${id}`;
         return await axiosClient.patch(url);
     },
+
+    async analyzeAudio(formData) {
+        const url = '/Language/analyze-audio';
+        return await axiosClient.post(url, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+    },
 };
 
 export default questionApi;

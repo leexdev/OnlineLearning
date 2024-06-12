@@ -3,21 +3,73 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Google.Cloud.TextToSpeech.V1;
+using Microsoft.EntityFrameworkCore;
+using server.Data;
 using server.Interfaces;
+using server.Models;
 
 namespace server.Service.TextToSpeech
 {
     public class TextToSpeechService : ITextToSpeechService
     {
+        private readonly ApplicationDbContext _context;
         private readonly TextToSpeechClient _textToSpeechClient;
 
-        public TextToSpeechService(TextToSpeechClient textToSpeechClient)
+        public TextToSpeechService(ApplicationDbContext context, TextToSpeechClient textToSpeechClient)
         {
+            _context = context;
             _textToSpeechClient = textToSpeechClient ?? throw new ArgumentNullException(nameof(textToSpeechClient));
         }
 
-        public async Task<byte[]> ConvertTextToSpeechAsync(string text, string languageCode = "vi-VN")
+        public async Task<byte[]> ConvertTextToSpeechAsync(string text, string language)
         {
+            var question = await _context.Questions
+                .FirstOrDefaultAsync(q => q.Content.ToUpper() == text.ToUpper() && q.Language == language);
+
+            if (question != null && question.Audio != null)
+            {
+                return question.Audio;
+            }
+
+            var audioContent = await CallGoogleTextToSpeechApiAsync(text, language);
+
+            if (audioContent != null && audioContent.Length > 0)
+            {
+                if (question == null)
+                {
+                    question = new Question
+                    {
+                        Audio = audioContent
+                    };
+                    _context.Questions.Add(question);
+                }
+                else
+                {
+                    question.Audio = audioContent;
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+            return audioContent;
+        }
+
+        private async Task<byte[]> CallGoogleTextToSpeechApiAsync(string text, string language)
+        {
+            string languageCode;
+            string voiceName;
+
+            if (language == "en")
+            {
+                languageCode = "en-US";
+                voiceName = "en-US-Wavenet-D";
+            }
+            else
+            {
+                languageCode = "vi-VN";
+                voiceName = "vi-VN-Wavenet-B";
+            }
+
             var input = new SynthesisInput
             {
                 Text = text
@@ -26,7 +78,7 @@ namespace server.Service.TextToSpeech
             var voice = new VoiceSelectionParams
             {
                 LanguageCode = languageCode,
-                Name = "vi-VN-Wavenet-B",
+                Name = voiceName,
                 SsmlGender = SsmlVoiceGender.Female
             };
 

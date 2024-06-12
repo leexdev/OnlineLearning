@@ -8,6 +8,7 @@ import QuestionContent from './components/QuestionContent';
 import AnswerOptions from './components/AnswerOptions';
 import AnswerResult from './components/AnswerResult';
 import Navigation from './components/Navigation';
+import SpeechAnalysisResult from './components/SpeechAnalysisResult'; // Import component mới
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
@@ -16,6 +17,7 @@ const Question = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [audioSrc, setAudioSrc] = useState(null);
+    const [recordedAudioSrc, setRecordedAudioSrc] = useState(null);
     const [history, setHistory] = useState([]);
     const [correctCount, setCorrectCount] = useState(0);
     const [userLastAnswer, setUserLastAnswer] = useState(null);
@@ -26,7 +28,15 @@ const Question = () => {
     const [showExplanation, setShowExplanation] = useState(false);
     const [showAnswer, setShowAnswer] = useState(false);
     const [correctAnswer, setCorrectAnswer] = useState(null);
+    const [accuracy, setAccuracy] = useState(null);
+    const [differences, setDifferences] = useState([]);
+    const [isRecording, setIsRecording] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [recorder, setRecorder] = useState(null);
+    const audioChunkRef = useRef([]);
+    const mediaStreamRef = useRef(null);
     const audioRef = useRef(null);
+    const recordedAudioRef = useRef(null);
     const location = useLocation();
     const { lessonId } = location.state || {};
 
@@ -63,7 +73,6 @@ const Question = () => {
     const checkUserAnswerHistory = useCallback(async (questionId) => {
         try {
             const result = await userAnswerApi.checkLastAnswer(questionId);
-            console.log(result);
             if (result === 404) {
                 setUserLastAnswer(null);
             } else {
@@ -95,7 +104,6 @@ const Question = () => {
             }
 
             const userAnswerHistoryDto = {
-                answerId: selectedAnswer.id,
                 questionId: questions[currentQuestionIndex].id,
                 isCorrect: isCorrect,
             };
@@ -136,33 +144,109 @@ const Question = () => {
                 URL.revokeObjectURL(audioSrc);
                 setAudioSrc(null);
             }
+            if (recordedAudioRef.current) {
+                recordedAudioRef.current.pause();
+                recordedAudioRef.current.currentTime = 0;
+                setRecordedAudioSrc(null);
+            }
             setShowAnswerResult(null);
             checkUserAnswerHistory(questions[newIndex].id);
         }
     };
 
-    const callTextToSpeechAPI = useCallback(
-        async (text) => {
+    const handleStartRecording = async () => {
+        if (!isRecording) {
             try {
-                if (audioRef.current) {
-                    audioRef.current.pause();
-                    setIsPlaying(false);
-                    URL.revokeObjectURL(audioSrc);
-                    setAudioSrc(null);
-                }
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaStreamRef.current = stream;
 
-                const data = await textToSpeechApi.convertTextToSpeech(text);
-                console.log(data);
-                const blob = new Blob([data], { type: 'audio/mpeg' });
-                const url = URL.createObjectURL(blob);
-                setAudioSrc(url);
-                setIsPlaying(true);
+                const newRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+                setRecorder(newRecorder);
+
+                audioChunkRef.current = [];
+
+                newRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunkRef.current.push(event.data);
+                    }
+                };
+
+                newRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunkRef.current, { type: 'audio/webm' });
+                    if (audioBlob.size === 0) {
+                        alert('Tệp âm thanh rỗng. Vui lòng ghi âm lại.');
+                        return;
+                    }
+                    if (recordedAudioSrc) {
+                        URL.revokeObjectURL(recordedAudioSrc);
+                    }
+                    const audioURL = URL.createObjectURL(audioBlob);
+                    setRecordedAudioSrc(audioURL);
+                    if (recordedAudioRef.current) {
+                        recordedAudioRef.current.src = audioURL;
+                    }
+                    await handleAnalyzeAudio(audioBlob);
+                };
+
+                // Wait a bit to ensure the recorder is ready
+                setTimeout(() => {
+                    newRecorder.start();
+                    setIsRecording(true);
+                }, 100); // 100ms delay to ensure recorder is ready
             } catch (error) {
-                console.error('Lỗi chuyển văn bản thành giọng nói:', error);
+                console.error('Error starting recording:', error);
             }
-        },
-        [audioSrc],
-    );
+        }
+    };
+
+    const handleStopRecording = () => {
+        if (isRecording && recorder) {
+            recorder.stop();
+            mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+            setIsRecording(false);
+        }
+    };
+
+    const handleAnalyzeAudio = async (audioBlob) => {
+        if (!audioBlob || audioBlob.size === 0) {
+            alert('Tệp âm thanh rỗng. Vui lòng ghi âm lại.');
+            return;
+        }
+
+        setIsLoading(true); // Bắt đầu trạng thái loading
+
+        const formData = new FormData();
+        formData.append('AudioFile', audioBlob, 'audio.webm');
+        formData.append('originalText', questions[currentQuestionIndex].content);
+
+        try {
+            const response = await questionApi.analyzeAudio(formData);
+            console.log(response);
+            setAccuracy(response.accuracy);
+            setDifferences(response.differences); // Lưu các từ khác biệt
+            let isCorrect;
+            if (response.accuracy > 80) {
+                isCorrect = true;
+            } else {
+                isCorrect = false;
+            }
+            const userAnswerHistoryDto = {
+                questionId: questions[currentQuestionIndex].id,
+                isCorrect: isCorrect,
+                accuracy: response.accuracy,
+            };
+
+            await userAnswerApi.saveUserAnswerHistory(userAnswerHistoryDto);
+            setUserLastAnswer(null);
+        } catch (error) {
+            console.error('Lỗi phân tích âm thanh:', error);
+            if (error.response) {
+                console.error('Chi tiết lỗi:', error.response.data);
+            }
+        } finally {
+            setIsLoading(false); // Kết thúc trạng thái loading
+        }
+    };
 
     const handleTextToSpeech = async (text) => {
         if (isPlaying) {
@@ -180,9 +264,28 @@ const Question = () => {
         }
     };
 
-    if (!questions || questions.length === 0) {
-        return <div className="text-center text-white">Không có câu hỏi nào để hiển thị</div>;
-    }
+    const callTextToSpeechAPI = useCallback(
+        async (text) => {
+            try {
+                if (audioRef.current) {
+                    audioRef.current.pause();
+                    setIsPlaying(false);
+                    URL.revokeObjectURL(audioSrc);
+                    setAudioSrc(null);
+                }
+
+                const currentQuestion = questions[currentQuestionIndex];
+                const data = await textToSpeechApi.convertTextToSpeech(text, currentQuestion.language);
+                const blob = new Blob([data], { type: 'audio/mpeg' });
+                const url = URL.createObjectURL(blob);
+                setAudioSrc(url);
+                setIsPlaying(true);
+            } catch (error) {
+                console.error('Lỗi chuyển văn bản thành giọng nói:', error);
+            }
+        },
+        [audioSrc, currentQuestionIndex, questions],
+    );
 
     const currentQuestion = questions[currentQuestionIndex];
 
@@ -190,40 +293,80 @@ const Question = () => {
         <div className="lg:min-h-screen bg-gradient-to-r bg-sky-700 flex flex-col items-center justify-center p-4">
             <div className="bg-white py-10 rounded-3xl border-sky-600 border-8 shadow-2xl max-w-3xl w-full transform transition duration-500 hover:scale-105 mb-6">
                 <QuestionHeader currentQuestionIndex={currentQuestionIndex} />
-                <QuestionContent
-                    content={currentQuestion.content}
-                    handleTextToSpeech={handleTextToSpeech}
-                    isPlaying={isPlaying}
-                />
-                {userLastAnswer && !showAnswerResult && (
-                    <div className={`text-center mb-4 ${userLastAnswer.isCorrect ? 'text-green-500' : 'text-red-500'}`}>
-                        Bạn đã làm {userLastAnswer.isCorrect ? 'đúng' : 'sai'} câu hỏi này trong lần làm gần nhất!
-                    </div>
-                )}
-                <AnswerOptions
-                    answers={currentQuestion.answers}
-                    selectedAnswer={selectedAnswer}
-                    handleAnswerClick={handleAnswerClick}
-                />
-                <div className="flex justify-center">
-                    <button
-                        onClick={handleSubmit}
-                        className="bg-orange-500 text-white px-12 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-orange-600 transition transform hover:scale-105"
-                    >
-                        Gửi câu trả lời{' '}
-                        <span className="ml-2">
-                            <FontAwesomeIcon icon={faPaperPlane} />
-                        </span>
-                    </button>
-                </div>
-                {showAnswerResult && (
-                    <AnswerResult
-                        isAnswerCorrect={isAnswerCorrect}
-                        currentQuestion={currentQuestion}
-                        correctAnswer={correctAnswer}
-                        showAnswer={showAnswer}
-                        setShowAnswer={setShowAnswer}
-                    />
+                {currentQuestion && (
+                    <>
+                        <QuestionContent
+                            content={currentQuestion.content}
+                            handleTextToSpeech={handleTextToSpeech}
+                            isPlaying={isPlaying}
+                        />
+                        {userLastAnswer && !showAnswerResult && (
+                            <div
+                                className={`text-center mb-4 ${
+                                    userLastAnswer.isCorrect ? 'text-green-500' : 'text-red-500'
+                                }`}
+                            >
+                                Bạn đã làm {userLastAnswer.isCorrect ? 'đúng' : 'sai'} câu hỏi này trong lần làm gần
+                                nhất!
+                                {userLastAnswer.accuracy && <p>Đúng: {userLastAnswer.accuracy}%</p>}
+                            </div>
+                        )}
+                        <AnswerOptions
+                            answers={currentQuestion.answers}
+                            selectedAnswer={selectedAnswer}
+                            handleAnswerClick={handleAnswerClick}
+                        />
+                        <div className="flex justify-center">
+                            {currentQuestion.language !== 'en' && (
+                                <button
+                                    onClick={handleSubmit}
+                                    className="bg-orange-500 text-white px-12 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-orange-600 transition transform hover:scale-105"
+                                >
+                                    Gửi câu trả lời{' '}
+                                    <span className="ml-2">
+                                        <FontAwesomeIcon icon={faPaperPlane} />
+                                    </span>
+                                </button>
+                            )}
+                        </div>
+                        {showAnswerResult && (
+                            <AnswerResult
+                                isAnswerCorrect={isAnswerCorrect}
+                                currentQuestion={currentQuestion}
+                                correctAnswer={correctAnswer}
+                                showAnswer={showAnswer}
+                                setShowAnswer={setShowAnswer}
+                            />
+                        )}
+                        {currentQuestion.language === 'en' && (
+                            <div className="flex flex-col items-center mt-4">
+                                {!isRecording ? (
+                                    <button
+                                        onClick={handleStartRecording}
+                                        className="bg-peach text-white px-4 py-2 rounded"
+                                        disabled={isLoading} // Vô hiệu hóa nút ghi âm khi đang tải
+                                    >
+                                        Bắt đầu ghi âm
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={handleStopRecording}
+                                        className="bg-red-500 text-white px-4 py-2 rounded"
+                                    >
+                                        Dừng ghi âm
+                                    </button>
+                                )}
+                                {recordedAudioSrc && (
+                                    <div className="mt-4">
+                                        <audio ref={recordedAudioRef} src={recordedAudioSrc} controls />
+                                    </div>
+                                )}
+                                {accuracy !== null && (
+                                    <SpeechAnalysisResult accuracy={accuracy} differences={differences} />
+                                )}
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
             <Navigation

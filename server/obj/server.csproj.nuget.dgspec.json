@@ -53,6 +53,18 @@
               "target": "Package",
               "version": "[1.0.3, )"
             },
+            "FuzzySharp": {
+              "target": "Package",
+              "version": "[2.0.2, )"
+            },
+            "Google.Cloud.Language.V1": {
+              "target": "Package",
+              "version": "[3.7.0, )"
+            },
+            "Google.Cloud.Speech.V1": {
+              "target": "Package",
+              "version": "[3.8.0, )"
+            },
             "Google.Cloud.TextToSpeech.V1": {
               "target": "Package",
               "version": "[3.6.0, )"
@@ -96,6 +108,14 @@
             "Microsoft.Extensions.Identity.Core": {
               "target": "Package",
               "version": "[8.0.4, )"
+            },
+            "NAudio": {
+              "target": "Package",
+              "version": "[2.2.1, )"
+            },
+            "NAudio.Lame": {
+              "target": "Package",
+              "version": "[2.1.0, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",

@@ -12,7 +12,7 @@ const NotLogin = () => {
     const toggleModal = () => {
         setIsLoginOpen(!isLoginOpen);
         if (!isLoginOpen) {
-            setIsRegister(false); // Đặt lại về form đăng nhập khi mở lại modal
+            setIsRegister(false);
         }
     };
 

@@ -76,7 +76,7 @@ namespace server.Repository
             var userAnswers = await _context.UserAnswerHistories
                 .Include(uah => uah.Question)
                     .ThenInclude(q => q.Lesson)
-                        .ThenInclude(l => l.Chapter)  // Đảm bảo chúng ta bao gồm Chapter ở đây
+                        .ThenInclude(l => l.Chapter) 
                 .Where(uah => uah.UserId == userId && uah.Question.Lesson.Chapter.CourseId == courseId)
                 .OrderBy(uah => uah.CreatedAt)
                 .ToListAsync();

@@ -7,6 +7,7 @@ import { convertErrorsToCamelCase } from '~/utils/errorUtils';
 import PasswordConfirmInput from './PasswordConfirmInput';
 import SubmitButton from './SubmitButton';
 import NameInput from './NameInput';
+import { toast } from 'react-toastify';
 
 const RegisterForm = ({ switchToLogin, onClose }) => {
     const {
@@ -31,7 +32,7 @@ const RegisterForm = ({ switchToLogin, onClose }) => {
                 email: data.email,
                 password: data.password,
             });
-            alert('Đăng ký thành công');
+            toast.success('Đăng ký thành công');
             onClose();
         } catch (error) {
             const responseData = error.response.data;

@@ -30,7 +30,8 @@ namespace server.Mappers
             {
                 UserId = userId,
                 QuestionId = dto.QuestionId,
-                IsCorrect = dto.IsCorrect
+                IsCorrect = dto.IsCorrect,
+                Accuracy = dto.Accuracy
             };
         }
     }
