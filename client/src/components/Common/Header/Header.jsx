@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from 'react';
+import { Fragment, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import images from '~/assets/images';
 import NotLogin from './components/NotLogin';

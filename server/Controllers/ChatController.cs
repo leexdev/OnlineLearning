@@ -84,7 +84,6 @@ namespace server.Controllers
                 return NotFound("Message not found.");
             }
 
-            // Kiểm tra xem người dùng có quyền đánh dấu tin nhắn này là đã đọc hay không
             if (!message.Conversation.UserConversations.Any(uc => uc.UserId == user.Id))
             {
                 return Forbid("You are not allowed to read this message.");

@@ -16,14 +16,14 @@ const subjectApi = {
         return await axiosClient.post(url, data);
     },
 
-    async update(data) {
-        const url = `/Subject/update/${data.id}`;
-        return await axiosClient.patch(url, data);
+    async update(id, data) {
+        const url = `/Subject/update/${id}`;
+        return await axiosClient.put(url, data);
     },
 
     async delete(id) {
         const url = `/Subject/delete/${id}`;
-        return await axiosClient.patch(url);
+        return await axiosClient.delete(url);
     },
 };
 

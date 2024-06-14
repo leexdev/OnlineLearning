@@ -208,7 +208,7 @@ const Lesson = () => {
                 />
             )}
             <div className="md:mr-64 xl:mr-96">
-                {lesson ? (
+                {lesson && (
                     <>
                         <Video videoURL={lesson.videoURL} onEnded={handleVideoEnded} />
                         <Info
@@ -227,8 +227,6 @@ const Lesson = () => {
                             onNewComment={handleNewComment}
                         />
                     </>
-                ) : (
-                    <Spinner />
                 )}
             </div>
             <ActionBar

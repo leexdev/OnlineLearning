@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { publicRoutes } from '~/routes';
-import DefaultLayout from '~/components/Common/Layouts/DefaultLayout';
+import DefaultLayout from '~/components/Common/Layout/DefaultLayout/DefautLayout';
 import { AuthProvider } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

@@ -7,29 +7,23 @@ const SpeechAnalysisResult = ({ accuracy, differences }) => {
             {differences && differences.length > 0 && (
                 <div>
                     <h4 className="mt-2">Từ khác biệt:</h4>
-                    <ul className="list-disc list-inside">
+                    <p>
                         {differences.map((diff, index) => {
                             const [original, transcribed] = diff.split(', Transcribed: ');
-                            const originalWords = original.replace('Original: ', '').split(' ');
-                            const transcribedWords = transcribed.split(' ');
+                            const originalWord = original.replace('Original: ', '').trim();
+                            const isMissing = transcribed.trim() === '(missing)';
                             return (
-                                <li key={index} className="text-black">
-                                    {originalWords.map((word, i) => (
-                                        <span key={i}>
-                                            {word}{' '}
-                                            {transcribedWords[i] === '(missing)' ? (
-                                                <span className="text-red-500">(missing) </span>
-                                            ) : (
-                                                <span className={transcribedWords[i] !== word ? 'text-red-500' : ''}>
-                                                    {transcribedWords[i]}{' '}
-                                                </span>
-                                            )}
-                                        </span>
-                                    ))}
-                                </li>
+                                <span
+                                    key={index}
+                                    style={{
+                                        color: isMissing || originalWord !== transcribed.trim() ? 'red' : 'black',
+                                    }}
+                                >
+                                    {originalWord}{' '}
+                                </span>
                             );
                         })}
-                    </ul>
+                    </p>
                 </div>
             )}
         </div>

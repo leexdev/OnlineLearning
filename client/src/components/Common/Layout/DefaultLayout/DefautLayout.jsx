@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
-import Header from '~/components/Common/Header';
+import Footer from './Footer';
 import ScrollToTopButton from '~/components/Common/ScrollToTopButton';
+import Header from '~/components/Common/Header/Header';
 
 // eslint-disable-next-line react/prop-types
 const DefaultLayout = ({ children }) => {
@@ -9,7 +10,10 @@ const DefaultLayout = ({ children }) => {
             <div className="header overflow-hidden">
                 <Header />
             </div>
-            <div className="content mt-[56px] bg-content" style={{ height: 'calc(100vh - 56px)' }}>{children}</div>
+            <div className="content mt-[56px] lg:min-h-screen bg-content">{children}</div>
+            <div className="footer">
+                <Footer />
+            </div>
             <ScrollToTopButton />
         </Fragment>
     );

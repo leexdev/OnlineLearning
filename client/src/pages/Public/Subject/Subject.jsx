@@ -11,7 +11,7 @@ import images from '~/assets/images';
 import userCourseApi from '~/api/userCourseApi';
 import AuthContext from '~/context/AuthContext';
 
-const ListCourse = () => {
+const Subject = () => {
     const { id } = useParams();
     const location = useLocation();
     const subjectName = location.state?.subjectName || '';
@@ -86,16 +86,16 @@ const ListCourse = () => {
     );
 };
 
-ListCourse.propTypes = {
+Subject.propTypes = {
     subjectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     subjectName: PropTypes.string,
     gradeName: PropTypes.string,
 };
 
-ListCourse.defaultProps = {
+Subject.defaultProps = {
     subjectId: '',
     subjectName: '',
     gradeName: '',
 };
 
-export default ListCourse;
+export default Subject;

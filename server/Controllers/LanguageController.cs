@@ -28,6 +28,7 @@ namespace server.Controllers
             var response = await _textAnalysisService.AnalyzeTextAsync(request.Text);
             return Ok(response);
         }
+        
         [HttpPost("analyze-audio")]
         public async Task<IActionResult> AnalyzeAudio([FromForm] AnalyzeSpeechRequest request, [FromForm] string originalText)
         {
@@ -51,7 +52,6 @@ namespace server.Controllers
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
         }
-
 
         private (double score, List<string> differences) CalculateAccuracy(string originalText, string transcribedText)
         {

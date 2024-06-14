@@ -223,7 +223,7 @@ const Question = () => {
             const response = await questionApi.analyzeAudio(formData);
             console.log(response);
             setAccuracy(response.accuracy);
-            setDifferences(response.differences); // Lưu các từ khác biệt
+            setDifferences(response.differences);
             let isCorrect;
             if (response.accuracy > 80) {
                 isCorrect = true;
@@ -339,7 +339,7 @@ const Question = () => {
                             />
                         )}
                         {currentQuestion.language === 'en' && (
-                            <div className="flex flex-col items-center mt-4">
+                            <div className="flex flex-col items-center">
                                 {!isRecording ? (
                                     <button
                                         onClick={handleStartRecording}

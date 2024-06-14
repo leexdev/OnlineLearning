@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -68,10 +68,10 @@ namespace server.Controllers
                 return NotFound();
             }
 
-            return Ok(subjectModel.ToSubjectDto());
+            return CreatedAtAction(nameof(GetById), new { id = subjectModel.Id }, subjectModel.ToSubjectDto());
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             var subjectModel = await _subjectRepo.DeleteAsync(id);

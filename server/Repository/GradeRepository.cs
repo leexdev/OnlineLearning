@@ -61,7 +61,7 @@ namespace server.Repository
 
         public async Task<Grade?> UpdateAsync(int id, Grade gradeModel)
         {
-            var existingGrade = await _context.Grades.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            var existingGrade = await _context.Grades.Include(x => x.Subjects).FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
             if (existingGrade == null)
             {
                 return null;

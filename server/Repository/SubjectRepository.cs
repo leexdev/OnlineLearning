@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,6 +22,12 @@ namespace server.Repository
         {
             await _context.Subjects.AddAsync(subjectModel);
             await _context.SaveChangesAsync();
+            var gradeName = await _context.Grades
+                .Where(g => g.Id == subjectModel.GradeId)
+                .Select(g => g.Name)
+                .FirstOrDefaultAsync();
+
+            subjectModel.Grade = new Grade { Name = gradeName };
             return subjectModel;
         }
 
@@ -39,7 +45,7 @@ namespace server.Repository
 
         public async Task<List<Subject>> GetAllAsync()
         {
-            return await _context.Subjects.Where(x => !x.IsDeleted).Include(x => x.Courses.Where(c=> !c.IsDeleted)).ToListAsync();
+            return await _context.Subjects.Include(x => x.Grade).Where(x => !x.IsDeleted).ToListAsync();
         }
 
         public async Task<Subject?> GetByIdAsync(int id)
@@ -60,7 +66,10 @@ namespace server.Repository
 
         public async Task<Subject?> UpdateAsync(int id, Subject subjectModel)
         {
-            var subject = await _context.Subjects.FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+            var subject = await _context.Subjects
+                .Include(s => s.Grade)
+                .FirstOrDefaultAsync(s => s.Id == id && !s.IsDeleted);
+
             if (subject == null)
             {
                 return null;
@@ -68,8 +77,18 @@ namespace server.Repository
 
             subject.Name = subjectModel.Name;
             subject.GradeId = subjectModel.GradeId;
+
             await _context.SaveChangesAsync();
+
+            var gradeName = await _context.Grades
+                .Where(g => g.Id == subjectModel.GradeId)
+                .Select(g => g.Name)
+                .FirstOrDefaultAsync();
+
+            subject.Grade = new Grade { Name = gradeName };
+
             return subject;
         }
+
     }
 }

@@ -15,6 +15,7 @@ namespace server.Mappers
             {
                 Id = subjectModel.Id,
                 Name = subjectModel.Name,
+                GradeName = subjectModel.Grade?.Name,
                 GradeId = subjectModel.GradeId,
                 Courses = subjectModel.Courses.Select(c => c.ToCourseDto()).ToList()
             };

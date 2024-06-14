@@ -14,7 +14,7 @@ class SignalRService {
         if (!this.connection || this.connection.state !== 'Connected') {
             const token = userToken || getJwtToken();
             this.connection = new HubConnectionBuilder()
-                .withUrl('https://localhost:5032/chatHub', {
+                .withUrl('http://localhost:5032/chatHub', {
                     accessTokenFactory: () => token,
                     withCredentials: true,
                 })

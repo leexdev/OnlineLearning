@@ -1,22 +1,20 @@
 import { Fragment } from 'react';
-import Footer from './Footer';
+import Header from '~/components/Common/Header/Header';
 import ScrollToTopButton from '~/components/Common/ScrollToTopButton';
-import Header from '~/components/Common/Header';
 
 // eslint-disable-next-line react/prop-types
-const DefaultLayout = ({ children }) => {
+const CustomLayout = ({ children }) => {
     return (
         <Fragment>
             <div className="header overflow-hidden">
                 <Header />
             </div>
-            <div className="content mt-[56px] lg:min-h-screen bg-content">{children}</div>
-            <div className="footer">
-                <Footer />
+            <div className="content mt-[56px] bg-content" style={{ height: 'calc(100vh - 56px)' }}>
+                {children}
             </div>
             <ScrollToTopButton />
         </Fragment>
     );
 };
 
-export default DefaultLayout;
+export default CustomLayout;
