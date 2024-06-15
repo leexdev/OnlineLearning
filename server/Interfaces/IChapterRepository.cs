@@ -10,9 +10,11 @@ namespace server.Interfaces
     {
         Task<List<Chapter>> GetAllAsync();
         Task<Chapter?> GetByIdAsync(int id);
-        Task<Chapter?> CreateAsync(Chapter chapterModel);
+        Task<Chapter> CreateAsync(Chapter chapterModel);
+        Task UpdateChapterOrderAsync(int courseId, List<Chapter> chapters);
         Task<Chapter?> UpdateAsync(int id, Chapter chapterModel);
         Task<Chapter?> DeleteAsync(int id);
+        Task<Chapter?> SetDelete(int id);
         Task<bool> ChapterExist(int id);
     }
 }

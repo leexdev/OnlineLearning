@@ -17,6 +17,8 @@ import DashboardAdmin from '~/pages/Admin/Dashboard/Dashboard';
 import BannerAdmin from '~/pages/Admin/Banner/Banner';
 import GradeAdmin from '~/pages/Admin/Grade/Grade';
 import SubjectAdmin from './../pages/Admin/Subject/Subject';
+import CourseAdmin from './../pages/Admin/Course/Course';
+import CreateCourseWizard from '~/pages/Admin/Course/components/CreateCourseWizard';
 
 const publicRoutes = [
     { path: '*', component: NotFound },
@@ -37,6 +39,8 @@ const publicRoutes = [
     { path: '/admin/banner', component: BannerAdmin, layout: AdminLayout },
     { path: '/admin/grade', component: GradeAdmin, layout: AdminLayout },
     { path: '/admin/subject', component: SubjectAdmin, layout: AdminLayout },
+    { path: '/admin/course', component: CourseAdmin, layout: AdminLayout },
+    { path: '/admin/course/create', component: CreateCourseWizard, layout: AdminLayout },
 ];
 
 const privateRoutes = [];

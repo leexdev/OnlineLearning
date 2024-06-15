@@ -42,16 +42,25 @@ namespace server.Mappers
             };
         }
 
-        public static Lesson ToLessonFromCreate(this CreateLessonDto lessonDto, string videoUrl)
+        public static Lesson ToLessonFromCreate(this CreateLessonDto lessonDto)
         {
             return new Lesson
             {
                 Title = lessonDto.Title,
                 Description = lessonDto.Description,
-                VideoURL = videoUrl,
                 isFree = lessonDto.isFree,
                 ChapterId = lessonDto.ChapterId
             };
+        }
+
+        public static List<Lesson> ToLessonOrder(this List<LessonOrder> lessonDtos)
+        {
+            return lessonDtos.Select(lessonDto => new Lesson
+            {
+                Id = lessonDto.Id,
+                ChapterId = lessonDto.ChapterId,
+                Order = lessonDto.Order
+            }).ToList();
         }
 
         public static Lesson ToLessonFromUpdate(this UpdateLessonDto lessonDto, string videoUrl)

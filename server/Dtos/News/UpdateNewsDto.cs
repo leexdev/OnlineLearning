@@ -11,5 +11,6 @@ namespace server.Dtos.New
         public string Content = string.Empty;
         public string ImageUrl = string.Empty;
         public int GradeId { get; set; }
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

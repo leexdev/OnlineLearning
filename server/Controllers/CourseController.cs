@@ -78,18 +78,19 @@ namespace server.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create(CreateCourseDto courseDto, IFormFile imageFile)
+        public async Task<IActionResult> Create([FromForm] CreateCourseDto courseDto)
         {
             if (!await _subjectRepo.SubjectExists(courseDto.SubjectId))
                 return BadRequest("Môn học không tồn tại");
 
-            if (!_fileService.IsImageFile(imageFile))
-                return BadRequest("Định dạng ảnh không phù hợp");
+            // if (!_fileService.IsImageFile(imageFile))
+            //     return BadRequest("Định dạng ảnh không phù hợp");
 
             try
             {
-                var folderPath = $"image_course";
-                var urlImage = await _firebaseService.HandleFile(null, folderPath, imageFile);
+                // var folderPath = $"image_course";
+                // var urlImage = await _firebaseService.HandleFile(null, folderPath, imageFile);
+                var urlImage = "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/image_course%2F814bd750-aaa1-4993-8d2f-de3d694a1c1c_0417_artboard-3-copy-68-403x--284-29.png?alt=media&token=3bee75e9-bdf0-47a1-aa30-eef1b6671afd";
                 var course = courseDto.ToCourseFromCreate(urlImage);
                 await _courseRepo.CreateAsync(course);
 

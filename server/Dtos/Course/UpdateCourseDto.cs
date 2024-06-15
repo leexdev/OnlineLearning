@@ -13,5 +13,6 @@ namespace server.Dtos.Course
         public int Price { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
         public int SubjectId { get; set; }
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

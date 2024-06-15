@@ -9,5 +9,6 @@ namespace server.Dtos.Chapter
     {
         public string Name { get; set; } = string.Empty;
         public int CourseId { get; set; }
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

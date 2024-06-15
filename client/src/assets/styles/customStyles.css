@@ -1,0 +1,16 @@
+.ql-editor {
+    min-height: 150px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    color: #333;
+    border: 0;
+}
+
+.ql-editor:focus {
+    border: 1px solid #ff6609;
+}
+
+.ql-editor::placeholder {
+    font-style: normal;
+    color: #a0a0a0;
+}

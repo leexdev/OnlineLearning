@@ -38,7 +38,7 @@ const SubjectForm = ({ isEditing, currentSubject, register, handleSubmit, onSubm
                     <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                         <div className="text-center sm:mt-0 sm:text-left">
                             <h3 className="text-lg leading-6 font-bold text-gray-900" id="modal-title">
-                                {isEditing ? 'Chỉnh sửa môn học' : 'Thêm mới môn học'}
+                                {isEditing ? 'Chỉnh sửa môn học' : 'Thêm môn học mới'}
                             </h3>
                             <div className="mt-4">
                                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

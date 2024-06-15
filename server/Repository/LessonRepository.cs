@@ -30,7 +30,23 @@ namespace server.Repository
             return lessonModel;
         }
 
-        public async Task<Lesson?> DeleteAsync(int id)
+        public async Task UpdateLessonOrderAsync(int chapterId, List<Lesson> lessons)
+        {
+            var existingLessons = await _context.Lessons.Where(c => c.ChapterId == chapterId).ToListAsync();
+
+            foreach (var lesson in lessons)
+            {
+                var existingLesson = existingLessons.FirstOrDefault(c => c.Id == lesson.Id);
+                if (existingLesson != null)
+                {
+                    existingLesson.Order = lesson.Order;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Lesson?> SetDelete(int id)
         {
             var lesson = await _context.Lessons.FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
             if (lesson == null)
@@ -39,6 +55,18 @@ namespace server.Repository
             }
 
             lesson.IsDeleted = true;
+            await _context.SaveChangesAsync();
+            return lesson;
+        }
+        public async Task<Lesson?> DeleteAsync(int id)
+        {
+            var lesson = await _context.Lessons.FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
+            if (lesson == null)
+            {
+                return null;
+            }
+
+            _context.Lessons.Remove(lesson);
             await _context.SaveChangesAsync();
             return lesson;
         }
@@ -87,6 +115,20 @@ namespace server.Repository
             lesson.VideoURL = lessonModel.VideoURL;
             lesson.isFree = lessonModel.isFree;
             lesson.ChapterId = lessonModel.ChapterId;
+
+            await _context.SaveChangesAsync();
+            return lesson;
+        }
+
+        public async Task<Lesson?> UpdateVideo(int id, string videoUrl)
+        {
+            var lesson = await _context.Lessons.Where(l => !l.IsDeleted).FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
+            if (lesson == null)
+            {
+                return null;
+            }
+
+            lesson.VideoURL = videoUrl;
 
             await _context.SaveChangesAsync();
             return lesson;

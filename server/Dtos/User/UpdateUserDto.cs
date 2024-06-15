@@ -13,6 +13,7 @@ public class UpdateUserDto
     [CustomValidation(typeof(UpdateUserDto), nameof(ValidateBirthDay))]
     public DateTime? BirthDay { get; set; }
     public string? Sex { get; set; }
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
     public static ValidationResult? ValidateBirthDay(DateTime? birthDay, ValidationContext context)
     {

@@ -11,5 +11,6 @@ namespace server.Dtos.Banner
         [Required(ErrorMessage = "Ảnh không được để trống!")]
         public string ImageUrl { get; set; } = string.Empty;
         public string? Link { get; set; } = string.Empty;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

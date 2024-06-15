@@ -8,5 +8,6 @@ namespace server.Dtos.Advise
     public class UpdateAdviseDto
     {
         public string? Status { get; set; }
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

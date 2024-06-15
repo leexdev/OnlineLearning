@@ -16,6 +16,25 @@ const lessonApi = {
         return await axiosClient.get(url);
     },
 
+    async add(data) {
+        const url = '/Lesson/create';
+        return await axiosClient.post(url, data);
+    },
+
+    async updateOrder(chapterId, lessons){
+        const url = `/Lesson/update-order/${chapterId}`
+        return await axiosClient.put(url, lessons);
+    },
+
+    async uploadVideo(id, data) {
+        const url = `/Lesson/upload-video/${id}`;
+        return await axiosClient.post(url, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+    },
+
     async getVideo(lessonId) {
         const url = `/Lesson/${lessonId}/video`;
         return await axiosClient.get(url);
@@ -28,7 +47,12 @@ const lessonApi = {
 
     async delete(id) {
         const url = `/Lesson/delete/${id}`;
-        return await axiosClient.patch(url);
+        return await axiosClient.delete(url);
+    },
+
+    async setdelete(id) {
+        const url = `/Lesson/set-delete/${id}`;
+        return await axiosClient.put(url);
     },
 };
 

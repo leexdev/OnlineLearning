@@ -14,18 +14,18 @@ namespace server.Controllers
     [Route("api/[controller]")]
     public class ChapterController : ControllerBase
     {
-        private readonly IChapterRepository _chappterRepo;
+        private readonly IChapterRepository _chapterRepo;
         private readonly ICourseRepository _courseRepo;
         public ChapterController(IChapterRepository chappterRepo, ICourseRepository courseRepo)
         {
-            _chappterRepo = chappterRepo;
+            _chapterRepo = chappterRepo;
             _courseRepo = courseRepo;
         }
 
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
-            var chapters = await _chappterRepo.GetAllAsync();
+            var chapters = await _chapterRepo.GetAllAsync();
             var chapterDto = chapters.Select(c => c.ToChapterDto());
             return Ok(chapterDto);
         }
@@ -33,7 +33,7 @@ namespace server.Controllers
         [HttpGet("get-by-id/{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var chapter = await _chappterRepo.GetByIdAsync(id);
+            var chapter = await _chapterRepo.GetByIdAsync(id);
             if (chapter == null)
             {
                 return NotFound();
@@ -51,9 +51,17 @@ namespace server.Controllers
             }
 
             var chapter = chapterDto.ToChapterFromCreate();
-            await _chappterRepo.CreateAsync(chapter);
+            await _chapterRepo.CreateAsync(chapter);
             return CreatedAtAction(nameof(GetById), new { id = chapter.Id }, chapter.ToChapterDto());
         }
+
+        [HttpPut("update-order/{courseId}")]
+        public async Task<IActionResult> UpdateOrder(int courseId, [FromBody] List<ChapterOrder> chapters)
+        {
+            await _chapterRepo.UpdateChapterOrderAsync(courseId, chapters.ToChapterOrder());
+            return Ok();
+        }
+
 
         [HttpPut("update/{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateChapterDto chapterDto)
@@ -63,7 +71,7 @@ namespace server.Controllers
                 return BadRequest("Khóa học không tồn tại");
             }
 
-            var chapter = await _chappterRepo.UpdateAsync(id, chapterDto.ToChapterFromUpdate());
+            var chapter = await _chapterRepo.UpdateAsync(id, chapterDto.ToChapterFromUpdate());
             if (chapter == null)
             {
                 return NotFound();
@@ -72,10 +80,23 @@ namespace server.Controllers
             return Ok(chapter.ToChapterDto());
         }
 
+        [HttpPut("set-delete/{id:int}")]
+        public async Task<IActionResult> SetDelete(int id)
+        {
+            var chapter = await _chapterRepo.SetDelete(id);
+
+            if (chapter == null)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
         [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var chapter = await _chappterRepo.DeleteAsync(id);
+            var chapter = await _chapterRepo.DeleteAsync(id);
 
             if (chapter == null)
             {

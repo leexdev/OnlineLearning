@@ -12,5 +12,6 @@ namespace server.Dtos.Lesson
         public string VideoURL { get; set; } = string.Empty;
         public bool isFree { get; set; } = false;
         public int ChapterId { get; set; }
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

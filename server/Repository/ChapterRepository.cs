@@ -24,11 +24,45 @@ namespace server.Repository
             return await _context.Chapters.Where(c => !c.IsDeleted).AnyAsync(c => c.Id == id);
         }
 
-        public async Task<Chapter?> CreateAsync(Chapter chapterModel)
+        public async Task<Chapter> CreateAsync(Chapter chapterModel)
         {
+            var maxOrder = await _context.Chapters
+                .Where(c => c.CourseId == chapterModel.CourseId && !c.IsDeleted)
+                .MaxAsync(c => (int?)c.Order) ?? 0;
+
+            chapterModel.Order = maxOrder + 1;
             await _context.Chapters.AddAsync(chapterModel);
             await _context.SaveChangesAsync();
             return chapterModel;
+        }
+
+        public async Task UpdateChapterOrderAsync(int courseId, List<Chapter> chapters)
+        {
+            var existingChapters = await _context.Chapters.Where(c => c.CourseId == courseId).ToListAsync();
+
+            foreach (var chapter in chapters)
+            {
+                var existingChapter = existingChapters.FirstOrDefault(c => c.Id == chapter.Id);
+                if (existingChapter != null)
+                {
+                    existingChapter.Order = chapter.Order;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Chapter?> SetDelete(int id)
+        {
+            var chapter = await _context.Chapters.FirstOrDefaultAsync(c => c.Id == id & !c.IsDeleted);
+            if (chapter == null)
+            {
+                return null;
+            }
+
+            chapter.IsDeleted = true;
+            await _context.SaveChangesAsync();
+            return chapter;
         }
 
         public async Task<Chapter?> DeleteAsync(int id)
@@ -39,7 +73,7 @@ namespace server.Repository
                 return null;
             }
 
-            chapter.IsDeleted = true;
+            _context.Chapters.Remove(chapter);
             await _context.SaveChangesAsync();
             return chapter;
         }

@@ -19,12 +19,10 @@ using server.Service.SpeechToText;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add logging configuration
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
-// Add services to the container.
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -33,6 +31,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Learning Online", Version = "v1" });
+    option.ResolveConflictingActions(api => api.First());
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -57,6 +56,7 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {

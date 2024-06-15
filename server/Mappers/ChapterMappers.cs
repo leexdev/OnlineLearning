@@ -30,6 +30,16 @@ namespace server.Mappers
             };
         }
 
+        public static List<Chapter> ToChapterOrder(this List<ChapterOrder> chapterDtos)
+        {
+            return chapterDtos.Select(chapterDto => new Chapter
+            {
+                Id = chapterDto.Id,
+                CourseId = chapterDto.CourseId,
+                Order = chapterDto.Order
+            }).ToList();
+        }
+
         public static Chapter ToChapterFromUpdate(this UpdateChapterDto chapterDto)
         {
             return new Chapter

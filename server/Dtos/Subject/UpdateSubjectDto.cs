@@ -9,5 +9,6 @@ namespace server.Dtos.Subject
     {
         public string Name { get; set; } = string.Empty;
         public int GradeId { get; set; }
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

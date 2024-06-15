@@ -96,12 +96,41 @@ namespace server.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create(CreateLessonDto lessonDto, IFormFile videoFile)
+        public async Task<IActionResult> Create(CreateLessonDto lessonDto)
         {
             try
             {
                 if (!await _chapterRepo.ChapterExist(lessonDto.ChapterId))
                     return NotFound("Chương không tồn tại");
+
+                var lesson = lessonDto.ToLessonFromCreate();
+                await _lessonRepo.CreateAsync(lesson);
+
+                return CreatedAtAction(nameof(GetById), new { id = lesson.Id }, lesson.ToLessonDto());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Có lỗi xảy ra khi tạo bài học: {ex.Message}");
+            }
+        }
+
+        [HttpPut("update-order/{chapterId:int}")]
+        public async Task<IActionResult> UpdateOrder(int chapterId, [FromBody] List<LessonOrder> lessons)
+        {
+            if (!await _chapterRepo.ChapterExist(chapterId))
+                return NotFound("Chương không tồn tại");
+
+            await _lessonRepo.UpdateLessonOrderAsync(chapterId, lessons.ToLessonOrder());
+            return Ok();
+        }
+
+        [HttpPost("upload-video/{id:int}")]
+        public async Task<IActionResult> UploadVideoLesson(int id, IFormFile videoFile)
+        {
+            try
+            {
+                if (!await _lessonRepo.LessonExists(id))
+                    return NotFound("Bài giảng không tồn tại");
 
                 if (videoFile == null || videoFile.Length == 0)
                     return BadRequest("Không có file video nào được chọn");
@@ -109,11 +138,16 @@ namespace server.Controllers
                 if (!_fileService.IsVideoFile(videoFile))
                     return BadRequest("Định dạng video không phù hợp");
 
+                var existingLesson = await _lessonRepo.GetByIdAsync(id);
+                if (existingLesson == null)
+                    return NotFound();
+
                 var folderPath = $"video_lesson";
                 var urlVideo = await _firebaseService.HandleFile(null, folderPath, videoFile);
 
-                var lesson = lessonDto.ToLessonFromCreate(urlVideo);
-                await _lessonRepo.CreateAsync(lesson);
+                var lesson = await _lessonRepo.UpdateVideo(id, urlVideo);
+                if (lesson == null)
+                    return NotFound();
 
                 return CreatedAtAction(nameof(GetById), new { id = lesson.Id }, lesson.ToLessonDto());
             }
@@ -156,7 +190,19 @@ namespace server.Controllers
         }
 
 
-        [HttpDelete("delete")]
+        [HttpPut("set-delete/{id:int}")]
+        public async Task<IActionResult> SetDelete(int id)
+        {
+            var lessonModel = await _lessonRepo.SetDelete(id);
+            if (lessonModel == null)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             var lessonModel = await _lessonRepo.DeleteAsync(id);

@@ -12,7 +12,10 @@ namespace server.Interfaces
         Task<Lesson?> GetByIdAsync(int id);
         Task<List<Lesson>> GetByCourseIdAsync(int courseId);
         Task<Lesson> CreateAsync(Lesson lessonModel);
+        Task UpdateLessonOrderAsync(int chapterId, List<Lesson> lessons);
         Task<Lesson?> UpdateAsync(int id, Lesson lessonModel);
+        Task<Lesson?> UpdateVideo(int id, string videoUrl);
+        Task<Lesson?> SetDelete(int id);
         Task<Lesson?> DeleteAsync(int id);
         Task<bool> LessonExists(int id);
     }

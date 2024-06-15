@@ -28,17 +28,21 @@ const courseApi = {
 
     async add(data) {
         const url = '/Course/create';
-        return await axiosClient.post(url, data);
+        return await axiosClient.post(url, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
     },
 
-    async update(data) {
-        const url = `/Course/update/${data.id}`;
-        return await axiosClient.patch(url, data);
+    async update(id, data) {
+        const url = `/Course/update/${id}`;
+        return await axiosClient.put(url, data);
     },
 
     async delete(id) {
         const url = `/Course/delete/${id}`;
-        return await axiosClient.patch(url);
+        return await axiosClient.put(url);
     },
 };
 
