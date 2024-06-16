@@ -5,7 +5,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '~/assets/styles/customStyles.css';
 
-const AddLessonModal = ({ isOpen, closeModal, handleAddLesson }) => {
+const AddQuestionModal = ({ isOpen, closeModal, handleAddQuestion }) => {
     const {
         register,
         handleSubmit,
@@ -16,7 +16,7 @@ const AddLessonModal = ({ isOpen, closeModal, handleAddLesson }) => {
     } = useForm();
 
     const onSubmit = (data) => {
-        handleAddLesson(data, setError);
+        handleAddQuestion(data, setError);
         reset();
     };
 
@@ -32,49 +32,58 @@ const AddLessonModal = ({ isOpen, closeModal, handleAddLesson }) => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                             <div className="mt-3 text-center sm:mt-0 sm:text-left">
-                                <h3 className="text-xl leading-6 font-bold text-gray-900">Thêm Bài Giảng Mới</h3>
+                                <h3 className="text-xl leading-6 font-bold text-gray-900">Thêm Câu Hỏi Mới</h3>
                                 <div className="mt-4">
-                                    <p className="font-bold">Tên Bài Giảng*</p>
-                                    <input
-                                        type="text"
-                                        {...register('title', {
-                                            required: 'Tiêu đề không được để trống',
-                                            maxLength: {
-                                                value: 100,
-                                                message: 'Tiêu đề không được vượt quá 100 ký tự',
-                                            },
-                                        })}
-                                        placeholder="Nhập tên bài giảng..."
-                                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                                    />
-                                    {errors.Title && <FormFieldError message={errors.Title.message} />}
-                                </div>
-                                <div className="mt-2">
-                                    <span className="font-bold">Mô Tả Bài Giảng*</span>
+                                    <p className="font-bold">Nội Dung Câu Hỏi*</p>
                                     <Controller
-                                        name="description"
+                                        name="content"
                                         control={control}
                                         defaultValue=""
                                         render={({ field }) => (
-                                            <ReactQuill {...field} placeholder="Mô tả bài giảng..." />
+                                            <ReactQuill {...field} placeholder="Nhập nội dung câu hỏi..." />
                                         )}
                                         rules={{
+                                            required: 'Nội dung câu hỏi không được để trống',
                                             maxLength: {
                                                 value: 500,
-                                                message: 'Mô tả không vượt quá 500 ký tự',
+                                                message: 'Nội dung câu hỏi không vượt quá 500 ký tự',
                                             },
                                         }}
                                     />
-                                    {errors.Description && <FormFieldError message={errors.Description.message} />}
+                                    {errors.Content && <FormFieldError message={errors.Content.message} />}
+                                </div>
+                                <div className="mt-2">
+                                    <p className="font-bold">Giải Thích</p>
+                                    <Controller
+                                        name="explanation"
+                                        control={control}
+                                        defaultValue=""
+                                        render={({ field }) => (
+                                            <ReactQuill {...field} placeholder="Nhập giải thích cho câu hỏi (nếu có)..." />
+                                        )}
+                                    />
+                                    {errors.Explanation && <FormFieldError message={errors.Explanation.message} />}
+                                </div>
+                                <div className="mt-2">
+                                    <p className="font-bold">Ngôn Ngữ*</p>
+                                    <input
+                                        type="text"
+                                        {...register('language', {
+                                            required: 'Ngôn ngữ không được để trống',
+                                        })}
+                                        defaultValue="vi"
+                                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                                    />
+                                    {errors.Language && <FormFieldError message={errors.Language.message} />}
                                 </div>
                                 <div className="mt-2">
                                     <label className="inline-flex items-center">
                                         <input
                                             type="checkbox"
-                                            {...register('isFree')}
+                                            {...register('isPronounce')}
                                             className="form-checkbox"
                                         />
-                                        <span className="ml-2">Bài giảng miễn phí</span>
+                                        <span className="ml-2">Câu hỏi phát âm</span>
                                     </label>
                                 </div>
                             </div>
@@ -101,4 +110,4 @@ const AddLessonModal = ({ isOpen, closeModal, handleAddLesson }) => {
     );
 };
 
-export default AddLessonModal;
+export default AddQuestionModal;

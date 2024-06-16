@@ -8,10 +8,8 @@ import CourseForm from './Course/CourseForm';
 import ChapterForm from './Chapter/ChapterForm';
 
 const CreateCourseWizard = () => {
-    const navigate = useNavigate();
     const [step, setStep] = useState(0);
     const [course, setCourse] = useState(null);
-    const [chapters, setChapters] = useState([]);
     const [grades, setGrades] = useState([]);
     const steps = ['Giới thiệu khóa học', 'Chương trình giảng Dạy', 'Câu hỏi ôn tập', 'Xuất bản'];
 
@@ -39,8 +37,7 @@ const CreateCourseWizard = () => {
         }
     };
 
-    const handleChapterSubmit = (data) => {
-        setChapters(data);
+    const handleChapterSubmit = () => {
         setStep(2);
     };
 
@@ -49,7 +46,7 @@ const CreateCourseWizard = () => {
             <StepNavigation steps={steps} currentStep={step} />
             {step === 0 && <CourseForm onSubmit={handleCourseSubmit} grades={grades} />}
             {step === 1 && course && <ChapterForm onSubmit={handleChapterSubmit} courseId={course.id} />}
-            {step === 2 && <QuestonForm onSubmit={handleQuestionSubmit} chapters={chapters} />}
+            {/* {step === 2 && <QuestonForm onSubmit={handleQuestionSubmit} chapters={chapters} />} */}
         </Fragment>
     );
 };

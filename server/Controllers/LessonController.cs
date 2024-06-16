@@ -122,7 +122,7 @@ namespace server.Controllers
                 return NotFound("Chương không tồn tại");
 
             await _lessonRepo.UpdateLessonOrderAsync(chapterId, lessons.ToLessonOrder());
-            return Ok();
+            return Ok(lessons);
         }
 
         [HttpPost("upload-video/{id:int}")]

@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { Controller, useForm } from 'react-hook-form';
-import { faBars, faPen, faPlus, faTag, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faPen, faPlus, faTag, faTrash, faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import lessonApi from '~/api/lessonApi';
 import { toast } from 'react-toastify';
@@ -13,6 +13,7 @@ const Chapter = ({
     openEditChapterModal,
     openEditLessonModal,
     addLesson,
+    addQuestion,
     deleteChapter,
     deleteLesson,
 }) => {
@@ -35,6 +36,7 @@ const Chapter = ({
         }
     };
 
+    console.log("chapter", chapter);
     const handleDrop = (acceptedFiles, rejectedFiles, lessonIndex) => {
         if (rejectedFiles && rejectedFiles.length > 0) {
             setError(`lesson-${lessonIndex}-video`, {
@@ -188,7 +190,7 @@ const Chapter = ({
                                                     <div className="flex justify-center items-center">
                                                         <label className="text-lg font-semibold text-gray-700 flex justify-center items-center">
                                                             <FontAwesomeIcon className="mr-1" icon={faPlus} />
-                                                            {lesson.order}. {lesson.title}
+                                                            {lesson.title}
                                                             <div className="flex space-x-2">
                                                                 <button
                                                                     type="button"
@@ -207,6 +209,15 @@ const Chapter = ({
                                                                     className="ml-2 text-gray-900 p-1 rounded-md"
                                                                 >
                                                                     <FontAwesomeIcon icon={faTrash} />
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                        addQuestion(chapterIndex, lessonIndex)
+                                                                    }
+                                                                    className="ml-2 text-gray-900 p-1 rounded-md"
+                                                                >
+                                                                    <FontAwesomeIcon icon={faQuestion} />
                                                                 </button>
                                                             </div>
                                                         </label>
@@ -278,6 +289,25 @@ const Chapter = ({
                                                         </div>
                                                     </div>
                                                 )}
+                                                {/* Displaying Questions */}
+                                                <div className="mt-4">
+                                                    {lesson.questions && lesson.questions.length > 0 && (
+                                                        <div>
+                                                            <p className="font-bold mb-2">Danh sách câu hỏi:</p>
+                                                            {lesson.questions.map((question, questionIndex) => (
+                                                                <div
+                                                                    key={question.id}
+                                                                    className="mb-2 p-2 bg-gray-100 rounded-md"
+                                                                >
+                                                                    {question.content}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                    {lesson.questions && lesson.questions.length === 0 && (
+                                                        <p>Không có câu hỏi cho bài học này.</p>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     )}

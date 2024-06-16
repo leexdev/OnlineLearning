@@ -13,6 +13,7 @@ namespace server.Dtos.Question
         public string? Explanation { get; set; }
         public int LessonId { get; set; }
         public string Language { get; set; } = "vi";
+        public bool IsPronounce { get; set; } = false;
         public List<AnswerDto> Answers { get; set; } = new List<AnswerDto>();
     }
 }

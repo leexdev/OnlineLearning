@@ -18,6 +18,7 @@ namespace server.Mappers
                 LessonId = questionModel.LessonId,
                 Explanation = questionModel.Explanation,
                 Language = questionModel.Language,
+                IsPronounce = questionModel.IsPronounce,
                 Answers = questionModel.Answers.Select(a => a.ToAnswerDto()).ToList(),
             };
         }
@@ -29,6 +30,7 @@ namespace server.Mappers
                 Content = questionDto.Content,
                 LessonId = questionDto.LessonId,
                 Explanation = questionDto.Explanation,
+                IsPronounce = questionDto.IsPronounce,
                 Language = questionDto.Language
             };
         }
@@ -39,7 +41,8 @@ namespace server.Mappers
             {
                 Content = questionDto.Content,
                 LessonId = questionDto.LessonId,
-                Language = questionDto.Language
+                Language = questionDto.Language,
+                IsPronounce = questionDto.IsPronounce,
             };
         }
     }

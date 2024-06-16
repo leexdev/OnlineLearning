@@ -81,6 +81,7 @@ namespace server.Repository
             question.Content = questionModel.Content;
             question.Explanation = questionModel.Explanation;
             question.LessonId = questionModel.LessonId;
+            question.IsPronounce = questionModel.IsPronounce;
             await _context.SaveChangesAsync();
             return question;
         }

@@ -26,14 +26,14 @@ const questionApi = {
         return await axiosClient.post(url, data);
     },
 
-    async update(data) {
-        const url = `/Question/update/${data.id}`;
-        return await axiosClient.patch(url, data);
+    async update(id, data) {
+        const url = `/Question/update/${id}`;
+        return await axiosClient.put(url, data);
     },
 
     async delete(id) {
         const url = `/Question/delete/${id}`;
-        return await axiosClient.patch(url);
+        return await axiosClient.put(url);
     },
 
     async analyzeAudio(formData) {

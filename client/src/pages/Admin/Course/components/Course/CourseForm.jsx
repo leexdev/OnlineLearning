@@ -45,8 +45,8 @@ const CourseForm = ({ onSubmit, initialData = {}, grades = [] }) => {
         }
     }, [selectedGrade, grades]);
 
-    const onDrop = (acceptedFiles, rejectedFiles) => {
-        if (rejectedFiles && rejectedFiles.length > 0) {
+    const onDrop = (acceptedFiles, fileRejections) => {
+        if (fileRejections.length > 0) {
             setError('imageFile', {
                 type: 'manual',
                 message: 'Định dạng ảnh không phù hợp. Chỉ hỗ trợ .jpg, .jpeg, .png, .gif, .bmp',
@@ -55,14 +55,21 @@ const CourseForm = ({ onSubmit, initialData = {}, grades = [] }) => {
         }
 
         const file = acceptedFiles[0];
-        setImage(file);
-        setValue('imageFile', file);
-        setPreview(URL.createObjectURL(file));
+        if (file) {
+            setImage(file);
+            setValue('imageFile', file);
+            setPreview(URL.createObjectURL(file));
+        }
     };
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
-        accept: 'image/jpeg, image/png, image/gif, image/bmp',
+        accept: {
+            'image/jpeg': ['.jpeg', '.jpg'],
+            'image/png': ['.png'],
+            'image/gif': ['.gif'],
+            'image/bmp': ['.bmp'],
+        },
         maxFiles: 1,
     });
 
@@ -235,7 +242,7 @@ const CourseForm = ({ onSubmit, initialData = {}, grades = [] }) => {
                                 </div>
                             )}
                         </div>
-                        {errors.imageFile && <p className="text-red-500">{errors.imageFile.message}</p>}
+                        {errors.imageFile && <FormFieldError message={errors.imageFile.message} />}
                     </div>
                     <div className="flex justify-center">
                         <button type="submit" className="bg-peach text-white px-4 py-2 rounded">

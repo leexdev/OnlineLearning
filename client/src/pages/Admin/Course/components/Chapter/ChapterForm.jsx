@@ -9,11 +9,14 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { convertErrorsToCamelCase } from '~/utils/errorUtils';
 import EditLessonModal from '../Lesson/EditLessonModal';
 import AddLessonModal from '../Lesson/AddLessonModal';
+import AddQuestionModal from '../Question/AddQuesionModal';
+import questionApi from '~/api/questionApi';
 
 const ChapterForm = ({ courseId, onSubmit }) => {
     const [chapters, setChapters] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [lessonModalIsOpen, setLessonModalIsOpen] = useState(false);
+    const [questionModalIsOpen, setQuestionModalIsOpen] = useState(false);
     const [editChapterModalIsOpen, setEditChapterModalIsOpen] = useState(false);
     const [editLessonModalIsOpen, setEditLessonModalIsOpen] = useState(false);
     const [newChapterTitle, setNewChapterTitle] = useState('');
@@ -56,8 +59,8 @@ const ChapterForm = ({ courseId, onSubmit }) => {
 
     const handleAddLesson = async (data, setError) => {
         const newLesson = {
-            title: data.Title,
-            description: data.Description,
+            title: data.title,
+            description: data.description,
             isFree: data.isFree || false,
             chapterId: chapters[currentChapterIndex].id,
         };
@@ -72,6 +75,42 @@ const ChapterForm = ({ courseId, onSubmit }) => {
 
             toast.success('Thêm bài giảng mới thành công');
             setLessonModalIsOpen(false);
+        } catch (error) {
+            const responseData = error.response.data;
+            if (responseData.errors) {
+                const errorData = convertErrorsToCamelCase(responseData.errors);
+                Object.keys(errorData).forEach((key) => setError(key, { type: 'manual', message: errorData[key] }));
+            } else {
+                toast.error('Không thể thêm bài giảng mới');
+            }
+        }
+    };
+
+    const addQuestion = (lessonIndex) => {
+        setCurrentLessonIndex(lessonIndex);
+        setQuestionModalIsOpen(true);
+    };
+
+    const handleAddQuestion = async (questionData, setError) => {
+        console.log('questionData', questionData);
+        const newQuestion = {
+            content: questionData.content,
+            explanation: questionData.explanation,
+            language: questionData.language,
+            isPronounce: questionData.isPronounce,
+            lessonId: chapters[currentChapterIndex].lessons[currentLessonIndex].id,
+        };
+
+        try {
+            const response = await questionApi.add(newQuestion);
+            const createdQuestion = response;
+
+            const newChapters = [...chapters];
+            newChapters[currentChapterIndex].lessons[currentLessonIndex].questions.push(createdQuestion);
+            setChapters(newChapters);
+
+            toast.success('Thêm câu hỏi mới thành công');
+            setQuestionModalIsOpen(false);
         } catch (error) {
             const responseData = error.response.data;
             if (responseData.errors) {
@@ -258,6 +297,12 @@ const ChapterForm = ({ courseId, onSubmit }) => {
                     handleAddLesson={handleAddLesson}
                 />
 
+                <AddQuestionModal
+                    isOpen={questionModalIsOpen}
+                    closeModal={() => setQuestionModalIsOpen(false)}
+                    handleAddQuestion={handleAddQuestion}
+                />
+
                 <EditChapterModal
                     isOpen={editChapterModalIsOpen}
                     closeModal={() => setEditChapterModalIsOpen(false)}
@@ -294,6 +339,7 @@ const ChapterForm = ({ courseId, onSubmit }) => {
                                                         chapter={chapter}
                                                         openEditChapterModal={openEditChapterModal}
                                                         addLesson={addLesson}
+                                                        addQuestion={addQuestion}
                                                         deleteChapter={deleteChapter}
                                                         deleteLesson={deleteLesson}
                                                         openEditLessonModal={openEditLessonModal}
