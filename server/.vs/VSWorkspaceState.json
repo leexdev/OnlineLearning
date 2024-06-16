@@ -5,6 +5,7 @@
     "\\bin\\Release",
     "\\bin\\Release\\net8.0",
     "\\Controllers",
+    "\\Data",
     "\\Dtos",
     "\\Dtos\\Chat",
     "\\Models",

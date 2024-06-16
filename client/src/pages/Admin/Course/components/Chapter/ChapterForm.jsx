@@ -1,37 +1,24 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import LessonModal from '../Lesson/LessonModal';
-import EditModal from '../EditModal';
+import React, { Fragment, useState } from 'react';
+import EditChapterModal from './EditChapterModal';
 import Chapter from './Chapter';
-import ChapterModal from './ChapterModal';
+import AddChapterModal from './AddChapterModal';
 import { toast } from 'react-toastify';
 import chapterApi from '~/api/chapterApi';
 import lessonApi from '~/api/lessonApi'; // Import lesson API
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { convertErrorsToCamelCase } from '~/utils/errorUtils';
+import EditLessonModal from '../Lesson/EditLessonModal';
+import AddLessonModal from '../Lesson/AddLessonModal';
 
 const ChapterForm = ({ courseId, onSubmit }) => {
     const [chapters, setChapters] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [lessonModalIsOpen, setLessonModalIsOpen] = useState(false);
-    const [editModalIsOpen, setEditModalIsOpen] = useState(false);
+    const [editChapterModalIsOpen, setEditChapterModalIsOpen] = useState(false);
+    const [editLessonModalIsOpen, setEditLessonModalIsOpen] = useState(false);
     const [newChapterTitle, setNewChapterTitle] = useState('');
-    const [newLessonTitle, setNewLessonTitle] = useState('');
     const [currentChapterIndex, setCurrentChapterIndex] = useState(null);
     const [currentLessonIndex, setCurrentLessonIndex] = useState(null);
-    const [isEditingChapter, setIsEditingChapter] = useState(false);
-
-    useEffect(() => {
-        const fetchChapters = async () => {
-            try {
-                const response = await chapterApi.getList(courseId);
-                setChapters(response);
-            } catch (error) {
-                toast.error('Không thể tải danh sách chương');
-            }
-        };
-
-        fetchChapters();
-    }, [courseId]);
 
     const openModal = () => {
         setModalIsOpen(true);
@@ -96,40 +83,94 @@ const ChapterForm = ({ courseId, onSubmit }) => {
         }
     };
 
-    const openEditModal = (chapterIndex, lessonIndex = null) => {
+    const openEditChapterModal = (chapterIndex) => {
+        setCurrentChapterIndex(chapterIndex);
+        setEditChapterModalIsOpen(true);
+    };
+
+    const openEditLessonModal = (chapterIndex, lessonIndex) => {
         setCurrentChapterIndex(chapterIndex);
         setCurrentLessonIndex(lessonIndex);
-        setIsEditingChapter(lessonIndex === null);
-        if (lessonIndex === null) {
-            setNewChapterTitle(chapters[chapterIndex].name);
-        } else {
-            setNewLessonTitle(chapters[chapterIndex].lessons[lessonIndex].title);
-        }
-        setEditModalIsOpen(true);
+        setEditLessonModalIsOpen(true);
     };
 
-    const handleEdit = () => {
+    const handleEditChapter = async (data, setError) => {
         const newChapters = [...chapters];
-        if (isEditingChapter) {
-            newChapters[currentChapterIndex].name = newChapterTitle;
-        } else {
-            newChapters[currentChapterIndex].lessons[currentLessonIndex].title = newLessonTitle;
+        newChapters[currentChapterIndex].name = data.name;
+        try {
+            await chapterApi.update(newChapters[currentChapterIndex].id, {
+                name: data.name,
+                courseId: courseId,
+            });
+            toast.success('Cập nhật chương thành công');
+            setChapters(newChapters);
+            setEditChapterModalIsOpen(false);
+        } catch (error) {
+            const responseData = error.response.data;
+            if (responseData.errors) {
+                const errorData = convertErrorsToCamelCase(responseData.errors);
+                Object.keys(errorData).forEach((key) => setError(key, { type: 'manual', message: errorData[key] }));
+            } else {
+                toast.error('Không thể cập nhật chương');
+            }
         }
-        setChapters(newChapters);
-        setEditModalIsOpen(false);
     };
 
-    const deleteChapter = (chapterIndex) => {
-        const newChapters = chapters.filter((_, index) => index !== chapterIndex);
-        setChapters(newChapters);
-    };
-
-    const deleteLesson = (chapterIndex, lessonIndex) => {
+    const handleEditLesson = async (data, setError) => {
         const newChapters = [...chapters];
-        newChapters[chapterIndex].lessons = newChapters[chapterIndex].lessons.filter(
-            (_, index) => index !== lessonIndex,
-        );
-        setChapters(newChapters);
+        const lessonToUpdate = newChapters[currentChapterIndex].lessons[currentLessonIndex];
+        lessonToUpdate.title = data.title;
+        lessonToUpdate.description = data.description;
+        lessonToUpdate.isFree = data.isFree;
+
+        const updateLessonDto = {
+            title: lessonToUpdate.title,
+            description: lessonToUpdate.description,
+            isFree: lessonToUpdate.isFree,
+            chapterId: lessonToUpdate.chapterId,
+        };
+
+        try {
+            await lessonApi.update(lessonToUpdate.id, updateLessonDto);
+            toast.success('Cập nhật bài giảng thành công');
+            setChapters(newChapters);
+            setEditLessonModalIsOpen(false);
+        } catch (error) {
+            const responseData = error.response.data;
+            if (responseData.errors) {
+                const errorData = convertErrorsToCamelCase(responseData.errors);
+                Object.keys(errorData).forEach((key) => setError(key, { type: 'manual', message: errorData[key] }));
+            } else {
+                toast.error('Không thể cập nhật bài giảng');
+            }
+        }
+    };
+
+    const deleteChapter = async (chapterIndex) => {
+        const chapterId = chapters[chapterIndex].id;
+        try {
+            await chapterApi.delete(chapterId);
+            const newChapters = chapters.filter((_, index) => index !== chapterIndex);
+            setChapters(newChapters);
+            toast.success('Xóa chương thành công');
+        } catch (error) {
+            toast.error('Không thể xóa chương');
+        }
+    };
+
+    const deleteLesson = async (chapterIndex, lessonIndex) => {
+        const lessonId = chapters[chapterIndex].lessons[lessonIndex].id;
+        try {
+            await lessonApi.delete(lessonId);
+            const newChapters = [...chapters];
+            newChapters[chapterIndex].lessons = newChapters[chapterIndex].lessons.filter(
+                (_, index) => index !== lessonIndex,
+            );
+            setChapters(newChapters);
+            toast.success('Xóa bài giảng thành công');
+        } catch (error) {
+            toast.error('Không thể xóa bài giảng');
+        }
     };
 
     const handleSubmit = (event) => {
@@ -203,7 +244,7 @@ const ChapterForm = ({ courseId, onSubmit }) => {
                         Thêm Chương
                     </button>
                 </div>
-                <ChapterModal
+                <AddChapterModal
                     isOpen={modalIsOpen}
                     closeModal={closeModal}
                     newChapterTitle={newChapterTitle}
@@ -211,21 +252,24 @@ const ChapterForm = ({ courseId, onSubmit }) => {
                     handleAddChapter={handleAddChapter}
                 />
 
-                <LessonModal
+                <AddLessonModal
                     isOpen={lessonModalIsOpen}
                     closeModal={() => setLessonModalIsOpen(false)}
                     handleAddLesson={handleAddLesson}
                 />
 
-                <EditModal
-                    isOpen={editModalIsOpen}
-                    closeModal={() => setEditModalIsOpen(false)}
-                    isEditingChapter={isEditingChapter}
-                    newChapterTitle={newChapterTitle}
-                    setNewChapterTitle={setNewChapterTitle}
-                    newLessonTitle={newLessonTitle}
-                    setNewLessonTitle={setNewLessonTitle}
-                    handleEdit={handleEdit}
+                <EditChapterModal
+                    isOpen={editChapterModalIsOpen}
+                    closeModal={() => setEditChapterModalIsOpen(false)}
+                    chapterData={chapters[currentChapterIndex]}
+                    handleEdit={handleEditChapter}
+                />
+
+                <EditLessonModal
+                    isOpen={editLessonModalIsOpen}
+                    closeModal={() => setEditLessonModalIsOpen(false)}
+                    lessonData={chapters[currentChapterIndex]?.lessons[currentLessonIndex]}
+                    handleEdit={handleEditLesson}
                 />
 
                 <form onSubmit={handleSubmit} className="bg-white shadow-md">
@@ -248,10 +292,11 @@ const ChapterForm = ({ courseId, onSubmit }) => {
                                                     <Chapter
                                                         chapterIndex={chapterIndex}
                                                         chapter={chapter}
-                                                        openEditModal={openEditModal}
+                                                        openEditChapterModal={openEditChapterModal}
                                                         addLesson={addLesson}
                                                         deleteChapter={deleteChapter}
                                                         deleteLesson={deleteLesson}
+                                                        openEditLessonModal={openEditLessonModal}
                                                     />
                                                 </div>
                                             )}
@@ -262,13 +307,15 @@ const ChapterForm = ({ courseId, onSubmit }) => {
                             )}
                         </Droppable>
                     </DragDropContext>
-                    {chapters.length > 0 && (
-                        <div className="text-center">
-                            <button type="submit" className="my-4 bg-peach text-xl font-bold text-white p-2 rounded-md">
-                                Hoàn Thành
-                            </button>
-                        </div>
-                    )}
+
+                    <div className="flex justify-center mt-4 p-4">
+                        <button
+                            type="submit"
+                            className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded shadow-md transition duration-200 ml-2"
+                        >
+                            Tiếp tục
+                        </button>
+                    </div>
                 </form>
             </div>
         </Fragment>

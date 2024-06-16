@@ -63,12 +63,11 @@ namespace server.Mappers
             }).ToList();
         }
 
-        public static Lesson ToLessonFromUpdate(this UpdateLessonDto lessonDto, string videoUrl)
+        public static Lesson ToLessonFromUpdate(this UpdateLessonDto lessonDto)
         {
             return new Lesson
             {
                 Title = lessonDto.Title,
-                VideoURL = videoUrl,
                 isFree = lessonDto.isFree,
                 ChapterId = lessonDto.ChapterId
             };

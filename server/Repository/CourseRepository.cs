@@ -68,12 +68,12 @@ namespace server.Repository
 
         public async Task<List<Course>> GetAllAsync()
         {
-            return await _context.Courses.Where(x => !x.IsDeleted).ToListAsync();
+            return await _context.Courses.Where(x => !x.IsDeleted).OrderByDescending(c => c.CreatedAt).ToListAsync();
         }
 
         public async Task<List<Course>> GetBySubjectName(string subjectName)
         {
-            return await _context.Courses.Include(x => x.Subject).Where(x => x.Subject.Name.ToUpper() == subjectName.ToUpper() && !x.IsDeleted).ToListAsync();
+            return await _context.Courses.Include(x => x.Subject).Where(x => x.Subject.Name.ToUpper() == subjectName.ToUpper() && !x.IsDeleted).OrderByDescending(c => c.CreatedAt).ToListAsync();
         }
 
         public async Task<Course?> GetByIdAsync(int id)
@@ -88,7 +88,7 @@ namespace server.Repository
 
         public async Task<List<Course>> GetBySubjectId(int subjectId)
         {
-            return await _context.Courses.Where(c => c.SubjectId == subjectId && !c.IsDeleted).ToListAsync();
+            return await _context.Courses.Where(c => c.SubjectId == subjectId && !c.IsDeleted).OrderByDescending(c => c.CreatedAt).ToListAsync();
         }
 
         public async Task<Course?> UpdateAsync(int id, Course courseModel)

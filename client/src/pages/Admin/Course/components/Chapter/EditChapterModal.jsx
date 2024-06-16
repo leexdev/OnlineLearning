@@ -1,23 +1,31 @@
-import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import FormFieldError from '~/components/Common/FormFieldError';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import '~/assets/styles/customStyles.css';
 
-const LessonModal = ({ isOpen, closeModal, handleAddLesson }) => {
+const EditChapterModal = ({ isOpen, closeModal, chapterData, handleEdit }) => {
     const {
         register,
         handleSubmit,
-        control,
         formState: { errors },
         setError,
         reset,
-    } = useForm();
+        setValue,
+    } = useForm({
+        defaultValues: {
+            name: '',
+        },
+    });
+
+    useEffect(() => {
+        if (isOpen && chapterData) {
+            setValue('name', chapterData.name);
+        }
+    }, [isOpen, chapterData, setValue]);
 
     const onSubmit = (data) => {
-        handleAddLesson(data, setError);
+        handleEdit({ ...data, chapterId: chapterData.id }, setError);
         reset();
+        closeModal();
     };
 
     if (!isOpen) return null;
@@ -32,50 +40,22 @@ const LessonModal = ({ isOpen, closeModal, handleAddLesson }) => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                             <div className="mt-3 text-center sm:mt-0 sm:text-left">
-                                <h3 className="text-xl leading-6 font-bold text-gray-900">Thêm Bài Giảng Mới</h3>
+                                <h3 className="text-xl leading-6 font-bold text-gray-900">Sửa Chương</h3>
                                 <div className="mt-4">
-                                    <p className="font-bold">Tên Bài Giảng*</p>
+                                    <p className="font-bold">Tên Chương*</p>
                                     <input
                                         type="text"
-                                        {...register('Title', {
+                                        {...register('name', {
                                             required: 'Tiêu đề không được để trống',
                                             maxLength: {
                                                 value: 100,
                                                 message: 'Tiêu đề không được vượt quá 100 ký tự',
                                             },
                                         })}
-                                        placeholder="Nhập tên bài giảng..."
+                                        placeholder="Nhập tên chương..."
                                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                                     />
-                                    {errors.Title && <FormFieldError message={errors.Title.message} />}
-                                </div>
-                                <div className="mt-2">
-                                    <span className="font-bold">Mô Tả Bài Giảng*</span>
-                                    <Controller
-                                        name="Description"
-                                        control={control}
-                                        defaultValue=""
-                                        render={({ field }) => (
-                                            <ReactQuill {...field} placeholder="Mô tả bài giảng..." />
-                                        )}
-                                        rules={{
-                                            maxLength: {
-                                                value: 500,
-                                                message: 'Mô tả không vượt quá 500 ký tự',
-                                            },
-                                        }}
-                                    />
-                                    {errors.Description && <FormFieldError message={errors.Description.message} />}
-                                </div>
-                                <div className="mt-2">
-                                    <label className="inline-flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            {...register('isFree')}
-                                            className="form-checkbox bg-peach"
-                                        />
-                                        <span className="ml-2">Bài giảng miễn phí</span>
-                                    </label>
+                                    {errors.name && <FormFieldError message={errors.name.message} />}
                                 </div>
                             </div>
                             <div className="flex justify-end mt-4">
@@ -90,7 +70,7 @@ const LessonModal = ({ isOpen, closeModal, handleAddLesson }) => {
                                     type="submit"
                                     className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded shadow-md transition duration-200 ml-2"
                                 >
-                                    Thêm
+                                    Sửa
                                 </button>
                             </div>
                         </div>
@@ -101,4 +81,4 @@ const LessonModal = ({ isOpen, closeModal, handleAddLesson }) => {
     );
 };
 
-export default LessonModal;
+export default EditChapterModal;

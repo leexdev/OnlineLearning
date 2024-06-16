@@ -79,4 +79,18 @@ public class FireBaseService : IFireBaseService
         return relativePath;
     }
 
+    public async Task DeleteFile(string fileUrl)
+    {
+        var auth = await _authProvider.SignInWithEmailAndPasswordAsync(_firebaseSettings.AuthEmail, _firebaseSettings.AuthPassword);
+        var firebaseStorage = new FirebaseStorage(
+            _firebaseSettings.Bucket,
+            new FirebaseStorageOptions
+            {
+                AuthTokenAsyncFactory = () => Task.FromResult(auth.FirebaseToken),
+                ThrowOnCancel = true,
+            });
+
+        var relativePath = ConvertUrlToRelativePath(fileUrl);
+        await DeleteFileAsync(firebaseStorage, relativePath);
+    }
 }

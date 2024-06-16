@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
 using server.Dtos.Lesson;
 using server.Extensions;
@@ -129,21 +130,22 @@ namespace server.Controllers
         {
             try
             {
-                if (!await _lessonRepo.LessonExists(id))
-                    return NotFound("Bài giảng không tồn tại");
+                // if (!await _lessonRepo.LessonExists(id))
+                //     return NotFound("Bài giảng không tồn tại");
 
-                if (videoFile == null || videoFile.Length == 0)
-                    return BadRequest("Không có file video nào được chọn");
+                // if (videoFile == null || videoFile.Length == 0)
+                //     return BadRequest("Không có file video nào được chọn");
 
-                if (!_fileService.IsVideoFile(videoFile))
-                    return BadRequest("Định dạng video không phù hợp");
+                // if (!_fileService.IsVideoFile(videoFile))
+                //     return BadRequest("Định dạng video không phù hợp");
 
                 var existingLesson = await _lessonRepo.GetByIdAsync(id);
                 if (existingLesson == null)
                     return NotFound();
 
-                var folderPath = $"video_lesson";
-                var urlVideo = await _firebaseService.HandleFile(null, folderPath, videoFile);
+                // var folderPath = $"video_lesson";
+                // var urlVideo = await _firebaseService.HandleFile(null, folderPath, videoFile);
+                var urlVideo = "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/video_lesson%2FTi%E1%BA%BFng%20Vi%E1%BB%87t%201%20%20%20Ch%E1%BB%AF%20A.mp4?alt=media&token=ac0d4527-66ae-47fd-9139-9c7cc75b5282";
 
                 var lesson = await _lessonRepo.UpdateVideo(id, urlVideo);
                 if (lesson == null)
@@ -159,24 +161,15 @@ namespace server.Controllers
 
 
         [HttpPut("update/{id:int}")]
-        public async Task<IActionResult> Update(int id, IFormFile videoFile, UpdateLessonDto lessonDto)
+        public async Task<IActionResult> Update(int id, UpdateLessonDto lessonDto)
         {
-            if (videoFile == null || videoFile.Length == 0)
-                return BadRequest("Không có file video nào được chọn");
-
-            if (!_fileService.IsVideoFile(videoFile))
-                return BadRequest("Định dạng video không phù hợp");
-
             try
             {
                 var existingLesson = await _lessonRepo.GetByIdAsync(id);
                 if (existingLesson == null)
                     return NotFound();
 
-                var folderPath = $"video_lesson";
-                var newVideoUrl = await _firebaseService.HandleFile(existingLesson.VideoURL, folderPath, videoFile);
-
-                var updatedLessonModel = await _lessonRepo.UpdateAsync(id, lessonDto.ToLessonFromUpdate(newVideoUrl));
+                var updatedLessonModel = await _lessonRepo.UpdateAsync(id, lessonDto.ToLessonFromUpdate());
 
                 if (updatedLessonModel == null)
                     return NotFound();
@@ -209,6 +202,10 @@ namespace server.Controllers
             if (lessonModel == null)
             {
                 return NotFound();
+            }
+            if (!lessonModel.VideoURL.IsNullOrEmpty())
+            {
+                await _firebaseService.DeleteFile(lessonModel.VideoURL);
             }
 
             return NoContent();

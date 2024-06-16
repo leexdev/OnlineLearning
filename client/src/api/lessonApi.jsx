@@ -40,9 +40,9 @@ const lessonApi = {
         return await axiosClient.get(url);
     },
 
-    async update(data) {
-        const url = `/Lesson/update/${data.id}`;
-        return await axiosClient.patch(url, data);
+    async update(id, data) {
+        const url = `/Lesson/update/${id}`;
+        return await axiosClient.put(url, data);
     },
 
     async delete(id) {

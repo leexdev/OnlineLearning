@@ -5,7 +5,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import '~/assets/styles/customStyles.css';
 
-const EditModal = ({ isOpen, closeModal, isEditingChapter, lessonData, handleEdit }) => {
+const EditLessonModal = ({ isOpen, closeModal, lessonData, handleEdit }) => {
     const {
         register,
         handleSubmit,
@@ -16,23 +16,24 @@ const EditModal = ({ isOpen, closeModal, isEditingChapter, lessonData, handleEdi
         setValue,
     } = useForm({
         defaultValues: {
-            Title: lessonData ? lessonData.title : '',
-            Description: lessonData ? lessonData.description : '',
-            isFree: lessonData ? lessonData.isFree : false,
+            title: '',
+            description: '',
+            isFree: false,
         },
     });
 
     useEffect(() => {
-        if (lessonData) {
-            setValue('Title', lessonData.title);
-            setValue('Description', lessonData.description);
+        if (isOpen && lessonData) {
+            setValue('title', lessonData.title);
+            setValue('description', lessonData.description);
             setValue('isFree', lessonData.isFree);
         }
-    }, [lessonData, setValue]);
+    }, [isOpen, lessonData, setValue]);
 
     const onSubmit = (data) => {
-        handleEdit({ ...data, ChapterId: lessonData.ChapterId, UpdatedAt: new Date() }, setError);
+        handleEdit({ ...data, lessonId: lessonData.id }, setError);
         reset();
+        closeModal();
     };
 
     if (!isOpen) return null;
@@ -47,59 +48,57 @@ const EditModal = ({ isOpen, closeModal, isEditingChapter, lessonData, handleEdi
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                             <div className="mt-3 text-center sm:mt-0 sm:text-left">
-                                <h3 className="text-xl leading-6 font-bold text-gray-900">
-                                    {isEditingChapter ? 'Sửa Chương' : 'Sửa Bài Giảng'}
-                                </h3>
+                                <h3 className="text-xl leading-6 font-bold text-gray-900">Sửa Bài Giảng</h3>
                                 <div className="mt-4">
-                                    <p className="font-bold">Tên {isEditingChapter ? 'Chương' : 'Bài Giảng'}*</p>
+                                    <p className="font-bold">Tên Bài Giảng*</p>
                                     <input
                                         type="text"
-                                        {...register('Title', {
+                                        {...register('title', {
                                             required: 'Tiêu đề không được để trống',
                                             maxLength: {
                                                 value: 100,
                                                 message: 'Tiêu đề không được vượt quá 100 ký tự',
                                             },
                                         })}
-                                        placeholder={`Nhập tên ${isEditingChapter ? 'chương' : 'bài giảng'}...`}
+                                        placeholder="Nhập tên bài giảng..."
                                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                                     />
-                                    {errors.Title && <FormFieldError message={errors.Title.message} />}
+                                    {errors.title && <FormFieldError message={errors.title.message} />}
                                 </div>
-                                {!isEditingChapter && (
-                                    <>
-                                        <div className="mt-2">
-                                            <span className="font-bold">Mô Tả Bài Giảng*</span>
-                                            <Controller
-                                                name="Description"
-                                                control={control}
-                                                defaultValue=""
-                                                render={({ field }) => (
-                                                    <ReactQuill {...field} placeholder="Mô tả bài giảng..." />
-                                                )}
-                                                rules={{
-                                                    maxLength: {
-                                                        value: 500,
-                                                        message: 'Mô tả không vượt quá 500 ký tự',
-                                                    },
-                                                }}
-                                            />
-                                            {errors.Description && (
-                                                <FormFieldError message={errors.Description.message} />
-                                            )}
-                                        </div>
-                                        <div className="mt-2">
-                                            <label className="inline-flex items-center">
+                                <div className="mt-2">
+                                    <span className="font-bold">Mô Tả Bài Giảng*</span>
+                                    <Controller
+                                        name="description"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <ReactQuill {...field} placeholder="Mô tả bài giảng..." />
+                                        )}
+                                        rules={{
+                                            maxLength: {
+                                                value: 500,
+                                                message: 'Mô tả không vượt quá 500 ký tự',
+                                            },
+                                        }}
+                                    />
+                                    {errors.description && <FormFieldError message={errors.description.message} />}
+                                </div>
+                                <div className="mt-2">
+                                    <label className="inline-flex items-center">
+                                        <Controller
+                                            name="isFree"
+                                            control={control}
+                                            render={({ field }) => (
                                                 <input
                                                     type="checkbox"
-                                                    {...register('isFree')}
-                                                    className="form-checkbox bg-peach"
+                                                    {...field}
+                                                    checked={field.value}
+                                                    className="form-checkbox"
                                                 />
-                                                <span className="ml-2">Bài giảng miễn phí</span>
-                                            </label>
-                                        </div>
-                                    </>
-                                )}
+                                            )}
+                                        />
+                                        <span className="ml-2">Bài giảng miễn phí</span>
+                                    </label>
+                                </div>
                             </div>
                             <div className="flex justify-end mt-4">
                                 <button
@@ -124,4 +123,4 @@ const EditModal = ({ isOpen, closeModal, isEditingChapter, lessonData, handleEdi
     );
 };
 
-export default EditModal;
+export default EditLessonModal;

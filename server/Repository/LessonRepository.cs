@@ -112,7 +112,6 @@ namespace server.Repository
             }
 
             lesson.Title = lessonModel.Title;
-            lesson.VideoURL = lessonModel.VideoURL;
             lesson.isFree = lessonModel.isFree;
             lesson.ChapterId = lessonModel.ChapterId;
 

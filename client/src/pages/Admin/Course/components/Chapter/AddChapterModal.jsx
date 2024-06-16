@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import FormFieldError from '~/components/Common/FormFieldError';
 
-const ChapterModal = ({ isOpen, closeModal, handleAddChapter }) => {
+const AddChapterModal = ({ isOpen, closeModal, handleAddChapter }) => {
     const {
         register,
         handleSubmit,
@@ -67,4 +67,4 @@ const ChapterModal = ({ isOpen, closeModal, handleAddChapter }) => {
     );
 };
 
-export default ChapterModal;
+export default AddChapterModal;
