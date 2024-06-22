@@ -84,9 +84,17 @@ namespace server.Controllers
         }
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> GetAll([FromQuery] QueryObject queryObject)
+        public async Task<IActionResult> GetAll()
         {
-            var (users, totalRecords) = await _userRepo.GetAllAsync(queryObject);
+            var users = await _userRepo.GetAllAsync();
+            var userDtos = users.Select(u => u.ToUserDto());
+            return Ok(userDtos);
+        }
+
+        [HttpGet("get-page")]
+        public async Task<IActionResult> GetPage([FromQuery] QueryObject queryObject)
+        {
+            var (users, totalRecords) = await _userRepo.GetPageAsync(queryObject);
 
             var userDtos = new List<UserDto>();
             foreach (var user in users)
@@ -119,11 +127,19 @@ namespace server.Controllers
         }
 
 
-        [HttpGet("get-teacher")]
-        public async Task<IActionResult> GetTeacher()
+        [HttpGet("get-list-teacher")]
+        public async Task<IActionResult> GetTeachers()
         {
             var users = await _userRepo.GetTeachers();
             var userDtos = users.Select(u => u.ToTeacherDto());
+            return Ok(userDtos);
+        }
+
+        [HttpGet("get-list-user")]
+        public async Task<IActionResult> GetUsers([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
+        {
+            var users = await _userRepo.GetUsers(startDate, endDate);
+            var userDtos = users.Select(u => u.ToUserDto());
             return Ok(userDtos);
         }
 

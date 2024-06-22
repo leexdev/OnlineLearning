@@ -13,8 +13,10 @@ namespace server.Interfaces
     {
         Task<(bool Succeeded, IEnumerable<IdentityError> Errors, NewUserDto User)> RegisterUserAsync(RegisterDto registerDto);
         Task<(bool Succeeded, string Error, NewUserDto User)> CheckUserLoginAsync(LoginDto loginDto);
-        Task<(List<User> Users, int TotalRecords)> GetAllAsync(QueryObject queryObject);
+        Task<List<User>> GetAllAsync();
+        Task<(List<User> Users, int TotalRecords)> GetPageAsync(QueryObject queryObject);
         Task<List<User>> GetTeachers();
+        Task<List<User>> GetUsers(DateTime? startDate, DateTime? endDate);
         Task<List<User>> GetAllExceptCurrentAsync(string userId);
         Task<bool> ChangeUserRolesAsync(User user, string[] newRoles);
         Task<User?> GetUserByIdAsync(string userId);

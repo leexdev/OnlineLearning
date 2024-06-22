@@ -66,7 +66,7 @@ namespace server.Repository
             return (true, null, newUserDto);
         }
 
-        public async Task<(List<User> Users, int TotalRecords)> GetAllAsync(QueryObject queryObject)
+        public async Task<(List<User> Users, int TotalRecords)> GetPageAsync(QueryObject queryObject)
         {
             var query = _userManager.Users.Where(u => !u.IsDeleted);
 
@@ -86,14 +86,27 @@ namespace server.Repository
 
         public async Task<List<User>> GetTeachers()
         {
-            var role = await _roleManager.FindByNameAsync("Teacher");
-            if (role == null)
-            {
-                return null;
-            }
-
             var usersInRole = await _userManager.GetUsersInRoleAsync("Teacher");
             return usersInRole.Where(u => !u.IsDeleted).ToList();
+        }
+
+        public async Task<List<User>> GetUsers(DateTime? startDate, DateTime? endDate)
+        {
+            var usersInRole = await _userManager.GetUsersInRoleAsync("User");
+
+            var query = usersInRole.AsQueryable().Where(u => !u.IsDeleted);
+
+            if (startDate.HasValue)
+            {
+                query = query.Where(u => u.CreatedAt >= startDate.Value);
+            }
+
+            if (endDate.HasValue)
+            {
+                query = query.Where(u => u.CreatedAt <= endDate.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<List<User>> GetAllExceptCurrentAsync(string userId)
@@ -174,6 +187,11 @@ namespace server.Repository
             await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
 
             return user;
+        }
+
+        public async Task<List<User>> GetAllAsync()
+        {
+            return await _userManager.Users.Where(u => !u.IsDeleted).ToListAsync();
         }
     }
 

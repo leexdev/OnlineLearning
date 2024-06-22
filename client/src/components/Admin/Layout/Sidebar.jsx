@@ -53,7 +53,7 @@ const Sidebar = () => {
                     </li>
                     <li>
                         <NavLink
-                            to="/admin"
+                            to="/admin/home"
                             className={({ isActive }) =>
                                 `flex items-center p-2 rounded-lg group ${
                                     isActive

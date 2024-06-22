@@ -25,7 +25,24 @@ namespace server.Repository
             return paymentModel;
         }
 
-        public async Task<(List<Payment> Payments, int TotalRecords)> GetAllAsync(QueryObject queryObject)
+        public async Task<List<Payment>> GetAllAsync(DateTime? startDate, DateTime? endDate)
+        {
+            var query = _context.Payments.Include(p => p.User).Include(p => p.Course).AsQueryable();
+
+            if (startDate.HasValue)
+            {
+                query = query.Where(p => p.CreatedAt >= startDate.Value);
+            }
+
+            if (endDate.HasValue)
+            {
+                query = query.Where(p => p.CreatedAt <= endDate.Value);
+            }
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<(List<Payment> Payments, int TotalRecords)> GetPageAsync(QueryObject queryObject)
         {
             var query = _context.Payments.AsQueryable();
 

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using server.Extensions;
 using server.Interfaces;
+using server.Mappers;
 using server.Models;
 using server.Repository;
 
@@ -24,6 +25,15 @@ namespace server.Controllers
         {
             _userManager = userManager;
             _ucRepo = ucRepo;
+        }
+
+        [HttpGet("get-all")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
+        {
+            var userCourses = await _ucRepo.GetAllAsync(startDate, endDate);
+            var userCourseDtos = userCourses.Select(uc => uc.ToUserCourseDto());
+            return Ok(userCourseDtos);
         }
 
         [HttpGet("get-by-userid")]

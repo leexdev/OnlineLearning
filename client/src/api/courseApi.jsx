@@ -3,6 +3,10 @@ import axiosClient from './axiosClient';
 const courseApi = {
     async getAll(params) {
         const url = '/Course/get-all';
+        return await axiosClient.get(url, {params});
+    },
+    async getPage(params) {
+        const url = '/Course/get-page';
         return await axiosClient.get(url, { params });
     },
 

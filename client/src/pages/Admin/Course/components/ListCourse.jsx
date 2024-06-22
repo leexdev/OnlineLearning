@@ -31,7 +31,7 @@ const ListCourse = ({ searchTerm, resetPageOnSearch }) => {
 
     const fetchCourses = async (page, searchTerm = '') => {
         try {
-            const response = await courseApi.getAll({ page, pageSize: 10, searchTerm });
+            const response = await courseApi.getPage({ page, pageSize: 10, searchTerm });
             setCourses(response.data);
             setTotalPages(response.totalPages);
         } catch (error) {

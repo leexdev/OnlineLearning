@@ -9,7 +9,8 @@ namespace server.Interfaces
 {
     public interface IPaymentRepository
     {
-        Task<(List<Payment> Payments, int TotalRecords)> GetAllAsync(QueryObject queryObject);
+        Task<List<Payment>> GetAllAsync(DateTime? startDate, DateTime? endDate);
+        Task<(List<Payment> Payments, int TotalRecords)> GetPageAsync(QueryObject queryObject);
         Task<Payment?> GetByIdAsync(Guid id);
         Task<Payment> CreateAsync(Payment paymentModel);
         Task<Payment?> UpdateAsync(Guid id, string status);

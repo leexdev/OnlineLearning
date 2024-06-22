@@ -1,6 +1,11 @@
 import axiosClient from './axiosClient';
 
 const userCourseApi = {
+    async getAll(params) {
+        const url = '/UserCourse/get-all';
+        return await axiosClient.get(url, { params });
+    },
+
     async get() {
         const url = '/UserCourse/get-by-userid';
         return await axiosClient.get(url);

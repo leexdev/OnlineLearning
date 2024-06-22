@@ -9,7 +9,8 @@ namespace server.Interfaces
 {
     public interface ICourseRepository
     {
-        Task<(List<Course> Courses, int TotalRecords)> GetAllAsync(QueryObject queryObject);
+        Task<List<Course>> GetAllAsync(DateTime? startDate, DateTime? endDate);
+        Task<(List<Course> Courses, int TotalRecords)> GetPageAsync(QueryObject queryObject);
         Task<List<Course>> GetBySubjectId(int subjectId);
         Task<List<Course>> GetBySubjectName(string subjectName);
         Task<Course?> GetByIdAsync(int id);

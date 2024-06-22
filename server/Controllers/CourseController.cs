@@ -32,9 +32,17 @@ namespace server.Controllers
         }
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> GetAll([FromQuery] QueryObject queryObject)
+        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
         {
-            var (courses, totalRecords) = await _courseRepo.GetAllAsync(queryObject);
+            var courses = await _courseRepo.GetAllAsync(startDate, endDate);
+            var courseDtos = courses.Select(p => p.ToCourseDto());
+            return Ok(courseDtos);
+        }
+
+        [HttpGet("get-page")]
+        public async Task<IActionResult> GetPage([FromQuery] QueryObject queryObject)
+        {
+            var (courses, totalRecords) = await _courseRepo.GetPageAsync(queryObject);
             var courseDto = courses.Select(x => x.ToCourseDto());
 
             var response = new

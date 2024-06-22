@@ -51,7 +51,7 @@ namespace server.Repository
             return course;
         }
 
-        public async Task<(List<Course> Courses, int TotalRecords)> GetAllAsync(QueryObject queryObject)
+        public async Task<(List<Course> Courses, int TotalRecords)> GetPageAsync(QueryObject queryObject)
         {
             var query = _context.Courses.Where(x => !x.IsDeleted);
 
@@ -148,5 +148,23 @@ namespace server.Repository
         {
             return await _context.Courses.FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
         }
+
+        public async Task<List<Course>> GetAllAsync(DateTime? startDate, DateTime? endDate)
+        {
+            var query = _context.Courses.Where(c => !c.IsDeleted).AsQueryable();
+
+            if (startDate.HasValue)
+            {
+                query = query.Where(c => c.CreatedAt >= startDate.Value);
+            }
+
+            if (endDate.HasValue)
+            {
+                query = query.Where(c => c.CreatedAt <= endDate.Value);
+            }
+
+            return await query.ToListAsync();
+        }
+
     }
 }

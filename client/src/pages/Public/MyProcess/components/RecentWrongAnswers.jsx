@@ -35,7 +35,6 @@ const RecentWrongAnswers = ({ courseId }) => {
     }, [page]);
 
     const fetchMoreData = () => {
-        console.log('Fetching more data...');
         setPage((prevPage) => prevPage + 1);
     };
 
@@ -44,14 +43,13 @@ const RecentWrongAnswers = ({ courseId }) => {
 
     return (
         <div className="mt-8 overflow-auto">
-            {/* Đặt chiều cao tối thiểu */}
             {data.length === 0 ? (
                 <p className="text-center mt-2">
                     <b>Bạn chưa làm sai câu nào</b>
                 </p>
             ) : (
                 <InfiniteScroll
-                    dataLength={data.length} // Cập nhật dataLength là độ dài của data
+                    dataLength={data.length}
                     next={fetchMoreData}
                     hasMore={hasMore}
                     endMessage={

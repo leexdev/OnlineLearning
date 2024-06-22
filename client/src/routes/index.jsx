@@ -38,7 +38,7 @@ const publicRoutes = [
     { path: '/payment-failure', component: PaymentFailure },
     { path: '/chat', component: Chat, layout: CustomLayout },
 
-    { path: '/admin', component: DashboardAdmin, layout: AdminLayout },
+    { path: '/admin/home', component: DashboardAdmin, layout: AdminLayout },
     { path: '/admin/banner', component: BannerAdmin, layout: AdminLayout },
     { path: '/admin/grade', component: GradeAdmin, layout: AdminLayout },
     { path: '/admin/subject', component: SubjectAdmin, layout: AdminLayout },

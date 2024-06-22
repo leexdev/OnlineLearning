@@ -39,9 +39,17 @@ namespace server.Controllers
         }
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> GetAll([FromQuery] QueryObject queryObject)
+        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
         {
-            var (payments, totalRecords) = await _paymentRepo.GetAllAsync(queryObject);
+            var payments = await _paymentRepo.GetAllAsync(startDate, endDate);
+            var paymentDtos = payments.Select(p => p.ToPaymentDto());
+            return Ok(paymentDtos);
+        }
+
+        [HttpGet("get-page")]
+        public async Task<IActionResult> GetPage([FromQuery] QueryObject queryObject)
+        {
+            var (payments, totalRecords) = await _paymentRepo.GetPageAsync(queryObject);
             var paymentDto = payments.Select(x => x.ToPaymentDto());
 
             var response = new

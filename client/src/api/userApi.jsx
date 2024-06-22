@@ -11,14 +11,24 @@ const userApi = {
         return await axiosClient.post(url, data);
     },
 
-    async getAll(params) {
+    async getAll() {
         const url = '/Account/get-all';
+        return await axiosClient.get(url);
+    },
+
+    async getPage(params) {
+        const url = '/Account/get-page';
         return await axiosClient.get(url, { params });
     },
 
     async getTeachers() {
-        const url = '/Account/get-teacher';
+        const url = '/Account/get-list-teacher';
         return await axiosClient.get(url);
+    },
+
+    async getUsers({ params }) {
+        const url = '/Account/get-list-user';
+        return await axiosClient.get(url, { params });
     },
 
     async get() {
