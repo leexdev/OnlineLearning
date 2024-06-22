@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
 using server.Dtos.Answer;
@@ -12,8 +13,9 @@ namespace server.Dtos.Question
         public string Content { get; set; } = string.Empty;
         public string? Explanation { get; set; }
         public int LessonId { get; set; }
-        public string Language { get; set; } = "vi";
-        public bool IsPronounce { get; set; } = false;
+        public string? Language { get; set; } = "vi";
+        public bool? IsPronounce { get; set; } = false;
+        public string? subjectName { get; set; }
         public List<AnswerDto> Answers { get; set; } = new List<AnswerDto>();
     }
 }

@@ -67,7 +67,6 @@ namespace server.Repository
         public async Task<Subject?> UpdateAsync(int id, Subject subjectModel)
         {
             var subject = await _context.Subjects
-                .Include(s => s.Grade)
                 .FirstOrDefaultAsync(s => s.Id == id && !s.IsDeleted);
 
             if (subject == null)
@@ -88,6 +87,11 @@ namespace server.Repository
             subject.Grade = new Grade { Name = gradeName };
 
             return subject;
+        }
+
+        public async Task<Subject> FindByNameAsync(int gradeId, string name)
+        {
+            return await _context.Subjects.FirstOrDefaultAsync(s => s.Name.Contains(name) && s.GradeId == gradeId && !s.IsDeleted);
         }
 
     }

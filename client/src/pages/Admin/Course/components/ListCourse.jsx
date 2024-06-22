@@ -1,69 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { convertErrorsToCamelCase } from '~/utils/errorUtils';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import courseApi from '~/api/courseApi';
 import DeleteModal from './Course/DeleteModal';
 import CourseTable from './Course/CourseTable';
-import CourseForm from './Course/CourseForm';
+import Pagination from '~/components/Admin/Layout/Pagination';
 
-const ListCourse = () => {
-    const {
-        register,
-        handleSubmit,
-        reset,
-        setError,
-        formState: { errors },
-    } = useForm();
+const ListCourse = ({ searchTerm, resetPageOnSearch }) => {
     const [courses, setCourses] = useState([]);
-    const [showModal, setShowModal] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-    const [currentCourse, setCurrentCourse] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [courseToDelete, setCourseToDelete] = useState(null);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                const response = await courseApi.getAll();
-                setCourses(response);
-            } catch (error) {
-                console.error('Lỗi khi lấy dữ liệu:', error);
-            }
-        };
-        fetchCourses();
-    }, []);
+        const params = new URLSearchParams(location.search);
+        const page = parseInt(params.get('page')) || 1;
+        setCurrentPage(page);
+        fetchCourses(page, searchTerm);
+    }, [location, searchTerm]);
 
-    const onSubmit = async (data) => {
+    useEffect(() => {
+        if (resetPageOnSearch) {
+            setCurrentPage(1);
+            navigate('?page=1');
+        }
+    }, [searchTerm, resetPageOnSearch, navigate]);
+
+    const fetchCourses = async (page, searchTerm = '') => {
         try {
-            let response;
-            if (isEditing) {
-                response = await courseApi.update(currentCourse.id, data);
-                setCourses(courses.map((course) => (course.id === currentCourse.id ? response : course)));
-                toast.success('Cập nhật khóa học thành công');
-            } else {
-                response = await courseApi.add(data);
-                setCourses([...courses, response]);
-                toast.success('Thêm khóa học thành công');
-            }
-            setShowModal(false);
-            reset();
+            const response = await courseApi.getAll({ page, pageSize: 10, searchTerm });
+            setCourses(response.data);
+            setTotalPages(response.totalPages);
         } catch (error) {
-            if (error.response && error.response.data && error.response.data.errors) {
-                const convertedErrors = convertErrorsToCamelCase(error.response.data.errors);
-                Object.keys(convertedErrors).forEach((key) => {
-                    setError(key, { type: 'server', message: convertedErrors[key][0] });
-                });
-            }
-            console.error('Lỗi khi thêm/sửa dữ liệu:', error);
+            toast.error('Lỗi khi tải khóa học');
         }
     };
 
-    const handleEdit = (course) => {
-        setIsEditing(true);
-        setCurrentCourse(course);
-        reset(course);
-        setShowModal(true);
+    const handleAddDiscount = async (id, price) => {
+        try {
+            const response = await courseApi.updatePrice(id, price);
+            setCourses((prevCourses) => prevCourses.map((course) => (course.id === id ? response : course)));
+            toast.success('Giá mới được tạo thành công');
+        } catch (error) {
+            toast.error('Lỗi khi tạo giá mới');
+        }
+    };
+
+    const handleDeleteDiscount = async (id) => {
+        try {
+            const response = await courseApi.deleteNewPrice(id);
+            setCourses((prevCourses) => prevCourses.map((course) => (course.id === id ? response : course)));
+            toast.success('Xóa giá thành công');
+        } catch (error) {
+            toast.error('Xóa giá thất bại');
+        }
     };
 
     const handleDelete = async () => {
@@ -77,26 +70,30 @@ const ListCourse = () => {
         }
     };
 
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        navigate(`?page=${page}`);
+    };
+
     return (
         <div className="p-4 bg-white rounded-md">
+            <div className="flex justify-between items-center mb-4">
+                <h1 className="text-xl font-bold">Danh sách khóa học</h1>
+                <Link
+                    to="/admin/course/create"
+                    className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded shadow-md transition duration-200"
+                >
+                    Thêm khóa học
+                </Link>
+            </div>
             <CourseTable
                 courses={courses}
-                handleEdit={handleEdit}
+                handleAddDiscount={handleAddDiscount}
+                handleDeleteDiscount={handleDeleteDiscount}
                 setCourseToDelete={setCourseToDelete}
                 setShowDeleteModal={setShowDeleteModal}
             />
-            {showModal && (
-                <CourseForm
-                    isEditing={isEditing}
-                    currentCourse={currentCourse}
-                    register={register}
-                    handleSubmit={handleSubmit}
-                    onSubmit={onSubmit}
-                    setShowModal={setShowModal}
-                    reset={reset}
-                    errors={errors}
-                />
-            )}
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
             {showDeleteModal && (
                 <DeleteModal item={courseToDelete} onDelete={handleDelete} onCancel={() => setShowDeleteModal(false)} />
             )}

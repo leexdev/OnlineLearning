@@ -8,10 +8,9 @@ const SubjectTable = ({ subjects, handleEdit, setSubjectToDelete, setShowDeleteM
             <table className="min-w-full bg-white border rounded-lg">
                 <thead>
                     <tr className="bg-peach text-white">
-                        <th className="py-3 px-4">ID</th>
                         <th className="py-3 px-4">Tên môn học</th>
                         <th className="py-3 px-4">Khối lớp</th>
-                        <th className="py-3 px-4">Hành động</th>
+                        <th className="py-3 px-4"></th>
                     </tr>
                 </thead>
                 <tbody>

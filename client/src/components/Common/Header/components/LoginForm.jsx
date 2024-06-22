@@ -33,7 +33,7 @@ const LoginForm = ({ switchToRegister, onClose }) => {
             const responseData = error.response.data;
             if (responseData.errors) {
                 const errorData = convertErrorsToCamelCase(responseData);
-                Object.keys(errorData).forEach((key) =>
+                Object.keys(errorData).forEach((key) => 
                     setError(key, { type: 'manual', message: errorData[key] })
                 );
             } else {

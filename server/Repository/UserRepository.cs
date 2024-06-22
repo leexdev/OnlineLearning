@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using server.Dtos.User;
+using server.Helpers;
 using server.Interfaces;
 using server.Models;
 
@@ -65,9 +66,34 @@ namespace server.Repository
             return (true, null, newUserDto);
         }
 
-        public async Task<List<User>> GetAllAsync()
+        public async Task<(List<User> Users, int TotalRecords)> GetAllAsync(QueryObject queryObject)
         {
-            return await _userManager.Users.Where(u => !u.IsDeleted).ToListAsync();
+            var query = _userManager.Users.Where(u => !u.IsDeleted);
+
+            if (!string.IsNullOrEmpty(queryObject.SearchTerm))
+            {
+                query = query.Where(u => u.Name.Contains(queryObject.SearchTerm) || u.Email.Contains(queryObject.SearchTerm));
+            }
+
+            var totalRecords = await query.CountAsync();
+            var users = await query
+                .Skip((queryObject.Page - 1) * queryObject.PageSize)
+                .Take(queryObject.PageSize)
+                .ToListAsync();
+
+            return (users, totalRecords);
+        }
+
+        public async Task<List<User>> GetTeachers()
+        {
+            var role = await _roleManager.FindByNameAsync("Teacher");
+            if (role == null)
+            {
+                return null;
+            }
+
+            var usersInRole = await _userManager.GetUsersInRoleAsync("Teacher");
+            return usersInRole.Where(u => !u.IsDeleted).ToList();
         }
 
         public async Task<List<User>> GetAllExceptCurrentAsync(string userId)
@@ -90,22 +116,16 @@ namespace server.Repository
 
         public async Task<bool> ChangeUserRolesAsync(User user, string[] newRoles)
         {
-            // Lấy các vai trò hiện tại của người dùng
             var existingRoles = await _userManager.GetRolesAsync(user);
 
-            // Tìm các vai trò mới cần thêm
             var rolesToAdd = newRoles.Except(existingRoles);
 
-            // Tìm các vai trò cũ cần xóa
             var rolesToRemove = existingRoles.Except(newRoles);
 
-            // Thêm các vai trò mới
             var resultAdd = await _userManager.AddToRolesAsync(user, rolesToAdd);
 
-            // Xóa các vai trò cũ
             var resultRemove = await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
 
-            // Trả về kết quả (true nếu thành công, false nếu thất bại)
             return resultAdd.Succeeded && resultRemove.Succeeded;
         }
 

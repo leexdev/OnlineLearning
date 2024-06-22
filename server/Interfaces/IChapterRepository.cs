@@ -14,7 +14,6 @@ namespace server.Interfaces
         Task UpdateChapterOrderAsync(int courseId, List<Chapter> chapters);
         Task<Chapter?> UpdateAsync(int id, Chapter chapterModel);
         Task<Chapter?> DeleteAsync(int id);
-        Task<Chapter?> SetDelete(int id);
         Task<bool> ChapterExist(int id);
     }
 }

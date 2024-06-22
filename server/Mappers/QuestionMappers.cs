@@ -31,7 +31,8 @@ namespace server.Mappers
                 LessonId = questionDto.LessonId,
                 Explanation = questionDto.Explanation,
                 IsPronounce = questionDto.IsPronounce,
-                Language = questionDto.Language
+                Language = questionDto.Language,
+                Answers = questionDto.Answers.ToAnswerListFromCreate()
             };
         }
 
@@ -41,8 +42,10 @@ namespace server.Mappers
             {
                 Content = questionDto.Content,
                 LessonId = questionDto.LessonId,
+                Explanation = questionDto.Explanation,
                 Language = questionDto.Language,
                 IsPronounce = questionDto.IsPronounce,
+                Answers = questionDto.Answers.ToAnswerListFromUpdate()
             };
         }
     }

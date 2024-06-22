@@ -15,10 +15,12 @@ namespace server.Mappers
             return new PaymentDto
             {
                 Id = paymentModel.Id,
-                UserId = paymentModel.UserId,
-                CourseId = paymentModel.CourseId,
+                UserName = paymentModel.User.UserName,
+                CourseName = paymentModel.Course.Name,
                 Amount = paymentModel.Amount,
-                Status = paymentModel.Status
+                Status = paymentModel.Status,
+                CourseId = paymentModel.Course.Id,
+                CreatedAt = paymentModel.CreatedAt
             };
         }
         public static PaymentRequest ToPaymentFromRequestDto(this Payment payment, int? amount)

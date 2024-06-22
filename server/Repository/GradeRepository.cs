@@ -70,5 +70,10 @@ namespace server.Repository
             await _context.SaveChangesAsync();
             return existingGrade;
         }
+
+        public async Task<Grade> FindByNameAsync(string name)
+        {
+            return await _context.Grades.FirstOrDefaultAsync(g => g.Name.Contains(name) && !g.IsDeleted);
+        }
     }
 }

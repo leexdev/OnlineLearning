@@ -7,10 +7,9 @@ const TableGrade = ({ grades, handleEdit, setGradeToDelete, setShowDeleteModal }
             <table className="min-w-full bg-white border rounded-lg">
                 <thead>
                     <tr className="bg-peach text-white">
-                        <th className="py-3 px-4">ID</th>
                         <th className="py-3 px-4">Tên khối lớp</th>
                         <th className="py-3 px-4">Môn học</th>
-                        <th className="py-3 px-4">Hành động</th>
+                        <th className="py-3 px-4"></th>
                     </tr>
                 </thead>
                 <tbody>

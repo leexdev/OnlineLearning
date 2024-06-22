@@ -1,16 +1,17 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using server.Dtos.Answer;
 
-namespace server.Dtos.Question
+public class CreateQuestionDto
 {
-    public class CreateQuestionDto
-    {
-        public string Content { get; set; } = string.Empty;
-        public string? Explanation { get; set; }
-        public int LessonId { get; set; }
-        public string Language { get; set; } = "vi";
-        public bool IsPronounce { get; set; } = false;
-    }
+    [Required(ErrorMessage = "Nội dung là bắt buộc.")]
+    [StringLength(200, ErrorMessage = "Nội dung không được dài quá 200 ký tự.")]
+    public string Content { get; set; } = string.Empty;
+
+    [StringLength(1000, ErrorMessage = "Giải thích không được dài quá 1000 ký tự.")]
+    public string? Explanation { get; set; }
+    public int LessonId { get; set; }
+    public string Language { get; set; } = "vi";
+    public bool IsPronounce { get; set; } = false;
+    public List<CreateAnswerDto> Answers { get; set; } = new List<CreateAnswerDto>();
 }

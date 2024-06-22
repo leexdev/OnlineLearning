@@ -15,6 +15,6 @@ namespace server.Interfaces
         Task<Subject?> UpdateAsync(int id, Subject subject);
         Task<Subject?> DeleteAsync(int id);
         Task<bool> SubjectExists(int id);
-
+        Task<Subject> FindByNameAsync(int gradeId, string name);
     }
 }

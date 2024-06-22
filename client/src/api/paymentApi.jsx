@@ -1,6 +1,10 @@
 import axiosClient from './axiosClient';
 
 const paymentApi = {
+    async getAll(params) {
+        const url = '/Payment/get-all';
+        return await axiosClient.get(url, { params });
+    },
     async generatePaymentUrl(paymentDto) {
         const url = '/Payment/generate-payment-url';
         return await axiosClient.post(url, paymentDto);

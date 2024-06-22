@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import ListSubject from './components/ListSubject';
 import Header from './components/Header';
 
-const Grade = () => {
+const Subject = () => {
     return (
         <Fragment>
             <Header />
@@ -11,4 +11,4 @@ const Grade = () => {
     );
 };
 
-export default Grade;
+export default Subject;

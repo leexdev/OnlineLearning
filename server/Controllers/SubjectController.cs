@@ -50,6 +50,13 @@ namespace server.Controllers
             {
                 return BadRequest("Lớp học không tồn tại");
             }
+
+            var existingSubject = await _subjectRepo.FindByNameAsync(subjectDto.GradeId, subjectDto.Name);
+            if (existingSubject != null)
+            {
+                return Conflict(new { message = "Môn học đã tồn tại" });
+            }
+
             var subject = subjectDto.ToSubjectFromCreate();
             await _subjectRepo.CreateAsync(subject);
             return CreatedAtAction(nameof(GetById), new { id = subject.Id }, subject.ToSubjectDto());
@@ -62,6 +69,13 @@ namespace server.Controllers
             {
                 return BadRequest("Lớp học không tồn tại");
             }
+
+            var existingSubject = await _subjectRepo.FindByNameAsync(subjectDto.GradeId, subjectDto.Name);
+            if (existingSubject != null && existingSubject.Id != id)
+            {
+                return Conflict(new { message = "Môn học đã tồn tại" });
+            }
+
             var subjectModel = await _subjectRepo.UpdateAsync(id, subjectDto.ToSubjectFromUpdate());
             if (subjectModel == null)
             {

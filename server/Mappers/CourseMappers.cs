@@ -21,8 +21,27 @@ namespace server.Mappers
                 NewPrice = courseModel.NewPrice,
                 ImageUrl = courseModel.ImageUrl,
                 SubjectId = courseModel.SubjectId,
-                DiscountId = courseModel.DiscountId,
-                Chapters = courseModel.Chapters.Select(c => c.ToChapterDto()).ToList()
+                SubjectName = courseModel.Subject?.Name,
+                Chapters = courseModel.Chapters.Select(c => c.ToChapterDto()).ToList(),
+                UserCourses = courseModel.UserCourses.Select(uc => uc.ToUserCourseDto()).ToList()
+            };
+        }
+
+        public static CourseDto ToCourseWithVideoLessonDto(this Course courseModel)
+        {
+            return new CourseDto
+            {
+                Id = courseModel.Id,
+                Name = courseModel.Name,
+                Title = courseModel.Title,
+                Description = courseModel.Description,
+                Price = courseModel.Price,
+                NewPrice = courseModel.NewPrice,
+                ImageUrl = courseModel.ImageUrl,
+                SubjectId = courseModel.SubjectId,
+                SubjectName = courseModel.Subject?.Name,
+                Chapters = courseModel.Chapters.Select(c => c.ToChapterWithVideoLessonDto()).ToList(),
+                UserCourses = courseModel.UserCourses.Select(uc => uc.ToUserCourseDto()).ToList()
             };
         }
 

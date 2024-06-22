@@ -2,7 +2,7 @@ import React from 'react';
 
 const StepNavigation = ({ steps, currentStep }) => {
     return (
-        <div className="flex justify-center items-center px-10 py-5 mb-4">
+        <div className="flex justify-center items-center px-10 py-5 mb-4 mx-auto w-1/2">
             {steps.map((step, index) => {
                 const isActive = index === currentStep;
                 const isCompleted = index < currentStep;

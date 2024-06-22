@@ -8,8 +8,11 @@ import { faCloudUpload } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import FormFieldError from '~/components/Common/FormFieldError';
 import '~/assets/styles/customStyles.css';
+import { convertErrorsToCamelCase } from '~/utils/errorUtils';
+import Select from 'react-select';
+import userApi from '~/api/userApi';
 
-const CourseForm = ({ onSubmit, initialData = {}, grades = [] }) => {
+const CourseForm = ({ onSubmit, initialData = {}, grades = [], isEditing }) => {
     const {
         register,
         handleSubmit,
@@ -23,11 +26,58 @@ const CourseForm = ({ onSubmit, initialData = {}, grades = [] }) => {
     const [filteredSubjects, setFilteredSubjects] = useState([]);
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
+    const [teachers, setTeachers] = useState([]);
+    const [selectedTeachers, setSelectedTeachers] = useState([]);
 
     useEffect(() => {
         register('description', { required: 'Mô tả khóa học không được để trống' });
-        register('imageFile', { required: 'Ảnh khóa học không được để trống' });
-    }, [register]);
+        if (!initialData.imageUrl) {
+            register('imageFile', { required: 'Ảnh khóa học không được để trống' });
+        }
+
+        const fetchTeachers = async () => {
+            try {
+                const response = await userApi.getTeachers();
+                setTeachers(response);
+            } catch (error) {
+                console.error('Lỗi khi lấy danh sách giáo viên:', error);
+            }
+        };
+
+        fetchTeachers();
+
+        if (initialData.imageUrl) {
+            setPreview(initialData.imageUrl);
+        } else {
+            setPreview(null);
+        }
+    }, [register, initialData.imageUrl]);
+
+    useEffect(() => {
+        if (isEditing) {
+            setDescription(initialData.description || '');
+            setPreview(initialData.imageUrl || null);
+            setValue('subject', initialData.subjectId);
+
+            const grade = grades.find((g) => g.subjects.some((subject) => subject.id === initialData.subjectId));
+            if (grade) {
+                setValue('grade', grade.id);
+                setFilteredSubjects(grade.subjects);
+            }
+
+            const selectedTeacherOptions = initialData.userCourses.map((uc) => ({
+                value: uc.userId,
+                label: teachers.find((teacher) => teacher.id === uc.userId)?.name || '',
+            }));
+            setSelectedTeachers(selectedTeacherOptions);
+            setValue('teachers', selectedTeacherOptions);
+
+            const formattedPrice = initialData.price
+                ? initialData.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                : '';
+            setValue('price', formattedPrice);
+        }
+    }, [isEditing, initialData, grades, teachers, setValue]);
 
     const handleDescriptionChange = (value) => {
         setDescription(value);
@@ -76,6 +126,7 @@ const CourseForm = ({ onSubmit, initialData = {}, grades = [] }) => {
     const inputClassNames = 'border border-gray-300 p-2 w-full rounded mt-2 focus:border-peach focus:ring-peach';
 
     const handleFormSubmit = async (data) => {
+        const teacherIds = (data.teachers || []).map((teacher) => teacher.value); // Đảm bảo data.teachers luôn là một mảng
         const formData = new FormData();
         formData.append('name', data.name);
         formData.append('title', data.title);
@@ -85,15 +136,15 @@ const CourseForm = ({ onSubmit, initialData = {}, grades = [] }) => {
         if (image) {
             formData.append('imageFile', image);
         }
+        formData.append('teacherIds', JSON.stringify(teacherIds));
 
         try {
             if (onSubmit) {
                 await onSubmit(formData);
             }
         } catch (error) {
-            const responseData = error.response.data;
-            if (responseData.errors) {
-                const errorData = convertErrorsToCamelCase(responseData.errors);
+            if (error.response && error.response.data && error.response.data.errors) {
+                const errorData = convertErrorsToCamelCase(error.response.data.errors);
                 Object.keys(errorData).forEach((key) => {
                     setError(key, { type: 'manual', message: errorData[key] });
                 });
@@ -101,15 +152,6 @@ const CourseForm = ({ onSubmit, initialData = {}, grades = [] }) => {
                 toast.error('Đã xảy ra lỗi khi tạo khóa học.');
             }
         }
-    };
-
-    const convertErrorsToCamelCase = (errors) => {
-        const result = {};
-        Object.keys(errors).forEach((key) => {
-            const camelCaseKey = key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
-            result[camelCaseKey] = errors[key];
-        });
-        return result;
     };
 
     return (
@@ -138,6 +180,8 @@ const CourseForm = ({ onSubmit, initialData = {}, grades = [] }) => {
                             <select
                                 {...register('subject', { required: 'Môn học không được để trống' })}
                                 className={inputClassNames}
+                                value={watch('subject')}
+                                onChange={(e) => setValue('subject', e.target.value)}
                             >
                                 <option value="">Chọn môn học</option>
                                 {filteredSubjects.map((subject) => (
@@ -148,39 +192,19 @@ const CourseForm = ({ onSubmit, initialData = {}, grades = [] }) => {
                             </select>
                             {errors.subject && <FormFieldError message={errors.subject.message} />}
                         </div>
-                        <div className="w-56 flex-1">
-                            <label htmlFor="price" className="font-bold">
-                                Giá Khóa Học*
-                            </label>
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    id="price"
-                                    placeholder="Giá.."
-                                    {...register('price', {
-                                        required: 'Giá không được để trống',
-                                        pattern: {
-                                            value: /^\d+(,\d{3})*$/,
-                                            message: 'Giá phải là một số dương',
-                                        },
-                                        validate: (value) =>
-                                            parseInt(value.replace(/,/g, ''), 10) > 0 || 'Giá phải là một số dương',
-                                    })}
-                                    onChange={(e) => {
-                                        const formattedValue = e.target.value.replace(/\D/g, '');
-                                        const numberWithCommas = formattedValue
-                                            .toString()
-                                            .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                                        e.target.value = numberWithCommas;
-                                        setValue('price', numberWithCommas, { shouldValidate: true });
-                                    }}
-                                    className={inputClassNames}
-                                />
-                                <span className="absolute inset-y-0 bg-peach right-0 top-2 m-1 px-2 font-bold flex items-center text-white">
-                                    VNĐ
-                                </span>
-                            </div>
-                            {errors.price && <FormFieldError message={errors.price.message} />}
+                        <div className="flex-1">
+                            <span className="font-bold">Chọn Giáo Viên*</span>
+                            <Select
+                                isMulti
+                                options={teachers.map((teacher) => ({ value: teacher.id, label: teacher.name }))}
+                                onChange={(selected) => {
+                                    setSelectedTeachers(selected);
+                                    setValue('teachers', selected);
+                                }}
+                                className="mt-2"
+                                value={selectedTeachers}
+                            />
+                            {errors.teachers && <FormFieldError message={errors.teachers.message} />}
                         </div>
                     </div>
                     <div>
@@ -225,6 +249,39 @@ const CourseForm = ({ onSubmit, initialData = {}, grades = [] }) => {
                         {errors.description && <FormFieldError message={errors.description.message} />}
                     </div>
 
+                    <div className="w-56 flex-1">
+                        <label htmlFor="price" className="font-bold">
+                            Giá khóa học (VNĐ)*
+                        </label>
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="Nhập giá khóa học..."
+                                {...register('price', {
+                                    required: 'Giá không được để trống',
+                                    pattern: {
+                                        value: /^\d+(,\d{3})*$/,
+                                        message: 'Giá phải là một số dương',
+                                    },
+                                    validate: (value) =>
+                                        parseInt(value.replace(/,/g, ''), 10) > 0 || 'Giá phải là một số dương',
+                                })}
+                                onChange={(e) => {
+                                    const formattedValue = e.target.value.replace(/\D/g, '');
+                                    const numberWithCommas = formattedValue
+                                        .toString()
+                                        .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                                    e.target.value = numberWithCommas;
+                                    setValue('price', numberWithCommas, { shouldValidate: true });
+                                }}
+                                className={inputClassNames}
+                            />
+                            <span className="absolute inset-y-0 bg-peach right-0 top-2 m-1 px-2 font-bold flex items-center text-white">
+                                VNĐ
+                            </span>
+                        </div>
+                        {errors.price && <FormFieldError message={errors.price.message} />}
+                    </div>
                     <div>
                         <span className="font-bold">Ảnh Khóa Học</span>
                         <div
@@ -233,7 +290,7 @@ const CourseForm = ({ onSubmit, initialData = {}, grades = [] }) => {
                         >
                             <input {...getInputProps()} />
                             {preview ? (
-                                <img src={preview} alt="Xem trước ảnh" className="w-full h-auto max-w-xs mx-auto" />
+                                <img src={preview} alt="Xem trước ảnh" className="w-full h-auto max-w-3xl mx-auto" />
                             ) : (
                                 <div className="text-gray-500">
                                     <FontAwesomeIcon className="text-2xl" icon={faCloudUpload} />

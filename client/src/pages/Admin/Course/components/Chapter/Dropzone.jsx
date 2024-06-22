@@ -6,7 +6,9 @@ import FormFieldError from '~/components/Common/FormFieldError';
 const Dropzone = ({ lessonIndex, handleDrop, previewVideos, error }) => {
     const { getRootProps, getInputProps } = useDropzone({
         onDrop: (acceptedFiles, rejectedFiles) => handleDrop(acceptedFiles, rejectedFiles, lessonIndex),
-        accept: 'video/mp4',
+        accept: {
+            'video/mp4': ['.mp4'],
+        },
         onDropRejected: (rejectedFiles) => handleDrop([], rejectedFiles, lessonIndex),
     });
 

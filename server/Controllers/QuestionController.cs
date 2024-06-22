@@ -64,32 +64,31 @@ namespace server.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create(CreateQuestionDto questionDto)
+        public async Task<IActionResult> CreateQuestionWithAnswers(CreateQuestionDto questionDto)
         {
             if (!await _lessonRepo.LessonExists(questionDto.LessonId))
             {
                 return NotFound("Bài giảng không tồn tại");
             }
+
             var question = questionDto.ToQuestionFromCreate();
-            await _questionRepo.CreateAsync(question);
-            return CreatedAtAction(nameof(GetById), new { id = question.Id }, question.ToQuestionDto());
+
+            var createdQuestion = await _questionRepo.AddQuestionWithAnswers(question);
+            return CreatedAtAction(nameof(GetById), new { id = question.Id }, createdQuestion.ToQuestionDto());
         }
 
-        [HttpPut("update/{id:int}")]
-        public async Task<IActionResult> Update(int id, UpdateQuestionDto questionDto)
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateQuestionWithAnswers(int id, UpdateQuestionDto questionDto)
         {
-            if (!await _lessonRepo.LessonExists(questionDto.LessonId))
+            var question = questionDto.ToQuestionFromUpdate();
+            var updatedQuestion = await _questionRepo.UpdateQuestionWithAnswers(id, question);
+
+            if (updatedQuestion == null)
             {
-                return NotFound("Bài giảng không tồn tại");
+                return NotFound("Câu hỏi không tồn tại");
             }
 
-            var question = await _questionRepo.UpdateAsync(id, questionDto.ToQuestionFromUpdate());
-            if (question == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(question.ToQuestionDto());
+            return Ok(updatedQuestion.ToQuestionDto());
         }
 
         [HttpDelete("delete/{id:int}")]

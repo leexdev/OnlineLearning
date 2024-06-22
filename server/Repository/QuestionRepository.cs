@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
+using server.Dtos.Question;
 using server.Interfaces;
 using server.Models;
 
@@ -16,12 +17,55 @@ namespace server.Repository
         {
             _context = context;
         }
-        public async Task<Question> CreateAsync(Question questionModel)
+        public async Task<Question> AddQuestionWithAnswers(Question questionModel)
         {
-            await _context.Questions.AddAsync(questionModel);
+            var question = new Question
+            {
+                Content = questionModel.Content,
+                Explanation = questionModel.Explanation,
+                LessonId = questionModel.LessonId,
+                Language = questionModel.Language,
+                IsPronounce = questionModel.IsPronounce,
+                Answers = questionModel.Answers.Select(a => new Answer
+                {
+                    Content = a.Content,
+                    IsCorrect = a.IsCorrect
+                }).ToList()
+            };
+
+            _context.Questions.Add(question);
             await _context.SaveChangesAsync();
-            return questionModel;
+            return question;
         }
+
+        public async Task<Question> UpdateQuestionWithAnswers(int id, Question questionModel)
+        {
+            var question = await _context.Questions
+                .Include(q => q.Answers)
+                .FirstOrDefaultAsync(q => q.Id == id);
+
+            if (question == null)
+            {
+                return null;
+            }
+
+            question.Content = questionModel.Content;
+            question.Explanation = questionModel.Explanation;
+            question.LessonId = questionModel.LessonId;
+            question.Language = questionModel.Language;
+            question.IsPronounce = questionModel.IsPronounce;
+
+            _context.Answers.RemoveRange(question.Answers);
+            question.Answers = questionModel.Answers.Select(a => new Answer
+            {
+                Content = a.Content,
+                IsCorrect = a.IsCorrect
+            }).ToList();
+
+            await _context.SaveChangesAsync();
+            return question;
+        }
+
 
         public async Task<Question?> DeleteAsync(int id)
         {
@@ -69,21 +113,6 @@ namespace server.Repository
         public async Task<bool> QuestionExists(int id)
         {
             return await _context.Questions.AnyAsync(q => q.Id == id);
-        }
-
-        public async Task<Question?> UpdateAsync(int id, Question questionModel)
-        {
-            var question = await _context.Questions.FirstOrDefaultAsync(q => q.Id == id);
-            if (question == null)
-            {
-                return null;
-            }
-            question.Content = questionModel.Content;
-            question.Explanation = questionModel.Explanation;
-            question.LessonId = questionModel.LessonId;
-            question.IsPronounce = questionModel.IsPronounce;
-            await _context.SaveChangesAsync();
-            return question;
         }
     }
 }

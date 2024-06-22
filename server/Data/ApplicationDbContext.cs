@@ -25,7 +25,6 @@ namespace server.Data
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Discount> Discounts { get; set; }
         public DbSet<UserCourse> UserCourses { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Banner> Banners { get; set; }

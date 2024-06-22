@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using server.Dtos.User;
 using server.Extensions;
+using server.Helpers;
 using server.Interfaces;
 using server.Mappers;
 using server.Models;
@@ -75,7 +76,6 @@ namespace server.Controllers
 
             if (!succeeded)
             {
-                // Trường hợp không thành công, trả về các lỗi từ quá trình đăng ký
                 var errorObject = new { errors };
                 return StatusCode(500, new { data = errorObject });
             }
@@ -84,12 +84,11 @@ namespace server.Controllers
         }
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject queryObject)
         {
-            var users = await _userRepo.GetAllAsync();
+            var (users, totalRecords) = await _userRepo.GetAllAsync(queryObject);
 
             var userDtos = new List<UserDto>();
-
             foreach (var user in users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
@@ -107,6 +106,24 @@ namespace server.Controllers
                 userDtos.Add(userDto);
             }
 
+            var result = new
+            {
+                Data = userDtos,
+                TotalRecords = totalRecords,
+                TotalPages = (int)Math.Ceiling(totalRecords / (double)queryObject.PageSize),
+                PageSize = queryObject.PageSize,
+                CurrentPage = queryObject.Page
+            };
+
+            return Ok(result);
+        }
+
+
+        [HttpGet("get-teacher")]
+        public async Task<IActionResult> GetTeacher()
+        {
+            var users = await _userRepo.GetTeachers();
+            var userDtos = users.Select(u => u.ToTeacherDto());
             return Ok(userDtos);
         }
 
@@ -183,7 +200,7 @@ namespace server.Controllers
             return Ok(userModel.ToUserDto());
         }
 
-        [HttpDelete("delete/{id:int}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var user = await _userRepo.DeleteAsync(id);
@@ -266,7 +283,6 @@ namespace server.Controllers
                     var lastMessage = await _chatMessageRepository.GetLastMessageByConversationIdAsync(id);
                     if (lastMessage != null)
                     {
-                        // Chỉ lấy tin nhắn nếu người gửi hoặc người nhận là userItem
                         if (lastMessage.UserId == userItem.Id || lastMessage.Conversation.UserConversations.Any(uc => uc.UserId == userItem.Id))
                         {
                             if (lastMessageOverall == null || lastMessage.CreatedAt > lastMessageOverall.CreatedAt)
@@ -288,7 +304,6 @@ namespace server.Controllers
                 });
             }
 
-            // Sắp xếp danh sách người dùng theo thời gian tin nhắn cuối cùng
             userDtos = userDtos.OrderByDescending(u => u.LastMessageTime).ToList();
 
             return Ok(userDtos);

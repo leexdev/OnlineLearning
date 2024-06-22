@@ -43,6 +43,13 @@ const Lesson = () => {
                 setTotalComments(lessonData.comments.length);
                 setComments(lessonData.comments.slice(0, 5));
                 const course = await courseApi.get(lessonData.courseId);
+
+                course.chapters.sort((a, b) => a.order - b.order);
+                course.chapters.forEach((chapter) => {
+                    chapter.lessons.sort((a, b) => a.order - b.order);
+                });
+
+                console.log('course.chapters', course.chapters);
                 setChapters(course.chapters);
 
                 if (user) {
@@ -108,10 +115,11 @@ const Lesson = () => {
         if (!lesson || !chapters) return null;
 
         let currentChapterIndex = chapters.findIndex((chapter) => chapter.id === lesson.chapterId);
-        let currentLessonIndex = chapters[currentChapterIndex].lessons.findIndex((les) => les.id === parseInt(id));
+        let currentChapter = chapters[currentChapterIndex];
+        let currentLessonIndex = currentChapter.lessons.findIndex((les) => les.id === parseInt(id));
 
         if (currentLessonIndex > 0) {
-            return chapters[currentChapterIndex].lessons[currentLessonIndex - 1];
+            return currentChapter.lessons[currentLessonIndex - 1];
         }
 
         if (currentChapterIndex > 0) {
@@ -126,10 +134,11 @@ const Lesson = () => {
         if (!lesson || !chapters) return null;
 
         let currentChapterIndex = chapters.findIndex((chapter) => chapter.id === lesson.chapterId);
-        let currentLessonIndex = chapters[currentChapterIndex].lessons.findIndex((les) => les.id === parseInt(id));
+        let currentChapter = chapters[currentChapterIndex];
+        let currentLessonIndex = currentChapter.lessons.findIndex((les) => les.id === parseInt(id));
 
-        if (currentLessonIndex < chapters[currentChapterIndex].lessons.length - 1) {
-            return chapters[currentChapterIndex].lessons[currentLessonIndex + 1];
+        if (currentLessonIndex < currentChapter.lessons.length - 1) {
+            return currentChapter.lessons[currentLessonIndex + 1];
         }
 
         if (currentChapterIndex < chapters.length - 1) {

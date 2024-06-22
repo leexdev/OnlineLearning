@@ -32,7 +32,6 @@ public class FireBaseService : IFireBaseService
                 ThrowOnCancel = true,
             });
 
-        // Xóa tệp cũ không đồng bộ
         if (!string.IsNullOrEmpty(existingFileUrl))
         {
             var relativePath = ConvertUrlToRelativePath(existingFileUrl);

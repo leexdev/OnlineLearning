@@ -11,6 +11,11 @@ const courseApi = {
         return await axiosClient.get(url);
     },
 
+    async getAllChildren(id) {
+        const url = `/Course/get-by-allchidren/${id}`;
+        return await axiosClient.get(url);
+    },
+
     async getCourse(id) {
         const url = `/Course/simple/${id}`;
         return await axiosClient.get(url);
@@ -37,11 +42,25 @@ const courseApi = {
 
     async update(id, data) {
         const url = `/Course/update/${id}`;
-        return await axiosClient.put(url, data);
+        return await axiosClient.put(url, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
     },
 
     async delete(id) {
         const url = `/Course/delete/${id}`;
+        return await axiosClient.delete(url);
+    },
+
+    async updatePrice(id, price) {
+        const url = `/Course/update-new-price/${id}?price=${price}`;
+        return await axiosClient.put(url);
+    },
+
+    async deleteNewPrice(id) {
+        const url = `/Course/delete-new-price/${id}`;
         return await axiosClient.put(url);
     },
 };

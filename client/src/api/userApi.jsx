@@ -11,8 +11,13 @@ const userApi = {
         return await axiosClient.post(url, data);
     },
 
-    async getAll() {
+    async getAll(params) {
         const url = '/Account/get-all';
+        return await axiosClient.get(url, { params });
+    },
+
+    async getTeachers() {
+        const url = '/Account/get-teacher';
         return await axiosClient.get(url);
     },
 
@@ -45,6 +50,16 @@ const userApi = {
     async contact() {
         const url = '/Account/contacts';
         return await axiosClient.get(url);
+    },
+
+    async changeRoles(id, newRoles) {
+        const url = `/Account/changeroles/${id}`;
+        return await axiosClient.post(url, newRoles);
+    },
+
+    async delete(id) {
+        const url = `/Account/delete/${id}`;
+        return await axiosClient.delete(url);
     },
 };
 

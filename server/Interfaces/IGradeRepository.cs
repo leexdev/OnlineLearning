@@ -16,5 +16,6 @@ namespace server.Interfaces
         Task<Grade?> UpdateAsync(int id, Grade gradeModel);
         Task<Grade?> DeleteAsync(int id);
         Task<bool> GradeExists(int id);
+        Task<Grade> FindByNameAsync(string name);
     }
 }

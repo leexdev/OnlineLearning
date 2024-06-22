@@ -317,7 +317,7 @@ const Question = () => {
                             handleAnswerClick={handleAnswerClick}
                         />
                         <div className="flex justify-center">
-                            {currentQuestion.language !== 'en' && (
+                            {currentQuestion.isPronounce === false && (
                                 <button
                                     onClick={handleSubmit}
                                     className="bg-orange-500 text-white px-12 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-orange-600 transition transform hover:scale-105"
@@ -338,13 +338,13 @@ const Question = () => {
                                 setShowAnswer={setShowAnswer}
                             />
                         )}
-                        {currentQuestion.language === 'en' && (
+                        {currentQuestion.isPronounce === true && (
                             <div className="flex flex-col items-center">
                                 {!isRecording ? (
                                     <button
                                         onClick={handleStartRecording}
                                         className="bg-peach text-white px-4 py-2 rounded"
-                                        disabled={isLoading} // Vô hiệu hóa nút ghi âm khi đang tải
+                                        disabled={isLoading}
                                     >
                                         Bắt đầu ghi âm
                                     </button>

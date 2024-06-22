@@ -53,7 +53,7 @@ const EditChapterModal = ({ isOpen, closeModal, chapterData, handleEdit }) => {
                                             },
                                         })}
                                         placeholder="Nhập tên chương..."
-                                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-peach focus:border-peach"
                                     />
                                     {errors.name && <FormFieldError message={errors.name.message} />}
                                 </div>

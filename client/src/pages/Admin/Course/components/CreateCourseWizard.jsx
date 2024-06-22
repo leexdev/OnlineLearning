@@ -7,11 +7,13 @@ import StepNavigation from './StepNavigation';
 import CourseForm from './Course/CourseForm';
 import ChapterForm from './Chapter/ChapterForm';
 
-const CreateCourseWizard = () => {
+const CreateCourseWizard = ({ courseToEdit }) => {
     const [step, setStep] = useState(0);
-    const [course, setCourse] = useState(null);
     const [grades, setGrades] = useState([]);
-    const steps = ['Giới thiệu khóa học', 'Chương trình giảng Dạy', 'Câu hỏi ôn tập', 'Xuất bản'];
+    const [course, setCourse] = useState(courseToEdit || null);
+    const steps = ['Giới thiệu khóa học', 'Chương trình giảng Dạy'];
+
+    console.log("Hello");
 
     useEffect(() => {
         const fetchGrades = async () => {
@@ -27,26 +29,36 @@ const CreateCourseWizard = () => {
 
     const handleCourseSubmit = async (data) => {
         try {
-            const response = await courseApi.add(data);
-            toast.success('Tạo khóa học thành công');
+            let response;
+            if (courseToEdit) {
+                response = await courseApi.update(courseToEdit.id, data);
+                toast.success('Cập nhật khóa học thành công');
+            } else {
+                response = await courseApi.add(data);
+                toast.success('Thêm khóa học thành công');
+            }
             setCourse(response);
-            setStep(1);
+            setStep((prevStep) => prevStep + 1);
         } catch (error) {
-            console.error('Lỗi khi tạo khóa học:', error);
-            toast.error('Lỗi khi tạo khóa học');
+            if (error.response && error.response.data && error.response.data.errors) {
+                const convertedErrors = convertErrorsToCamelCase(error.response.data.errors);
+                Object.keys(convertedErrors).forEach((key) => {
+                    setError(key, { type: 'server', message: convertedErrors[key][0] });
+                });
+            }
+            console.error('Lỗi khi thêm/sửa dữ liệu:', error);
         }
     };
 
     const handleChapterSubmit = () => {
-        setStep(2);
+        useNavigate('admin/course');
     };
 
     return (
         <Fragment>
             <StepNavigation steps={steps} currentStep={step} />
-            {step === 0 && <CourseForm onSubmit={handleCourseSubmit} grades={grades} />}
-            {step === 1 && course && <ChapterForm onSubmit={handleChapterSubmit} courseId={course.id} />}
-            {/* {step === 2 && <QuestonForm onSubmit={handleQuestionSubmit} chapters={chapters} />} */}
+            {step === 0 && <CourseForm onSubmit={handleCourseSubmit} grades={grades} course={course} />}
+            {step === 1 && course && <ChapterForm onSubmit={handleChapterSubmit} course={course} />}
         </Fragment>
     );
 };

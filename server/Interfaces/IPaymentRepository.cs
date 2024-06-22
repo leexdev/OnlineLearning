@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using server.Helpers;
 using server.Models;
 
 namespace server.Interfaces
 {
     public interface IPaymentRepository
     {
-        Task<List<Payment>> GetAllAsync();
+        Task<(List<Payment> Payments, int TotalRecords)> GetAllAsync(QueryObject queryObject);
         Task<Payment?> GetByIdAsync(Guid id);
         Task<Payment> CreateAsync(Payment paymentModel);
         Task<Payment?> UpdateAsync(Guid id, string status);

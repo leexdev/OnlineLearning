@@ -262,14 +262,11 @@ namespace server.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Order")
+                    b.Property<int?>("Order")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -384,9 +381,6 @@ namespace server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DiscountId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -416,42 +410,9 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DiscountId");
-
                     b.HasIndex("SubjectId");
 
                     b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("server.Models.Discount", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DiscountAmount")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Discounts");
                 });
 
             modelBuilder.Entity("server.Models.Grade", b =>
@@ -496,9 +457,6 @@ namespace server.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<int>("Order")
                         .HasColumnType("int");
@@ -629,11 +587,10 @@ namespace server.Migrations
                     b.Property<string>("Explanation")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsPronounce")
+                    b.Property<bool?>("IsPronounce")
                         .HasColumnType("bit");
 
                     b.Property<string>("Language")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("LessonId")
@@ -800,7 +757,7 @@ namespace server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double>("Accuracy")
+                    b.Property<double?>("Accuracy")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1010,17 +967,11 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.Course", b =>
                 {
-                    b.HasOne("server.Models.Discount", "Discount")
-                        .WithMany("Courses")
-                        .HasForeignKey("DiscountId");
-
                     b.HasOne("server.Models.Subject", "Subject")
                         .WithMany("Courses")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Discount");
 
                     b.Navigation("Subject");
                 });
@@ -1196,11 +1147,6 @@ namespace server.Migrations
                     b.Navigation("Payments");
 
                     b.Navigation("UserCourses");
-                });
-
-            modelBuilder.Entity("server.Models.Discount", b =>
-                {
-                    b.Navigation("Courses");
                 });
 
             modelBuilder.Entity("server.Models.Grade", b =>

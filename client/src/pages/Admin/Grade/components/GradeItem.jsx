@@ -5,7 +5,6 @@ import React from 'react';
 const GradeItem = ({ grade, handleEdit, setGradeToDelete, setShowDeleteModal }) => {
     return (
         <tr key={grade.id} className="text-center even:bg-gray-50">
-            <td className="py-2 border-b px-4">{grade.id}</td>
             <td className="py-2 border-b px-4">{grade.name}</td>
             <td className="py-2 border-b px-4">
                 <ul className="list-inside">

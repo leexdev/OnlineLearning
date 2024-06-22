@@ -13,8 +13,8 @@ namespace server.Models
         public string Content { get; set; } = string.Empty;
         public string? Explanation { get; set; }
         public int LessonId { get; set; }
-        public string Language { get; set; } = "vi";
-        public bool IsPronounce { get; set; } = false;
+        public string? Language { get; set; } = "vi";
+        public bool? IsPronounce { get; set; } = false;
         public byte[]? Audio { get; set; }
         public Lesson? Lesson { get; set; }
         public List<Answer> Answers { get; set; } = new List<Answer>();

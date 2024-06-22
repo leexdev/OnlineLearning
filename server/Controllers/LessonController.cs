@@ -85,6 +85,14 @@ namespace server.Controllers
 
             var userName = User.GetUsername();
             var user = await _userManager.FindByNameAsync(userName);
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            if (userRoles.Contains("Admin"))
+            {
+                return Ok(lesson.ToLessonVideoDto());
+            }
+
             var userCourses = await _ucRepo.GetUserCourses(user.Id);
 
             var hasAccess = userCourses.Any(uc => uc.Id == lesson.Chapter.CourseId);
@@ -180,19 +188,6 @@ namespace server.Controllers
             {
                 return StatusCode(500, $"Có lỗi xảy ra khi cập nhật bài học: {ex.Message}");
             }
-        }
-
-
-        [HttpPut("set-delete/{id:int}")]
-        public async Task<IActionResult> SetDelete(int id)
-        {
-            var lessonModel = await _lessonRepo.SetDelete(id);
-            if (lessonModel == null)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
         }
 
         [HttpDelete("delete/{id:int}")]

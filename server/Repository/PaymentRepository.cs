@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
+using server.Helpers;
 using server.Interfaces;
 using server.Models;
 
@@ -24,10 +25,26 @@ namespace server.Repository
             return paymentModel;
         }
 
-        public async Task<List<Payment>> GetAllAsync()
+        public async Task<(List<Payment> Payments, int TotalRecords)> GetAllAsync(QueryObject queryObject)
         {
-            return await _context.Payments.ToListAsync();
+            var query = _context.Payments.AsQueryable();
+
+            if (!string.IsNullOrEmpty(queryObject.SearchTerm))
+            {
+                query = query.Where(p => p.User.UserName.Contains(queryObject.SearchTerm) || p.Course.Name.ToString().Contains(queryObject.SearchTerm));
+            }
+
+            var totalRecords = await query.CountAsync();
+            var payments = await query
+                .Include(p => p.Course).Include(p => p.User)
+                .OrderByDescending(p => p.CreatedAt)
+                .Skip((queryObject.Page - 1) * queryObject.PageSize)
+                .Take(queryObject.PageSize)
+                .ToListAsync();
+
+            return (payments, totalRecords);
         }
+
 
         public async Task<UserCourse?> GetByCourseIdAndUserIdAsync(int courseId, string userId)
         {

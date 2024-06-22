@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { faClock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useNavigate } from 'react-router-dom';
@@ -25,11 +25,7 @@ const CourseCard = ({ course }) => {
                     <div className="title text-white text-lg px-5 py-2 text-center">{course.name}</div>
                     <div className="content bg-white md:line-clamp-5 px-5 py-2 rounded-b-3xl">
                         <span className="line-clamp-5">{course.title}</span>
-                        <div className="grid grid-cols-1 md:grid-cols-2">
-                            <div className="time">
-                                <FontAwesomeIcon className="mr-1 text-gray-500" icon={faClock} />
-                                <span className="text-sm text-end">Chỉ còn 2 ngày</span>
-                            </div>
+                        <div className="grid grid-cols-1 md:grid-cols-1">
                             {course.newPrice !== null ? (
                                 <div className="price text-right">
                                     <div className="old-price line-through md:text-md xl:text-xl font-bold">
@@ -61,13 +57,13 @@ const CourseCard = ({ course }) => {
                                 state={{
                                     courseId: course.id,
                                 }}
-                                className="mr-3 mb-3 md:mb-0 shadow-md block bg-gray-300 p-2 xl:py-2 xl:px-5 rounded-xl"
+                                className="md:mr-3 mb-3 md:mb-0 shadow-md block bg-gray-300 p-2 xl:py-2 xl:px-5 rounded-xl"
                             >
                                 Xem thêm
                             </Link>
                             <button
                                 onClick={handleRegisterClick}
-                                className="mr-3 shadow-md block bg-orange-600 p-2 xl:py-2 xl:px-7 rounded-xl"
+                                className="mr-3 shadow-md block bg-orange-600 p-2 xl:py-2 xl:px-7 rounded-xl w-full md:w-auto"
                             >
                                 Đăng ký
                             </button>

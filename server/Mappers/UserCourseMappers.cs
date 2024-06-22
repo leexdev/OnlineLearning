@@ -9,6 +9,15 @@ namespace server.Mappers
 {
     public static class UserCourseMappers
     {
+        public static UserCourseDto ToUserCourseDto(this UserCourse courseModel)
+        {
+            return new UserCourseDto
+            {
+                CourseId = courseModel.CourseId,
+                UserId = courseModel.UserId
+            };
+        }
+
         public static UserCourse ToUserCourseFromCreate(this CreateUserCourseDto courseDto)
         {
             return new UserCourse
@@ -16,6 +25,15 @@ namespace server.Mappers
                 CourseId = courseDto.CourseId,
                 UserId = courseDto.UserId
             };
+        }
+
+        public static List<UserCourse> ToTeacherCoursesFromCreate(this CreateTeacherCourseDto createDto, int courseId)
+        {
+            return createDto.TeacherIds.Select(teacherId => new UserCourse
+            {
+                UserId = teacherId,
+                CourseId = courseId,
+            }).ToList();
         }
     }
 }

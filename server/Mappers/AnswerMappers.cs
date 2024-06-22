@@ -26,8 +26,12 @@ namespace server.Mappers
             {
                 Content = answerDto.Content,
                 IsCorrect = answerDto.IsCorrect,
-                QuestionId = answerDto.QuestionId
             };
+        }
+
+        public static List<Answer> ToAnswerListFromCreate(this List<CreateAnswerDto> answerDtos)
+        {
+            return answerDtos.Select(a => a.ToAnswerFromCreate()).ToList();
         }
 
         public static Answer ToAnswerFromUpdate(this UpdateAnswerDto answerDto)
@@ -36,8 +40,12 @@ namespace server.Mappers
             {
                 Content = answerDto.Content,
                 IsCorrect = answerDto.IsCorrect,
-                QuestionId = answerDto.QuestionId
             };
+        }
+
+        public static List<Answer> ToAnswerListFromUpdate(this List<UpdateAnswerDto> answerDtos)
+        {
+            return answerDtos.Select(a => a.ToAnswerFromUpdate()).ToList();
         }
     }
 }

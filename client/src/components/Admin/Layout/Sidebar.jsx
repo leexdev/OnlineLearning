@@ -53,7 +53,7 @@ const Sidebar = () => {
                     </li>
                     <li>
                         <NavLink
-                            to="/admin/home"
+                            to="/admin"
                             className={({ isActive }) =>
                                 `flex items-center p-2 rounded-lg group ${
                                     isActive
@@ -162,7 +162,7 @@ const Sidebar = () => {
                     </li>
                     <li>
                         <NavLink
-                            to="/admin/order"
+                            to="/admin/payment"
                             className={({ isActive }) =>
                                 `flex items-center p-2 rounded-lg group ${
                                     isActive

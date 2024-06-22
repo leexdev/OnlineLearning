@@ -22,6 +22,7 @@ namespace server.Mappers
                 Order = lessonModel.Order,
                 Comments = lessonModel.Comments.Select(c => c.ToCommentDto()).ToList(),
                 LessonCompletes = lessonModel.LessonCompletes.Select(c => c.ToLessonCompletedDto()).ToList(),
+                Questions = lessonModel.Questions.Select(q => q.ToQuestionDto()).ToList()
             };
         }
 
@@ -39,6 +40,7 @@ namespace server.Mappers
                 Order = lessonModel.Order,
                 Comments = lessonModel.Comments.Select(c => c.ToCommentDto()).ToList(),
                 LessonCompletes = lessonModel.LessonCompletes.Select(c => c.ToLessonCompletedDto()).ToList(),
+                Questions = lessonModel.Questions.Select(q => q.ToQuestionDto()).ToList()
             };
         }
 

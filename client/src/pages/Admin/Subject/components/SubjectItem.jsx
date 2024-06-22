@@ -3,11 +3,9 @@ import { faPen, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
-const SubjectItem = ({ subject, handleEdit, setSubjectToDelete, setShowDeleteModal }) => {
-    console.log('subject', subject);
+const SubjectItem = ({ subject, handleEdit, setSubjectToDelete, setShowDeleteModal }) => {  
     return (
         <tr key={subject.id} className="text-center even:bg-gray-50">
-            <td className="py-2 border-b px-4">{subject.id}</td>
             <td className="py-2 border-b px-4">{subject.name}</td>
             <td className="py-2 border-b px-4">{subject.gradeName}</td>
             <td className="py-2 border-b px-4 space-x-2">

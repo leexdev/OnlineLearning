@@ -11,16 +11,15 @@ const Info = ({ title, course }) => {
 
     const maxLength = 150;
     const fullDescription = course?.description || '';
-    const truncatedDescription = fullDescription.length > maxLength
-        ? `${fullDescription.slice(0, maxLength)}...`
-        : fullDescription;
+    const truncatedDescription =
+        fullDescription.length > maxLength ? `${fullDescription.slice(0, maxLength)}...` : fullDescription;
 
     return (
         <div id="course-info" className="mb-10">
             <div className="title text-2xl font-semibold mb-2">{title}</div>
             <div className="info border py-5 px-10 rounded-lg bg-white">
                 <div className="content">
-                    {isExpanded ? fullDescription : truncatedDescription}
+                    <div dangerouslySetInnerHTML={{ __html: isExpanded ? fullDescription : truncatedDescription }} />
                 </div>
                 {fullDescription.length > maxLength && (
                     <div className="mt-2">
@@ -30,11 +29,11 @@ const Info = ({ title, course }) => {
                         >
                             {isExpanded ? (
                                 <>
-                                    Thu gọn <FontAwesomeIcon icon={faAngleUp} className="ml-2"/>
+                                    Thu gọn <FontAwesomeIcon icon={faAngleUp} className="ml-2" />
                                 </>
                             ) : (
                                 <>
-                                    Xem thêm <FontAwesomeIcon icon={faAngleRight} className="ml-2"/>
+                                    Xem thêm <FontAwesomeIcon icon={faAngleRight} className="ml-2" />
                                 </>
                             )}
                         </button>

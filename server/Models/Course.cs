@@ -17,9 +17,7 @@ namespace server.Models
         public int? NewPrice { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
         public int SubjectId { get; set; }
-        public int? DiscountId { get; set; }
         public bool IsDeleted { get; set; } = false;
-        public Discount? Discount { get; set; }
         public Subject? Subject { get; set; }
         public List<Chapter> Chapters { get; set; } = new List<Chapter>();
         public List<UserCourse> UserCourses { get; set; } = new List<UserCourse>();

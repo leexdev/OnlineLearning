@@ -15,7 +15,6 @@ namespace server.Models
         public string VideoURL { get; set; } = string.Empty;
         public bool isFree { get; set; } = false;
         public int ChapterId { get; set; }
-        public bool IsDeleted { get; set; } = false;
         public int Order { get; set; }
         public Chapter? Chapter { get; set; }
         public List<Question> Questions { get; set; } = new List<Question>();

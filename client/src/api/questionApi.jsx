@@ -33,7 +33,7 @@ const questionApi = {
 
     async delete(id) {
         const url = `/Question/delete/${id}`;
-        return await axiosClient.put(url);
+        return await axiosClient.delete(url);
     },
 
     async analyzeAudio(formData) {

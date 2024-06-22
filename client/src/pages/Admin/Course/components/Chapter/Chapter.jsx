@@ -1,7 +1,7 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { Controller, useForm } from 'react-hook-form';
-import { faBars, faPen, faPlus, faTag, faTrash, faQuestion } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faPen, faPlus, faTrash, faQuestion, faVideo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import lessonApi from '~/api/lessonApi';
 import { toast } from 'react-toastify';
@@ -12,31 +12,46 @@ const Chapter = ({
     chapter,
     openEditChapterModal,
     openEditLessonModal,
+    openEditQuestionModal,
     addLesson,
     addQuestion,
     deleteChapter,
     deleteLesson,
+    deleteQuestion,
 }) => {
     const [uploadStates, setUploadStates] = useState({});
     const [previewVideos, setPreviewVideos] = useState({});
     const [uploadedVideos, setUploadedVideos] = useState({});
-    const [showModal, setShowModal] = useState(false);
-    const [currentLessonIndex, setCurrentLessonIndex] = useState(null);
     const { control, setError, clearErrors } = useForm();
+    const [openQuestions, setOpenQuestions] = useState({});
+
+    useEffect(() => {
+        if (chapter && chapter.lessons) {
+            const initialPreviewVideos = {};
+            chapter.lessons.forEach((lesson, index) => {
+                if (lesson.videoURL) {
+                    initialPreviewVideos[index] = { previewURL: lesson.videoURL };
+                }
+            });
+            console.log('initialPreviewVideos', initialPreviewVideos);
+            setPreviewVideos(initialPreviewVideos);
+        }
+    }, [chapter]);
 
     const handleToggleUpload = (lessonIndex) => {
-        if (previewVideos[lessonIndex] && !uploadedVideos[lessonIndex]) {
-            setShowModal(true);
-            setCurrentLessonIndex(lessonIndex);
-        } else {
-            setUploadStates((prev) => ({
-                ...prev,
-                [lessonIndex]: !prev[lessonIndex],
-            }));
-        }
+        setUploadStates((prev) => ({
+            ...prev,
+            [lessonIndex]: !prev[lessonIndex],
+        }));
     };
 
-    console.log("chapter", chapter);
+    const toggleQuestionSection = (lessonIndex) => {
+        setOpenQuestions((prev) => ({
+            ...prev,
+            [lessonIndex]: !prev[lessonIndex],
+        }));
+    };
+
     const handleDrop = (acceptedFiles, rejectedFiles, lessonIndex) => {
         if (rejectedFiles && rejectedFiles.length > 0) {
             setError(`lesson-${lessonIndex}-video`, {
@@ -121,32 +136,6 @@ const Chapter = ({
         }
     };
 
-    const handleCloseModal = () => {
-        setShowModal(false);
-        setCurrentLessonIndex(null);
-    };
-
-    const confirmCloseUploadSection = () => {
-        if (currentLessonIndex !== null) {
-            setUploadStates((prev) => ({
-                ...prev,
-                [currentLessonIndex]: !prev[currentLessonIndex],
-            }));
-            handleCloseModal();
-            resetVideoTrongLesson();
-        }
-    };
-
-    const resetVideoTrongLesson = () => {
-        if (currentLessonIndex !== null && previewVideos[currentLessonIndex]) {
-            setPreviewVideos((prev) => {
-                const updatedPreviews = { ...prev };
-                delete updatedPreviews[currentLessonIndex];
-                return updatedPreviews;
-            });
-        }
-    };
-
     return (
         <Fragment>
             <div className="p-4">
@@ -155,20 +144,26 @@ const Chapter = ({
                         <FontAwesomeIcon className="mr-2" icon={faBars} />
                         {chapter.name}
                     </label>
-                    <div className="flex mr-5">
+                    <div className="flex mr-2">
                         <button
                             type="button"
                             onClick={() => openEditChapterModal(chapterIndex)}
-                            className="ml-2 text-gray-900 p-2 rounded-md"
+                            className="ml-2 text-white bg-yellow-400 p-2 rounded-md"
                         >
-                            <FontAwesomeIcon className="text-xl" icon={faPen} />
+                            <span className="font-bold">
+                                <FontAwesomeIcon className="mr-1 text-xl" icon={faPen} />
+                                Sửa
+                            </span>
                         </button>
                         <button
                             type="button"
                             onClick={() => deleteChapter(chapterIndex)}
-                            className="ml-2 text-gray-900 p-2 rounded-md"
+                            className="ml-2 text-white bg-red-500 p-2 rounded-md"
                         >
-                            <FontAwesomeIcon className="text-xl" icon={faTrash} />
+                            <span className="font-bold">
+                                <FontAwesomeIcon className="mr-1 text-xl" icon={faTrash} />
+                                Xóa
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -191,46 +186,129 @@ const Chapter = ({
                                                         <label className="text-lg font-semibold text-gray-700 flex justify-center items-center">
                                                             <FontAwesomeIcon className="mr-1" icon={faPlus} />
                                                             {lesson.title}
-                                                            <div className="flex space-x-2">
+                                                            <div>
                                                                 <button
                                                                     type="button"
                                                                     onClick={() =>
                                                                         openEditLessonModal(chapterIndex, lessonIndex)
                                                                     }
-                                                                    className="ml-4 text-gray-900 p-1 rounded-md"
+                                                                    className="ml-4 text-gray-900 bg-yellow-400 py-1 px-2 rounded-md"
                                                                 >
-                                                                    <FontAwesomeIcon icon={faPen} />
+                                                                    <span className="text-white text-base">
+                                                                        <FontAwesomeIcon
+                                                                            className="mr-1"
+                                                                            icon={faPen}
+                                                                        />
+                                                                        Sửa
+                                                                    </span>
                                                                 </button>
                                                                 <button
                                                                     type="button"
                                                                     onClick={() =>
                                                                         deleteLesson(chapterIndex, lessonIndex)
                                                                     }
-                                                                    className="ml-2 text-gray-900 p-1 rounded-md"
+                                                                    className="ml-2 bg-red-500 py-1 px-2 rounded-md"
                                                                 >
-                                                                    <FontAwesomeIcon icon={faTrash} />
-                                                                </button>
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() =>
-                                                                        addQuestion(chapterIndex, lessonIndex)
-                                                                    }
-                                                                    className="ml-2 text-gray-900 p-1 rounded-md"
-                                                                >
-                                                                    <FontAwesomeIcon icon={faQuestion} />
+                                                                    <span className="text-white text-base">
+                                                                        <FontAwesomeIcon
+                                                                            className="mr-1"
+                                                                            icon={faTrash}
+                                                                        />
+                                                                        Xóa
+                                                                    </span>
                                                                 </button>
                                                             </div>
                                                         </label>
                                                     </div>
-                                                    <div className="mr-5">
+                                                    <div className="flex justify-center items-center mr-3">
                                                         <button
                                                             type="button"
                                                             onClick={() => handleToggleUpload(lessonIndex)}
+                                                            className="mr-2 bg-emerald-500 p-2 rounded-md"
                                                         >
-                                                            <FontAwesomeIcon className="p-2 text-xl" icon={faTag} />
+                                                            <span className="text-white text-base font-bold">
+                                                                <FontAwesomeIcon className="mr-1" icon={faVideo} />
+                                                                Video
+                                                            </span>
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => toggleQuestionSection(lessonIndex)}
+                                                            className="mr-2 bg-teal-500 p-2 rounded-md"
+                                                        >
+                                                            <span className="text-white text-base font-bold">
+                                                                <FontAwesomeIcon className="mr-1" icon={faQuestion} />
+                                                                Câu Hỏi
+                                                            </span>
                                                         </button>
                                                     </div>
                                                 </div>
+                                                {openQuestions[lessonIndex] && (
+                                                    <div className="mt-5">
+                                                        <div className="flex justify-center items-center mb-5">
+                                                            <p className="font-bold block flex-1">Danh sách câu hỏi:</p>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => addQuestion(lessonIndex)}
+                                                                className="text-gray-900 mr-6"
+                                                            >
+                                                                <span className="p-2 bg-peach rounded-md font-bold text-white">
+                                                                    <FontAwesomeIcon className="mr-1" icon={faPlus} />
+                                                                    Thêm câu hỏi
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                        <div className="flex">
+                                                            <div className="flex-1">
+                                                                {lesson.questions.map((question, questionIndex) => (
+                                                                    <div
+                                                                        key={question?.id}
+                                                                        className="mb-2 p-2 bg-gray-50 rounded-md flex justify-center items-center"
+                                                                    >
+                                                                        <div className="content flex-1">
+                                                                            {question?.content}
+                                                                        </div>
+
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() =>
+                                                                                openEditQuestionModal(
+                                                                                    chapterIndex,
+                                                                                    lessonIndex,
+                                                                                    questionIndex,
+                                                                                    question,
+                                                                                )
+                                                                            }
+                                                                            className="text-gray-900 mr-2"
+                                                                        >
+                                                                            <FontAwesomeIcon
+                                                                                className="p-2 bg-yellow-400 rounded-md text-white"
+                                                                                icon={faPen}
+                                                                            />
+                                                                        </button>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() =>
+                                                                                deleteQuestion(
+                                                                                    chapterIndex,
+                                                                                    lessonIndex,
+                                                                                    questionIndex,
+                                                                                )
+                                                                            }
+                                                                            className="text-gray-900 mr-2"
+                                                                        >
+                                                                            <FontAwesomeIcon
+                                                                                className="p-2 bg-red-500 rounded-md text-white"
+                                                                                icon={faTrash}
+                                                                            />
+                                                                        </button>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                            <div></div>
+                                                        </div>
+                                                    </div>
+                                                )}
                                                 {uploadStates[lessonIndex] && (
                                                     <div className="mt-4">
                                                         <label className="block mb-2 font-bold text-gray-700">
@@ -258,56 +336,33 @@ const Chapter = ({
                                                             {previewVideos[lessonIndex] && (
                                                                 <div className="pb-4">
                                                                     <div className="flex justify-center items-center">
-                                                                        {!uploadedVideos[lessonIndex] && (
-                                                                            <button
-                                                                                type="button"
-                                                                                onClick={() =>
-                                                                                    handleRemoveVideo(lessonIndex)
-                                                                                }
-                                                                                className="mt-2 bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded shadow-md transition duration-200"
-                                                                            >
-                                                                                Bỏ Video
-                                                                            </button>
-                                                                        )}
-                                                                        {!uploadedVideos[lessonIndex] && (
-                                                                            <button
-                                                                                type="button"
-                                                                                onClick={() =>
-                                                                                    handleUploadVideo(
-                                                                                        lessonIndex,
-                                                                                        lesson.id,
-                                                                                    )
-                                                                                }
-                                                                                className="mt-2 ml-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded shadow-md transition duration-200"
-                                                                            >
-                                                                                Tải Video Lên
-                                                                            </button>
-                                                                        )}
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() =>
+                                                                                handleRemoveVideo(lessonIndex)
+                                                                            }
+                                                                            className="mt-2 bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded shadow-md transition duration-200"
+                                                                        >
+                                                                            Bỏ Video
+                                                                        </button>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() =>
+                                                                                handleUploadVideo(
+                                                                                    lessonIndex,
+                                                                                    lesson.id,
+                                                                                )
+                                                                            }
+                                                                            className="mt-2 ml-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded shadow-md transition duration-200"
+                                                                        >
+                                                                            Tải Video Lên
+                                                                        </button>
                                                                     </div>
                                                                 </div>
                                                             )}
                                                         </div>
                                                     </div>
                                                 )}
-                                                {/* Displaying Questions */}
-                                                <div className="mt-4">
-                                                    {lesson.questions && lesson.questions.length > 0 && (
-                                                        <div>
-                                                            <p className="font-bold mb-2">Danh sách câu hỏi:</p>
-                                                            {lesson.questions.map((question, questionIndex) => (
-                                                                <div
-                                                                    key={question.id}
-                                                                    className="mb-2 p-2 bg-gray-100 rounded-md"
-                                                                >
-                                                                    {question.content}
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    )}
-                                                    {lesson.questions && lesson.questions.length === 0 && (
-                                                        <p>Không có câu hỏi cho bài học này.</p>
-                                                    )}
-                                                </div>
                                             </div>
                                         </div>
                                     )}
@@ -326,30 +381,6 @@ const Chapter = ({
                 <FontAwesomeIcon className="mr-1" icon={faPlus} />
                 Tạo Bài Giảng
             </button>
-            {showModal && (
-                <div className="fixed inset-0 z-50 flex cursor-default items-center justify-center overflow-auto bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full">
-                        <h2 className="text-lg font-semibold mb-4">Chưa tải video lên</h2>
-                        <p className="mb-4">Bạn chưa tải video lên cho bài giảng này. Bạn có chắc muốn đóng?</p>
-                        <div className="flex justify-end">
-                            <button
-                                type="button"
-                                onClick={handleCloseModal}
-                                className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
-                            >
-                                Hủy
-                            </button>
-                            <button
-                                type="button"
-                                onClick={confirmCloseUploadSection}
-                                className="bg-red-500 text-white px-4 py-2 rounded"
-                            >
-                                Đóng
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </Fragment>
     );
 };

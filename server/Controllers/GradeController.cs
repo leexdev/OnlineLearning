@@ -47,6 +47,12 @@ namespace server.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create(CreateGradeDto gradeDto)
         {
+            var existingGrade = await _gradeRepo.FindByNameAsync(gradeDto.Name);
+            if (existingGrade != null)
+            {
+                return Conflict(new { message = "Khối lớp đã tồn tại" });
+            }
+
             var grade = gradeDto.ToGradeFromCreate();
             await _gradeRepo.CreateAsync(grade);
             return CreatedAtAction(nameof(GetById), new { id = grade.Id }, grade.ToGradeDto());
@@ -55,6 +61,12 @@ namespace server.Controllers
         [HttpPut("update/{id:int}")]
         public async Task<IActionResult> Update(int id, UpdateGradeDto updateDto)
         {
+            var existingGrade = await _gradeRepo.FindByNameAsync(updateDto.Name);
+            if (existingGrade != null && existingGrade.Id != id)
+            {
+                return Conflict(new { message = "Khối lớp đã tồn tại" });
+            }
+
             var gradeModel = await _gradeRepo.UpdateAsync(id, updateDto.ToGradeFromUpdate());
             if (gradeModel == null)
             {

@@ -41,12 +41,12 @@ const ListSubject = () => {
                 console.log(currentSubject.id);
                 console.log(data);
                 response = await subjectApi.update(currentSubject.id, data);
-                console.log('Update response:', response); // Add this line
+                console.log('Update response:', response);
                 setSubjects(subjects.map((subject) => (subject.id === currentSubject.id ? response : subject)));
                 toast.success('Cập nhật môn học thành công');
             } else {
                 response = await subjectApi.add(data);
-                console.log('Add response:', response); // Add this line
+                console.log('Add response:', response);
                 setSubjects([...subjects, response]);
                 toast.success('Thêm mới môn học thành công');
             }
@@ -55,12 +55,16 @@ const ListSubject = () => {
             setIsEditing(false);
             setCurrentSubject(null);
         } catch (error) {
-            const responseData = error.response.data;
-            if (responseData.errors) {
-                const errorData = convertErrorsToCamelCase(responseData.errors);
-                Object.keys(errorData).forEach((key) => setError(key, { type: 'manual', message: errorData[key] }));
+            if (error.response.status === 409) {
+                setError('name', { type: 'manual', message: 'Tên khối lớp đã tồn tại.' });
             } else {
-                toast.error('Đã xảy ra lỗi.');
+                const responseData = error.response.data;
+                if (responseData.errors) {
+                    const errorData = convertErrorsToCamelCase(responseData.errors);
+                    Object.keys(errorData).forEach((key) => setError(key, { type: 'manual', message: errorData[key] }));
+                } else {
+                    toast.error('Đã xảy ra lỗi.');
+                }
             }
         }
     };

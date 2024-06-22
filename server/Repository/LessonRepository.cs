@@ -19,7 +19,7 @@ namespace server.Repository
         public async Task<Lesson> CreateAsync(Lesson lessonModel)
         {
             var maxOrder = _context.Lessons
-                .Where(l => l.ChapterId == lessonModel.ChapterId && !l.IsDeleted)
+                .Where(l => l.ChapterId == lessonModel.ChapterId)
                 .OrderByDescending(l => l.Order)
                 .Select(l => l.Order)
                 .FirstOrDefault();
@@ -45,22 +45,10 @@ namespace server.Repository
 
             await _context.SaveChangesAsync();
         }
-
-        public async Task<Lesson?> SetDelete(int id)
-        {
-            var lesson = await _context.Lessons.FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
-            if (lesson == null)
-            {
-                return null;
-            }
-
-            lesson.IsDeleted = true;
-            await _context.SaveChangesAsync();
-            return lesson;
-        }
+        
         public async Task<Lesson?> DeleteAsync(int id)
         {
-            var lesson = await _context.Lessons.FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
+            var lesson = await _context.Lessons.FirstOrDefaultAsync(l => l.Id == id);
             if (lesson == null)
             {
                 return null;
@@ -73,12 +61,12 @@ namespace server.Repository
 
         public async Task<List<Lesson>> GetAllAsync()
         {
-            return await _context.Lessons.Include(l => l.Comments).ThenInclude(l => l.User).Where(l => !l.IsDeleted).OrderBy(l => l.Order).ToListAsync();
+            return await _context.Lessons.Include(l => l.Comments).ThenInclude(l => l.User).OrderBy(l => l.Order).ToListAsync();
         }
 
         public async Task<Lesson?> GetByIdAsync(int id)
         {
-            var lesson = await _context.Lessons.Include(l => l.Chapter).Include(l => l.Comments.OrderByDescending(c => c.CreatedAt)).ThenInclude(l => l.User).FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
+            var lesson = await _context.Lessons.Include(l => l.Chapter).Include(l => l.Comments.OrderByDescending(c => c.CreatedAt)).ThenInclude(l => l.User).FirstOrDefaultAsync(l => l.Id == id);
             if (lesson == null)
             {
                 return null;
@@ -100,12 +88,12 @@ namespace server.Repository
 
         public async Task<bool> LessonExists(int id)
         {
-            return await _context.Lessons.Where(l => !l.IsDeleted).AnyAsync(l => l.Id == id);
+            return await _context.Lessons.AnyAsync(l => l.Id == id);
         }
 
         public async Task<Lesson?> UpdateAsync(int id, Lesson lessonModel)
         {
-            var lesson = await _context.Lessons.FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
+            var lesson = await _context.Lessons.FirstOrDefaultAsync(l => l.Id == id);
             if (lesson == null)
             {
                 return null;
@@ -121,7 +109,7 @@ namespace server.Repository
 
         public async Task<Lesson?> UpdateVideo(int id, string videoUrl)
         {
-            var lesson = await _context.Lessons.Where(l => !l.IsDeleted).FirstOrDefaultAsync(l => l.Id == id && !l.IsDeleted);
+            var lesson = await _context.Lessons.FirstOrDefaultAsync(l => l.Id == id);
             if (lesson == null)
             {
                 return null;

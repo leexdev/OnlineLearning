@@ -17,7 +17,19 @@ namespace server.Mappers
                 Id = chapterModel.Id,
                 Name = chapterModel.Name,
                 CourseId = chapterModel.CourseId,
+                Order = chapterModel.Order,
                 Lessons = chapterModel.Lessons.Select(l => l.ToLessonDto()).ToList()
+            };
+        }
+
+        public static ChapterDto ToChapterWithVideoLessonDto(this Chapter chapterModel)
+        {
+            return new ChapterDto
+            {
+                Id = chapterModel.Id,
+                Name = chapterModel.Name,
+                CourseId = chapterModel.CourseId,
+                Lessons = chapterModel.Lessons.Select(l => l.ToLessonVideoDto()).ToList()
             };
         }
 

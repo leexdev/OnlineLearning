@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using server.Dtos.Payment;
 using server.Dtos.UserCourse;
 using server.Extensions;
+using server.Helpers;
 using server.Interfaces;
 using server.Mappers;
 using server.Models;
@@ -38,12 +39,21 @@ namespace server.Controllers
         }
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject queryObject)
         {
-            var payments = await _paymentRepo.GetAllAsync();
-            var paymentDto = payments.Select(p => p.ToPaymentDto());
-            return Ok(paymentDto);
+            var (payments, totalRecords) = await _paymentRepo.GetAllAsync(queryObject);
+            var paymentDto = payments.Select(x => x.ToPaymentDto());
+
+            var response = new
+            {
+                Data = paymentDto,
+                TotalRecords = totalRecords,
+                TotalPages = (int)Math.Ceiling(totalRecords / (double)queryObject.PageSize)
+            };
+
+            return Ok(response);
         }
+
 
         [HttpPost("generate-payment-url")]
         [Authorize]

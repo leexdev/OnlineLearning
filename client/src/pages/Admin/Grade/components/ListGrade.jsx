@@ -38,7 +38,6 @@ const ListGrade = () => {
     const onSubmit = async (data) => {
         try {
             if (isEditing) {
-                console.log(currentGrade.id);
                 const response = await gradeApi.update(currentGrade.id, data);
                 setGrades(grades.map((grade) => (grade.id === currentGrade.id ? response : grade)));
                 toast.success('Cập nhật khối lớp thành công');
@@ -52,12 +51,16 @@ const ListGrade = () => {
             setIsEditing(false);
             setCurrentGrade(null);
         } catch (error) {
-            const responseData = error.response.data;
-            if (responseData.errors) {
-                const errorData = convertErrorsToCamelCase(responseData);
-                Object.keys(errorData).forEach((key) => setError(key, { type: 'manual', message: errorData[key] }));
+            if (error.response.status === 409) {
+                setError('name', { type: 'manual', message: 'Tên khối lớp đã tồn tại.' });
             } else {
-                toast.error('Đã xảy ra lỗi.');
+                const responseData = error.response.data;
+                if (responseData.errors) {
+                    const errorData = convertErrorsToCamelCase(responseData);
+                    Object.keys(errorData).forEach((key) => setError(key, { type: 'manual', message: errorData[key] }));
+                } else {
+                    toast.error('Đã xảy ra lỗi.');
+                }
             }
         }
     };

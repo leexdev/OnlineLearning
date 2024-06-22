@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import EditChapterModal from './EditChapterModal';
 import Chapter from './Chapter';
 import AddChapterModal from './AddChapterModal';
@@ -9,20 +9,25 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { convertErrorsToCamelCase } from '~/utils/errorUtils';
 import EditLessonModal from '../Lesson/EditLessonModal';
 import AddLessonModal from '../Lesson/AddLessonModal';
-import AddQuestionModal from '../Question/AddQuesionModal';
 import questionApi from '~/api/questionApi';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import AddQuestionModal from '../Question/AddQuesionModal';
+import EditQuestionModal from '../Question/EditQuestionModal';
+import { Link } from 'react-router-dom';
 
-const ChapterForm = ({ courseId, onSubmit }) => {
+const ChapterForm = ({ course, onSubmit }) => {
     const [chapters, setChapters] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [lessonModalIsOpen, setLessonModalIsOpen] = useState(false);
     const [questionModalIsOpen, setQuestionModalIsOpen] = useState(false);
     const [editChapterModalIsOpen, setEditChapterModalIsOpen] = useState(false);
     const [editLessonModalIsOpen, setEditLessonModalIsOpen] = useState(false);
+    const [editQuestionModalIsOpen, setEditQuestionModalIsOpen] = useState(false);
     const [newChapterTitle, setNewChapterTitle] = useState('');
     const [currentChapterIndex, setCurrentChapterIndex] = useState(null);
     const [currentLessonIndex, setCurrentLessonIndex] = useState(null);
-
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(null);
     const openModal = () => {
         setModalIsOpen(true);
     };
@@ -31,8 +36,15 @@ const ChapterForm = ({ courseId, onSubmit }) => {
         setModalIsOpen(false);
     };
 
+    useEffect(() => {
+        if (course != null) {
+            setChapters(course.chapters);
+            console.log("course.chapters", course.chapters);
+        }
+    }, [course]);
+
     const handleAddChapter = async (data, setError) => {
-        const newChapter = { name: data.name, courseId };
+        const newChapter = { name: data.name, courseId: course.id };
 
         try {
             const response = await chapterApi.add(newChapter);
@@ -88,26 +100,37 @@ const ChapterForm = ({ courseId, onSubmit }) => {
 
     const addQuestion = (lessonIndex) => {
         setCurrentLessonIndex(lessonIndex);
+        console.log('lessonIndex', lessonIndex);
         setQuestionModalIsOpen(true);
     };
 
     const handleAddQuestion = async (questionData, setError) => {
-        console.log('questionData', questionData);
+        if (course.subjectName.toLowerCase() === 'tiếng anh') {
+            questionData.language = 'en';
+        }
+
         const newQuestion = {
             content: questionData.content,
             explanation: questionData.explanation,
             language: questionData.language,
             isPronounce: questionData.isPronounce,
             lessonId: chapters[currentChapterIndex].lessons[currentLessonIndex].id,
+            answers: questionData.answers.map((answer) => ({
+                content: answer.content,
+                isCorrect: answer.isCorrect,
+            })),
         };
 
         try {
             const response = await questionApi.add(newQuestion);
+            console.log('response', response);
             const createdQuestion = response;
 
-            const newChapters = [...chapters];
-            newChapters[currentChapterIndex].lessons[currentLessonIndex].questions.push(createdQuestion);
-            setChapters(newChapters);
+            const updatedChapters = [...chapters];
+            updatedChapters[currentChapterIndex].lessons[currentLessonIndex].questions.push(createdQuestion);
+
+            console.log('updatedChapters', updatedChapters);
+            setChapters(updatedChapters);
 
             toast.success('Thêm câu hỏi mới thành công');
             setQuestionModalIsOpen(false);
@@ -117,7 +140,7 @@ const ChapterForm = ({ courseId, onSubmit }) => {
                 const errorData = convertErrorsToCamelCase(responseData.errors);
                 Object.keys(errorData).forEach((key) => setError(key, { type: 'manual', message: errorData[key] }));
             } else {
-                toast.error('Không thể thêm bài giảng mới');
+                toast.error('Không thể thêm câu hỏi mới');
             }
         }
     };
@@ -133,13 +156,24 @@ const ChapterForm = ({ courseId, onSubmit }) => {
         setEditLessonModalIsOpen(true);
     };
 
+    const openEditQuestionModal = (chapterIndex, lessonIndex, questionIndex) => {
+        setCurrentChapterIndex(chapterIndex);
+        setCurrentLessonIndex(lessonIndex);
+        setCurrentQuestionIndex(questionIndex);
+
+        console.log('chapterIndex', chapterIndex);
+        console.log('lessonIndex', lessonIndex);
+        console.log('questionIndex', questionIndex);
+        setEditQuestionModalIsOpen(true);
+    };
+
     const handleEditChapter = async (data, setError) => {
         const newChapters = [...chapters];
         newChapters[currentChapterIndex].name = data.name;
         try {
             await chapterApi.update(newChapters[currentChapterIndex].id, {
                 name: data.name,
-                courseId: courseId,
+                courseId: course.id,
             });
             toast.success('Cập nhật chương thành công');
             setChapters(newChapters);
@@ -185,6 +219,54 @@ const ChapterForm = ({ courseId, onSubmit }) => {
         }
     };
 
+    const handleEditQuestion = async (questionData, setError) => {
+        if (course.subjectName.toLowerCase() === 'tiếng anh') {
+            questionData.language = 'en';
+        }
+
+        const updatedQuestion = {
+            content: questionData.content,
+            explanation: questionData.explanation,
+            language: questionData.language,
+            isPronounce: questionData.isPronounce,
+            lessonId: chapters[currentChapterIndex].lessons[currentLessonIndex].id,
+            answers: questionData.answers.map((answer) => ({
+                content: answer.content,
+                isCorrect: answer.isCorrect,
+            })),
+        };
+
+        console.log('Payload:', updatedQuestion); // Kiểm tra payload trước khi gửi
+
+        try {
+            const response = await questionApi.update(
+                chapters[currentChapterIndex].lessons[currentLessonIndex].questions[currentQuestionIndex].id,
+                updatedQuestion,
+            );
+
+            console.log('response', response);
+            const updatedQuestionData = response;
+
+            const updatedChapters = [...chapters];
+
+            updatedChapters[currentChapterIndex].lessons[currentLessonIndex].questions[currentQuestionIndex] =
+                updatedQuestionData;
+
+            setChapters(updatedChapters);
+
+            toast.success('Cập nhật câu hỏi thành công');
+            setEditQuestionModalIsOpen(false);
+        } catch (error) {
+            const responseData = error.response.data;
+            if (responseData.errors) {
+                const errorData = convertErrorsToCamelCase(responseData.errors);
+                Object.keys(errorData).forEach((key) => setError(key, { type: 'manual', message: errorData[key] }));
+            } else {
+                toast.error('Không thể cập nhật câu hỏi');
+            }
+        }
+    };
+
     const deleteChapter = async (chapterIndex) => {
         const chapterId = chapters[chapterIndex].id;
         try {
@@ -212,6 +294,21 @@ const ChapterForm = ({ courseId, onSubmit }) => {
         }
     };
 
+    const deleteQuestion = async (chapterIndex, lessonIndex, questionIndex) => {
+        const questionId = chapters[chapterIndex].lessons[lessonIndex].questions[questionIndex].id;
+        try {
+            await questionApi.delete(questionId);
+            const newChapters = [...chapters];
+            newChapters[chapterIndex].lessons[lessonIndex].questions = newChapters[chapterIndex].lessons[
+                lessonIndex
+            ].questions.filter((_, index) => index !== questionIndex);
+            setChapters(newChapters);
+            toast.success('Xóa câu hỏi thành công');
+        } catch (error) {
+            toast.error('Không thể xóa câu hỏi');
+        }
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         onSubmit(chapters);
@@ -235,7 +332,7 @@ const ChapterForm = ({ courseId, onSubmit }) => {
             setChapters(updatedChapters);
 
             try {
-                await chapterApi.updateOrder(courseId, updatedChapters);
+                await chapterApi.updateOrder(course.id, updatedChapters);
                 toast.success('Sắp xếp chương thành công');
             } catch (error) {
                 toast.error('Không thể sắp xếp chương');
@@ -280,7 +377,10 @@ const ChapterForm = ({ courseId, onSubmit }) => {
                         onClick={openModal}
                         className="mt-2 bg-peach font-bold text-white p-2 rounded-md"
                     >
-                        Thêm Chương
+                        <span className="p-2 bg-peach rounded-md font-bold text-white">
+                            <FontAwesomeIcon className="mr-1" icon={faPlus} />
+                            Thêm Chương
+                        </span>
                     </button>
                 </div>
                 <AddChapterModal
@@ -300,7 +400,8 @@ const ChapterForm = ({ courseId, onSubmit }) => {
                 <AddQuestionModal
                     isOpen={questionModalIsOpen}
                     closeModal={() => setQuestionModalIsOpen(false)}
-                    handleAddQuestion={handleAddQuestion}
+                    handleAdd={handleAddQuestion}
+                    subjectName={course.subjectName}
                 />
 
                 <EditChapterModal
@@ -315,6 +416,16 @@ const ChapterForm = ({ courseId, onSubmit }) => {
                     closeModal={() => setEditLessonModalIsOpen(false)}
                     lessonData={chapters[currentChapterIndex]?.lessons[currentLessonIndex]}
                     handleEdit={handleEditLesson}
+                />
+
+                <EditQuestionModal
+                    isOpen={editQuestionModalIsOpen}
+                    closeModal={() => setEditQuestionModalIsOpen(false)}
+                    questionData={
+                        chapters[currentChapterIndex]?.lessons[currentLessonIndex]?.questions[currentQuestionIndex]
+                    }
+                    handleEdit={handleEditQuestion}
+                    subjectName={course.subjectName}
                 />
 
                 <form onSubmit={handleSubmit} className="bg-white shadow-md">
@@ -342,7 +453,9 @@ const ChapterForm = ({ courseId, onSubmit }) => {
                                                         addQuestion={addQuestion}
                                                         deleteChapter={deleteChapter}
                                                         deleteLesson={deleteLesson}
+                                                        deleteQuestion={deleteQuestion}
                                                         openEditLessonModal={openEditLessonModal}
+                                                        openEditQuestionModal={openEditQuestionModal}
                                                     />
                                                 </div>
                                             )}
@@ -355,12 +468,12 @@ const ChapterForm = ({ courseId, onSubmit }) => {
                     </DragDropContext>
 
                     <div className="flex justify-center mt-4 p-4">
-                        <button
-                            type="submit"
+                        <Link
+                            to={"/admin/course"}
                             className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded shadow-md transition duration-200 ml-2"
                         >
-                            Tiếp tục
-                        </button>
+                            Hoàn thành
+                        </Link>
                     </div>
                 </form>
             </div>

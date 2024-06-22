@@ -15,7 +15,6 @@ namespace server.Interfaces
         Task UpdateLessonOrderAsync(int chapterId, List<Lesson> lessons);
         Task<Lesson?> UpdateAsync(int id, Lesson lessonModel);
         Task<Lesson?> UpdateVideo(int id, string videoUrl);
-        Task<Lesson?> SetDelete(int id);
         Task<Lesson?> DeleteAsync(int id);
         Task<bool> LessonExists(int id);
     }

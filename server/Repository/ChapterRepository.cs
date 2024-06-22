@@ -21,13 +21,13 @@ namespace server.Repository
 
         public async Task<bool> ChapterExist(int id)
         {
-            return await _context.Chapters.Where(c => !c.IsDeleted).AnyAsync(c => c.Id == id);
+            return await _context.Chapters.AnyAsync(c => c.Id == id);
         }
 
         public async Task<Chapter> CreateAsync(Chapter chapterModel)
         {
             var maxOrder = await _context.Chapters
-                .Where(c => c.CourseId == chapterModel.CourseId && !c.IsDeleted)
+                .Where(c => c.CourseId == chapterModel.CourseId)
                 .MaxAsync(c => (int?)c.Order) ?? 0;
 
             chapterModel.Order = maxOrder + 1;
@@ -52,22 +52,9 @@ namespace server.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Chapter?> SetDelete(int id)
-        {
-            var chapter = await _context.Chapters.FirstOrDefaultAsync(c => c.Id == id & !c.IsDeleted);
-            if (chapter == null)
-            {
-                return null;
-            }
-
-            chapter.IsDeleted = true;
-            await _context.SaveChangesAsync();
-            return chapter;
-        }
-
         public async Task<Chapter?> DeleteAsync(int id)
         {
-            var chapter = await _context.Chapters.FirstOrDefaultAsync(c => c.Id == id & !c.IsDeleted);
+            var chapter = await _context.Chapters.FirstOrDefaultAsync(c => c.Id == id);
             if (chapter == null)
             {
                 return null;
@@ -80,12 +67,12 @@ namespace server.Repository
 
         public async Task<List<Chapter>> GetAllAsync()
         {
-            return await _context.Chapters.Where(c => !c.IsDeleted).Include(c => c.Lessons.Where(l => !l.IsDeleted).OrderBy(l => l.Order)).ToListAsync();
+            return await _context.Chapters.Include(c => c.Lessons.OrderBy(l => l.Order)).ToListAsync();
         }
 
         public async Task<Chapter?> GetByIdAsync(int id)
         {
-            var chapter = await _context.Chapters.Include(c => c.Lessons.Where(l => !l.IsDeleted).OrderBy(l => l.Order)).FirstOrDefaultAsync(c => c.Id == id & !c.IsDeleted);
+            var chapter = await _context.Chapters.Include(c => c.Lessons.OrderBy(l => l.Order)).FirstOrDefaultAsync(c => c.Id == id);
             if (chapter == null)
             {
                 return null;
@@ -96,7 +83,7 @@ namespace server.Repository
 
         public async Task<Chapter?> UpdateAsync(int id, Chapter chapterModel)
         {
-            var chapter = await _context.Chapters.FirstOrDefaultAsync(c => c.Id == id & !c.IsDeleted);
+            var chapter = await _context.Chapters.FirstOrDefaultAsync(c => c.Id == id);
             if (chapter == null)
             {
                 return null;

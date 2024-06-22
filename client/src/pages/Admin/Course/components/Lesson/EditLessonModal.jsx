@@ -61,7 +61,7 @@ const EditLessonModal = ({ isOpen, closeModal, lessonData, handleEdit }) => {
                                             },
                                         })}
                                         placeholder="Nhập tên bài giảng..."
-                                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-peach focus:border-peach"
                                     />
                                     {errors.title && <FormFieldError message={errors.title.message} />}
                                 </div>

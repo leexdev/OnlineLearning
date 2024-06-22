@@ -80,19 +80,6 @@ namespace server.Controllers
             return Ok(chapter.ToChapterDto());
         }
 
-        [HttpPut("set-delete/{id:int}")]
-        public async Task<IActionResult> SetDelete(int id)
-        {
-            var chapter = await _chapterRepo.SetDelete(id);
-
-            if (chapter == null)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
-
         [HttpDelete("delete/{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {

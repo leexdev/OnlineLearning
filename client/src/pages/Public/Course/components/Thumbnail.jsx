@@ -51,10 +51,6 @@ const Thumbnail = ({ course, setAdviseSuccess, user }) => {
                                         {course.newPrice.toLocaleString('vi-VN')}₫
                                     </span>
                                 </div>
-                                <div className="text-peach">
-                                    <FontAwesomeIcon className="mr-1" icon={faClock} />
-                                    <span>Chỉ còn 2 ngày</span>
-                                </div>
                             </div>
                         ) : (
                             <div className="text-sm font-bold">

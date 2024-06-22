@@ -11,6 +11,6 @@ namespace server.Interfaces
     {
         Task<List<CourseDto>> GetUserCourses(string userId);
         Task<UserCourse> CreateAsync(UserCourse userCourse);
-
+        Task<List<UserCourse>> CreateTeacher(List<UserCourse> userCourses);
     }
 }
