@@ -1,9 +1,9 @@
 import axiosClient from './axiosClient';
 
 const courseApi = {
-    async getAll(params) {
+    async getAll() {
         const url = '/Course/get-all';
-        return await axiosClient.get(url, {params});
+        return await axiosClient.get(url);
     },
     async getPage(params) {
         const url = '/Course/get-page';
@@ -32,6 +32,11 @@ const courseApi = {
 
     async getBySubjectName(subjectName) {
         const url = `/Course/get-by-subjectName/${subjectName}`;
+        return await axiosClient.get(url);
+    },
+
+    async getCoursesByTeacher() {
+        const url = `/Course/courses-by-teacher`;
         return await axiosClient.get(url);
     },
 

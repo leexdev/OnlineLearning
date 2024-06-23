@@ -35,15 +35,9 @@ namespace server.Repository
             return await _context.Ratings.ToListAsync();
         }
 
-        public async Task<Rating?> GetByIdAsync(int id)
+        public async Task<List<Rating>> GetByCourseIdAsync(int courseId)
         {
-            var rating = await _context.Ratings.FirstOrDefaultAsync(r => r.Id == id);
-            if (rating == null)
-            {
-                return null;
-            }
-
-            return rating;
+            return await _context.Ratings.Where(r => r.CourseId == courseId).ToListAsync();
         }
 
         public async Task<Rating?> CreateAsync(string userId, Rating ratingModel)

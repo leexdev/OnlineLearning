@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
-import { publicRoutes } from '~/routes';
+import { publicRoutes, privateRoutes } from '~/routes';
 import DefaultLayout from '~/components/Common/Layout/DefaultLayout/DefautLayout';
+import PrivateRoute from '~/components/Common/PrivateRoute/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -24,7 +25,24 @@ function App() {
                                         <Page />
                                     </Layout>
                                 }
-                            ></Route>
+                            />
+                        );
+                    })}
+                    {privateRoutes.map((route, index) => {
+                        const Layout = route.layout || DefaultLayout;
+                        const Page = route.component;
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <PrivateRoute roles={route.roles}>
+                                        <Layout>
+                                            <Page />
+                                        </Layout>
+                                    </PrivateRoute>
+                                }
+                            />
                         );
                     })}
                 </Routes>

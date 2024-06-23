@@ -23,7 +23,7 @@ namespace server.Models
         public List<UserAnswerHistory> UserAnswerHistories { get; set; } = new List<UserAnswerHistory>();
         public List<ChatMessage> ChatMessages { get; set; } = new List<ChatMessage>();
         public List<UserConversation> UserConversations { get; set; } = new List<UserConversation>();
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
+        public DateTime? UpdatedAt { get; set; } = DateTime.Now;
     }
 }

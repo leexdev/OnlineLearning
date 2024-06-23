@@ -105,6 +105,7 @@ namespace server.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateLessonDto lessonDto)
         {
             try
@@ -124,6 +125,7 @@ namespace server.Controllers
         }
 
         [HttpPut("update-order/{chapterId:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateOrder(int chapterId, [FromBody] List<LessonOrder> lessons)
         {
             if (!await _chapterRepo.ChapterExist(chapterId))
@@ -134,6 +136,7 @@ namespace server.Controllers
         }
 
         [HttpPost("upload-video/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UploadVideoLesson(int id, IFormFile videoFile)
         {
             try
@@ -169,6 +172,7 @@ namespace server.Controllers
 
 
         [HttpPut("update/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, UpdateLessonDto lessonDto)
         {
             try
@@ -191,6 +195,7 @@ namespace server.Controllers
         }
 
         [HttpDelete("delete/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var lessonModel = await _lessonRepo.DeleteAsync(id);

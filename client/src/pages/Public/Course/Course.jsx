@@ -14,6 +14,7 @@ import MessageModal from '~/components/Common/MessageModal';
 import userCourseApi from '~/api/userCourseApi';
 import images from '~/assets/images';
 import { Helmet } from 'react-helmet';
+import Rating from './components/Rating';
 
 const Course = () => {
     const { id } = useParams();
@@ -115,6 +116,7 @@ const Course = () => {
                             onLessonClick={handleLessonClick}
                             completedLessons={completedLessons}
                         />
+                        <Rating courseId={id} hasPurchased={hasPurchased} setError={setError} setSuccess={setSuccess}/> {/* Add Rating component */}
                     </div>
                 </div>
             </div>

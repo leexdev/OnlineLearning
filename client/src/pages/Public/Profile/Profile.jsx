@@ -7,11 +7,11 @@ import Profile from './component/Profile';
 const Account = () => {
     const { user, loading } = useContext(AuthContext);
     if (loading) {
-        return <Spinner />; // Hiển thị khi đang tải
+        return <Spinner />; 
     }
 
     if (!user) {
-        return <div>User not found</div>; // Hiển thị khi không tìm thấy người dùng
+        return <div>User not found</div>;
     }
 
     return (

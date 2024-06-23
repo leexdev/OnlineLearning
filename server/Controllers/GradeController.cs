@@ -45,6 +45,7 @@ namespace server.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateGradeDto gradeDto)
         {
             var existingGrade = await _gradeRepo.FindByNameAsync(gradeDto.Name);
@@ -59,6 +60,7 @@ namespace server.Controllers
         }
 
         [HttpPut("update/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, UpdateGradeDto updateDto)
         {
             var existingGrade = await _gradeRepo.FindByNameAsync(updateDto.Name);
@@ -74,22 +76,9 @@ namespace server.Controllers
             }
             return Ok(gradeModel.ToGradeDto());
         }
-
-        // [HttpDelete]
-        // [Route("{id}")]
-        // public async Task<IActionResult> DeleteGrade([FromRoute] int id)
-        // {
-        //     var gradeModel = await _context.Grades.FirstOrDefaultAsync(x => x.Id == id);
-        //     if (gradeModel == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     _context.Grades.Remove(gradeModel);
-        //     await _context.SaveChangesAsync();
-        //     return NoContent();
-        // }
-
+        
         [HttpDelete("delete/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var gradeModel = await _gradeRepo.DeleteAsync(id);

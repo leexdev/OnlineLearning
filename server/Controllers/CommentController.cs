@@ -69,6 +69,7 @@ namespace server.Controllers
         }
 
         [HttpPut("update/{id:int}")]
+        [Authorize]
         public async Task<IActionResult> Update(int id, UpdateCommentDto commentDto)
         {
             var comment = await _commentRepo.UpdateAsync(id, commentDto.ToCommentFromUpdate());
@@ -81,6 +82,7 @@ namespace server.Controllers
         }
 
         [HttpDelete("delete/{id:int}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var comment = await _commentRepo.DeleteAsync(id);

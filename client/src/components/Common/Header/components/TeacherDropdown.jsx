@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import DropdownLink from './DropdownLink';
 
-const UserDropdown = ({ user, onLogout }) => {
+const TeacherDropdown = ({ user, onLogout }) => {
     return (
         <Fragment>
             <div
@@ -20,8 +20,8 @@ const UserDropdown = ({ user, onLogout }) => {
                 )}
                 <ul>
                     <DropdownLink to="/profile">Thông tin cá nhân</DropdownLink>
-                    <DropdownLink to="/my-course">Khóa học của tôi</DropdownLink>
-                    <DropdownLink to="/chat">Nhắn tin với giáo viên</DropdownLink>
+                    <DropdownLink to="/my-advise">Danh sách tư vấn</DropdownLink>
+                    <DropdownLink to="/chat">Nhắn tin với học viên</DropdownLink>
                     <DropdownLink to="/" onClick={onLogout}>
                         Đăng xuất
                     </DropdownLink>
@@ -31,4 +31,4 @@ const UserDropdown = ({ user, onLogout }) => {
     );
 };
 
-export default UserDropdown;
+export default TeacherDropdown;

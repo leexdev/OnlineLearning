@@ -64,6 +64,7 @@ namespace server.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateQuestionWithAnswers(CreateQuestionDto questionDto)
         {
             if (!await _lessonRepo.LessonExists(questionDto.LessonId))
@@ -78,6 +79,7 @@ namespace server.Controllers
         }
 
         [HttpPut("update/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateQuestionWithAnswers(int id, UpdateQuestionDto questionDto)
         {
             var question = questionDto.ToQuestionFromUpdate();
@@ -92,6 +94,7 @@ namespace server.Controllers
         }
 
         [HttpDelete("delete/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var question = await _questionRepo.DeleteAsync(id);

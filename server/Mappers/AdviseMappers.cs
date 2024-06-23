@@ -16,6 +16,7 @@ namespace server.Mappers
                 Id = adviseModel.Id,
                 Name = adviseModel.Name,
                 BirthDay = adviseModel.BirthDay,
+                PhoneNumber = adviseModel.PhoneNumber,
                 Academic = adviseModel.Academic,
                 Status = adviseModel.Status,
                 courseId = adviseModel.courseId,
@@ -31,6 +32,7 @@ namespace server.Mappers
                 BirthDay = adviseDto.BirthDay,
                 Academic = adviseDto.Academic,
                 courseId = adviseDto.courseId,
+                PhoneNumber = adviseDto.PhoneNumber
             };
         }
 

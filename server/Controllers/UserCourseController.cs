@@ -29,9 +29,9 @@ namespace server.Controllers
 
         [HttpGet("get-all")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
+        public async Task<IActionResult> GetAll()
         {
-            var userCourses = await _ucRepo.GetAllAsync(startDate, endDate);
+            var userCourses = await _ucRepo.GetAllAsync();
             var userCourseDtos = userCourses.Select(uc => uc.ToUserCourseDto());
             return Ok(userCourseDtos);
         }

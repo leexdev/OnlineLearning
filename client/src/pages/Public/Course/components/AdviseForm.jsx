@@ -42,11 +42,12 @@ const AdviseForm = ({ courseId, onClose, setAdviseSuccess }) => {
             const param = {
                 name: data.name,
                 birthDay: data.birthYear,
+                phoneNumber: data.phone,
                 academic: data.academic,
                 courseId: courseId,
             };
             await adviseApi.add(param);
-            setAdviseSuccess('Gửi yêu cầu tư vấn thành công');
+            setAdviseSuccess('Gửi yêu cầu tư vấn thành công! Giáo viên sẽ liên hệ bạn trong thời gian sớm nhất.');
             reset();
             onClose();
         } catch (error) {

@@ -26,9 +26,9 @@ const userApi = {
         return await axiosClient.get(url);
     },
 
-    async getUsers({ params }) {
+    async getUsers() {
         const url = '/Account/get-list-user';
-        return await axiosClient.get(url, { params });
+        return await axiosClient.get(url);
     },
 
     async get() {

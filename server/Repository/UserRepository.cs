@@ -90,23 +90,12 @@ namespace server.Repository
             return usersInRole.Where(u => !u.IsDeleted).ToList();
         }
 
-        public async Task<List<User>> GetUsers(DateTime? startDate, DateTime? endDate)
+        public async Task<List<User>> GetUsers()
         {
             var usersInRole = await _userManager.GetUsersInRoleAsync("User");
+            var query = usersInRole.Where(u => !u.IsDeleted).ToList();
 
-            var query = usersInRole.AsQueryable().Where(u => !u.IsDeleted);
-
-            if (startDate.HasValue)
-            {
-                query = query.Where(u => u.CreatedAt >= startDate.Value);
-            }
-
-            if (endDate.HasValue)
-            {
-                query = query.Where(u => u.CreatedAt <= endDate.Value);
-            }
-
-            return await query.ToListAsync();
+            return query;
         }
 
         public async Task<List<User>> GetAllExceptCurrentAsync(string userId)

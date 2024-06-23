@@ -1,9 +1,9 @@
 import axiosClient from './axiosClient';
 
 const userCourseApi = {
-    async getAll(params) {
+    async getAll() {
         const url = '/UserCourse/get-all';
-        return await axiosClient.get(url, { params });
+        return await axiosClient.get(url);
     },
 
     async get() {

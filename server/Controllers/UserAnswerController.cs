@@ -66,6 +66,7 @@ namespace server.Controllers
         }
 
         [HttpGet("history/course/{courseId}")]
+        [Authorize]
         public async Task<IActionResult> GetHistoryByCourse(int courseId, DateTime startDate, DateTime endDate)
         {
             var userName = User.GetUsername();

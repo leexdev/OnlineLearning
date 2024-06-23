@@ -84,6 +84,7 @@ namespace server.Controllers
         }
 
         [HttpGet("get-all")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             var users = await _userRepo.GetAllAsync();
@@ -92,6 +93,7 @@ namespace server.Controllers
         }
 
         [HttpGet("get-page")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPage([FromQuery] QueryObject queryObject)
         {
             var (users, totalRecords) = await _userRepo.GetPageAsync(queryObject);
@@ -128,6 +130,7 @@ namespace server.Controllers
 
 
         [HttpGet("get-list-teacher")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetTeachers()
         {
             var users = await _userRepo.GetTeachers();
@@ -136,14 +139,16 @@ namespace server.Controllers
         }
 
         [HttpGet("get-list-user")]
-        public async Task<IActionResult> GetUsers([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetUsers()
         {
-            var users = await _userRepo.GetUsers(startDate, endDate);
+            var users = await _userRepo.GetUsers();
             var userDtos = users.Select(u => u.ToUserDto());
             return Ok(userDtos);
         }
 
         [HttpPost("changeroles/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ChangeRoles(string id, [FromBody] string[] newRoles)
         {
             var user = await _userRepo.GetUserByIdAsync(id);
@@ -190,6 +195,7 @@ namespace server.Controllers
         }
 
         [HttpPut("update/user{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(string id, UpdateUserDto userDto)
         {
             var user = await _userRepo.UpdateAsync(id, userDto.ToUserFromUpdate());
@@ -217,6 +223,7 @@ namespace server.Controllers
         }
 
         [HttpDelete("delete/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string id)
         {
             var user = await _userRepo.DeleteAsync(id);

@@ -22,6 +22,7 @@ import CreateCourseWizard from '~/pages/Admin/Course/components/CreateCourseWiza
 import EditCourseWizard from '~/pages/Admin/Course/components/EditCourseWizard';
 import UserAdmin from '~/pages/Admin/User/User';
 import PaymentAdmin from '~/pages/Admin/Payment/Payment';
+import ListAdvise from '~/pages/Public/Advise/ListAdvise';
 
 const publicRoutes = [
     { path: '*', component: NotFound },
@@ -37,18 +38,19 @@ const publicRoutes = [
     { path: '/payment-success', component: PaymentSuccess },
     { path: '/payment-failure', component: PaymentFailure },
     { path: '/chat', component: Chat, layout: CustomLayout },
-
-    { path: '/admin/home', component: DashboardAdmin, layout: AdminLayout },
-    { path: '/admin/banner', component: BannerAdmin, layout: AdminLayout },
-    { path: '/admin/grade', component: GradeAdmin, layout: AdminLayout },
-    { path: '/admin/subject', component: SubjectAdmin, layout: AdminLayout },
-    { path: '/admin/course', component: CourseAdmin, layout: AdminLayout },
-    { path: '/admin/course/create', component: CreateCourseWizard, layout: AdminLayout },
-    { path: '/admin/course/edit/:courseId', component: EditCourseWizard, layout: AdminLayout },
-    { path: '/admin/user', component: UserAdmin, layout: AdminLayout },
-    { path: '/admin/payment', component: PaymentAdmin, layout: AdminLayout },
 ];
 
-const privateRoutes = [];
+const privateRoutes = [
+    { path: '/my-advise', component: ListAdvise, roles: ['Teacher'] },
+    { path: '/admin/home', component: DashboardAdmin, layout: AdminLayout, roles: ['Admin'] },
+    { path: '/admin/banner', component: BannerAdmin, layout: AdminLayout, roles: ['Admin'] },
+    { path: '/admin/grade', component: GradeAdmin, layout: AdminLayout, roles: ['Admin'] },
+    { path: '/admin/subject', component: SubjectAdmin, layout: AdminLayout, roles: ['Admin'] },
+    { path: '/admin/course', component: CourseAdmin, layout: AdminLayout, roles: ['Admin'] },
+    { path: '/admin/course/create', component: CreateCourseWizard, layout: AdminLayout, roles: ['Admin'] },
+    { path: '/admin/course/edit/:courseId', component: EditCourseWizard, layout: AdminLayout, roles: ['Admin'] },
+    { path: '/admin/user', component: UserAdmin, layout: AdminLayout, roles: ['Admin'] },
+    { path: '/admin/payment', component: PaymentAdmin, layout: AdminLayout, roles: ['Admin'] },
+];
 
 export { publicRoutes, privateRoutes };

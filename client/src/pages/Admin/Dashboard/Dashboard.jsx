@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Bar, Line, Pie } from 'react-chartjs-2'; // Import Pie
+import { Bar, Line } from 'react-chartjs-2';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
@@ -20,10 +20,16 @@ import paymentApi from '~/api/paymentApi';
 import userCourseApi from '~/api/userCourseApi';
 import courseApi from '~/api/courseApi';
 import userApi from '~/api/userApi';
-import { format } from 'date-fns';
+import { format, subDays, setHours, setMinutes, setSeconds, setMilliseconds } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import {
+    faBookOpen,
+    faCreditCard,
+    faGraduationCap,
+    faUser,
+    faChalkboardTeacher,
+} from '@fortawesome/free-solid-svg-icons';
 
 // Đăng ký các thành phần của Chart.js và plugin zoom
 ChartJS.register(
@@ -41,30 +47,39 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
-    const [combinedChartData, setCombinedChartData] = useState({});
-    const [revenueLineChartData, setRevenueLineChartData] = useState({});
-    const [studentPieChartData, setStudentPieChartData] = useState({});
+    const [combinedChartData, setCombinedChartData] = useState({
+        labels: [],
+        datasets: [],
+    });
+    const [revenueLineChartData, setRevenueLineChartData] = useState({
+        labels: [],
+        datasets: [],
+    });
     const [totalStudents, setTotalStudents] = useState(0);
     const [totalCourses, setTotalCourses] = useState(0);
     const [totalPayments, setTotalPayments] = useState(0);
     const [totalRegisteredUsers, setTotalRegisteredUsers] = useState(0);
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
+    const [totalTeachers, setTotalTeachers] = useState(0);
+    const [startDate, setStartDate] = useState(subDays(new Date(), 7));
+    const [endDate, setEndDate] = useState(new Date());
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [payments, userCourses, courses, users] = await Promise.all([
-                    paymentApi.getAll(startDate, endDate),
-                    userCourseApi.getAll(startDate, endDate),
-                    courseApi.getAll(startDate, endDate),
-                    userApi.getUsers(startDate, endDate),
+                const params = {};
+                const [payments, userCourses, courses, users, teachers] = await Promise.all([
+                    paymentApi.getAll(params),
+                    userCourseApi.getAll(),
+                    courseApi.getAll(),
+                    userApi.getUsers(),
+                    userApi.getTeachers(), // Fetch teachers data
                 ]);
 
                 console.log('payments', payments);
                 console.log('userCourses', userCourses);
                 console.log('courses', courses);
                 console.log('users', users);
+                console.log('teachers', teachers);
 
                 if (
                     payments &&
@@ -74,9 +89,13 @@ const Dashboard = () => {
                     courses &&
                     Array.isArray(courses) &&
                     users &&
-                    Array.isArray(users)
+                    Array.isArray(users) &&
+                    teachers &&
+                    Array.isArray(teachers)
                 ) {
-                    const successfulPayments = payments.filter((payment) => payment.status === 'Thành công');
+                    const successfulPayments = payments.filter(
+                        (payment) => payment.status === 'Thành công' || payment.status === '',
+                    );
 
                     const groupedPayments = successfulPayments.reduce((acc, payment) => {
                         if (!acc[payment.courseId]) {
@@ -98,7 +117,19 @@ const Dashboard = () => {
                     const amounts = Object.values(groupedPayments).map((payment) => payment.totalAmount);
                     const studentCounts = Object.values(groupedUserCourses);
 
-                    const groupedByDate = successfulPayments.reduce((acc, payment) => {
+                    const startOfDay = startDate
+                        ? setMilliseconds(setSeconds(setMinutes(setHours(startDate, 0), 0), 0), 0)
+                        : null;
+                    const endOfDay = endDate
+                        ? setMilliseconds(setSeconds(setMinutes(setHours(endDate, 23), 59), 59), 999)
+                        : null;
+
+                    const filteredPayments = successfulPayments.filter((payment) => {
+                        const paymentDate = new Date(payment.createdAt);
+                        return (!startDate || paymentDate >= startOfDay) && (!endDate || paymentDate <= endOfDay);
+                    });
+
+                    const groupedByDate = filteredPayments.reduce((acc, payment) => {
                         const date = format(new Date(payment.createdAt), 'dd/MM/yyyy', { locale: vi });
                         if (!acc[date]) {
                             acc[date] = 0;
@@ -145,28 +176,11 @@ const Dashboard = () => {
                         ],
                     });
 
-                    setStudentPieChartData({
-                        labels: courseNames,
-                        datasets: [
-                            {
-                                label: 'Tỉ lệ học viên',
-                                data: studentCounts,
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.6)',
-                                    'rgba(54, 162, 235, 0.6)',
-                                    'rgba(255, 206, 86, 0.6)',
-                                    'rgba(75, 192, 192, 0.6)',
-                                    'rgba(153, 102, 255, 0.6)',
-                                    'rgba(255, 159, 64, 0.6)',
-                                ],
-                            },
-                        ],
-                    });
-
                     setTotalStudents(users.length);
                     setTotalCourses(courses.length);
                     setTotalPayments(successfulPayments.length);
                     setTotalRegisteredUsers(users.length);
+                    setTotalTeachers(teachers.length);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -177,73 +191,125 @@ const Dashboard = () => {
     }, [startDate, endDate]);
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
+        <div className="mx-auto px-4 py-8">
+            <h1 className="text-2xl font-bold mb-8">Thống kê</h1>
+            <div className="grid grid-cols-5 gap-6 mb-8">
+                <div className="bg-white rounded-lg shadow-lg p-6 w-full flex items-center">
+                    <FontAwesomeIcon icon={faUser} className="text-4xl text-blue-500 mr-4" />
+                    <div>
+                        <p className="text-2xl font-semibold">{totalRegisteredUsers}</p>
+                        <p className="text-gray-600">Người dùng đã đăng ký</p>
+                    </div>
+                </div>
+                <div className="bg-white rounded-lg shadow-lg p-6 w-full flex items-center">
+                    <FontAwesomeIcon icon={faGraduationCap} className="text-4xl text-green-500 mr-4" />
+                    <div>
+                        <p className="text-2xl font-semibold">{totalStudents}</p>
+                        <p className="text-gray-600">Học viên</p>
+                    </div>
+                </div>
+                <div className="bg-white rounded-lg shadow-lg p-6 w-full flex items-center">
+                    <FontAwesomeIcon icon={faBookOpen} className="text-4xl text-yellow-500 mr-4" />
+                    <div>
+                        <p className="text-2xl font-semibold">{totalCourses}</p>
+                        <p className="text-gray-600">Khoá học</p>
+                    </div>
+                </div>
+                <div className="bg-white rounded-lg shadow-lg p-6 w-full flex items-center">
+                    <FontAwesomeIcon icon={faCreditCard} className="text-4xl text-red-500 mr-4" />
+                    <div>
+                        <p className="text-2xl font-semibold">{totalPayments}</p>
+                        <p className="text-gray-600">Giao dịch</p>
+                    </div>
+                </div>
+                <div className="bg-white rounded-lg shadow-lg p-6 w-full flex items-center">
+                    <FontAwesomeIcon icon={faChalkboardTeacher} className="text-4xl text-purple-500 mr-4" />
+                    <div>
+                        <p className="text-2xl font-semibold">{totalTeachers}</p>
+                        <p className="text-gray-600">Giáo viên</p>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex justify-end mb-4 items-center space-x-4">
+                <div className="flex items-center space-x-4">
+                    <span className="text-gray-700">Từ ngày</span>
+                    <DatePicker
+                        selected={startDate}
+                        onChange={(date) => setStartDate(date)}
+                        selectsStart
+                        startDate={startDate}
+                        endDate={endDate}
+                        placeholderText="Ngày bắt đầu"
+                        className="border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-peach focus:border-peach"
+                    />
+                </div>
+                <div className="flex items-center space-x-2">
+                    <span className="text-gray-700">Đến ngày</span>
+                    <DatePicker
+                        selected={endDate}
+                        onChange={(date) => setEndDate(date)}
+                        selectsEnd
+                        startDate={startDate}
+                        endDate={endDate}
+                        placeholderText="Ngày kết thúc"
+                        className="border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-peach focus:border-peach"
+                    />
+                </div>
+            </div>
+
             <div className="flex flex-wrap gap-4 mb-8">
-                <div className="flex flex-col items-center bg-white rounded-lg shadow p-4 w-48">
-                    <FontAwesomeIcon icon={faUser} className="text-4xl text-gray-500 mb-2" />
-                    <p className="text-xl font-bold">{totalRegisteredUsers}</p>
-                    <p className="text-gray-500">Người dùng đã đăng ký</p>
+                <div className="bg-white rounded-lg shadow p-4 flex-1">
+                    <h2 className="text-2xl font-bold mb-4">Doanh thu & Học viên</h2>
+                    <Bar
+                        data={combinedChartData}
+                        options={{
+                            responsive: true,
+                            plugins: {
+                                zoom: {
+                                    zoom: {
+                                        wheel: {
+                                            enabled: true,
+                                        },
+                                        pinch: {
+                                            enabled: true,
+                                        },
+                                        mode: 'x',
+                                    },
+                                    pan: {
+                                        enabled: false,
+                                    },
+                                },
+                            },
+                        }}
+                    />
                 </div>
-                <div className="flex flex-col items-center bg-white rounded-lg shadow p-4 w-48">
-                    <p className="text-xl font-bold">{totalStudents}</p>
-                    <p className="text-gray-500">Học viên</p>
+
+                <div className="bg-white rounded-lg shadow p-4 flex-1">
+                    <h2 className="text-2xl font-bold mb-4">Doanh thu hàng ngày</h2>
+                    <Line
+                        data={revenueLineChartData}
+                        options={{
+                            responsive: true,
+                            plugins: {
+                                zoom: {
+                                    zoom: {
+                                        wheel: {
+                                            enabled: true,
+                                        },
+                                        pinch: {
+                                            enabled: true,
+                                        },
+                                        mode: 'x',
+                                    },
+                                    pan: {
+                                        enabled: false,
+                                    },
+                                },
+                            },
+                        }}
+                    />
                 </div>
-                <div className="flex flex-col items-center bg-white rounded-lg shadow p-4 w-48">
-                    <p className="text-xl font-bold">{totalCourses}</p>
-                    <p className="text-gray-500">Khoá học</p>
-                </div>
-                <div className="flex flex-col items-center bg-white rounded-lg shadow p-4 w-48">
-                    <p className="text-xl font-bold">{totalPayments}</p>
-                    <p className="text-gray-500">Giao dịch</p>
-                </div>
-            </div>
-
-            <div className="flex justify-end mb-4">
-                <DatePicker
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    selectsStart
-                    startDate={startDate}
-                    endDate={endDate}
-                    placeholderText="Ngày bắt đầu"
-                    className="mr-2"
-                />
-                <DatePicker
-                    selected={endDate}
-                    onChange={(date) => setEndDate(date)}
-                    selectsEnd
-                    startDate={startDate}
-                    endDate={endDate}
-                    placeholderText="Ngày kết thúc"
-                />
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-4 mb-8">
-                <h2 className="text-2xl font-bold mb-4">Doanh thu & Học viên</h2>
-                <Bar
-                    data={combinedChartData}
-                    options={{
-                        responsive: true,
-                        plugins: { zoom: { zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' } } },
-                    }}
-                />
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-4 mb-8">
-                <h2 className="text-2xl font-bold mb-4">Doanh thu hàng ngày</h2>
-                <Line
-                    data={revenueLineChartData}
-                    options={{
-                        responsive: true,
-                        plugins: { zoom: { zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' } } },
-                    }}
-                />
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-4">
-                <h2 className="text-2xl font-bold mb-4">Tỉ lệ học viên theo khoá học</h2>
-                <Pie data={studentPieChartData} options={{ responsive: true }} />
             </div>
         </div>
     );

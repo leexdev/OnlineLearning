@@ -42,6 +42,16 @@ namespace server.Repository
             return await _context.Advises.ToListAsync();
         }
 
+        public async Task<List<Advise>> GetAdvisesByTeacherAsync(string teacherId)
+        {
+            return await _context.Advises
+                .Include(a => a.Course)
+                .ThenInclude(c => c.UserCourses)
+                .Where(a => a.Course.UserCourses.Any(uc => uc.UserId == teacherId && uc.IsTeacher))
+                .OrderByDescending(a => a.CreatedAt)
+                .ToListAsync();
+        }
+
         public async Task<List<Advise>> GetByCourseId(int courseId)
         {
             return await _context.Advises.Where(a => a.courseId == courseId).ToListAsync();

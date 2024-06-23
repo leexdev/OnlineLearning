@@ -30,6 +30,7 @@ namespace server.Controllers
         }
 
         [HttpGet("conversation/contact/{contactId}")]
+        [Authorize]
         public async Task<IActionResult> GetConversationWithContact(string contactId)
         {
             var userName = User.GetUsername();
@@ -45,6 +46,7 @@ namespace server.Controllers
         }
 
         [HttpPost("conversation/{contactId}")]
+        [Authorize]
         public async Task<IActionResult> CreateConversation(string contactId)
         {
             var userName = User.GetUsername();
@@ -60,6 +62,7 @@ namespace server.Controllers
         }
 
         [HttpGet("conversation/{conversationId}/messages")]
+        [Authorize]
         public async Task<IActionResult> GetMessages(int conversationId, int page = 1, int pageSize = 15)
         {
             var messages = await _chatMessageRepository.GetMessagesByConversationIdAsync(conversationId, page, pageSize);

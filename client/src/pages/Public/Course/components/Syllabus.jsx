@@ -48,7 +48,7 @@ const Syllabus = ({ chapters, onLessonClick, completedLessons }) => {
                     </div>
                 </form>
             </div>
-            <div className="box rounded-b-lg border-cyan-500 bg-white">
+            <div className="box rounded-lg border-gray-300 border bg-white">
                 <FreeLessons lessons={freeLessons.filter(lesson => lesson.title.toLowerCase().includes(searchTerm.toLowerCase()))} onLessonClick={onLessonClick} />
                 <ChapterList chapters={filteredChapters} onLessonClick={onLessonClick} completedLessons={completedLessons} />
             </div>

@@ -14,6 +14,8 @@ namespace server.Dtos.Advise
         public string? BirthDay { get; set; }
         [Required(ErrorMessage = "Học lực là bắt buộc")]
         public string? Academic { get; set; }
+        [Required(ErrorMessage = "Số điện thoại là bắt buộc")]
+        public string? PhoneNumber { get; set; }
         [Required]
         public int courseId { get; set; }
     }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using server.Helpers.GoogleCloud;
 using server.Interfaces;
 using FuzzySharp;
+using Microsoft.AspNetCore.Authorization;
 
 namespace server.Controllers
 {
@@ -23,6 +24,7 @@ namespace server.Controllers
         }
 
         [HttpPost("analyze")]
+        [Authorize]
         public async Task<IActionResult> AnalyzeText([FromBody] AnalyzeTextRequest request)
         {
             var response = await _textAnalysisService.AnalyzeTextAsync(request.Text);
@@ -30,6 +32,7 @@ namespace server.Controllers
         }
         
         [HttpPost("analyze-audio")]
+        [Authorize]
         public async Task<IActionResult> AnalyzeAudio([FromForm] AnalyzeSpeechRequest request, [FromForm] string originalText)
         {
             try

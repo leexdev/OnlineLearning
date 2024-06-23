@@ -95,7 +95,6 @@ namespace server.Repository
             return course;
         }
 
-
         public async Task<List<Course>> GetBySubjectId(int subjectId)
         {
             return await _context.Courses.Where(c => c.SubjectId == subjectId && !c.IsDeleted).OrderByDescending(c => c.CreatedAt).ToListAsync();
@@ -149,22 +148,16 @@ namespace server.Repository
             return await _context.Courses.FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
         }
 
-        public async Task<List<Course>> GetAllAsync(DateTime? startDate, DateTime? endDate)
+        public async Task<List<Course>> GetAllAsync()
         {
-            var query = _context.Courses.Where(c => !c.IsDeleted).AsQueryable();
-
-            if (startDate.HasValue)
-            {
-                query = query.Where(c => c.CreatedAt >= startDate.Value);
-            }
-
-            if (endDate.HasValue)
-            {
-                query = query.Where(c => c.CreatedAt <= endDate.Value);
-            }
-
-            return await query.ToListAsync();
+            return await _context.Courses.Where(c => !c.IsDeleted).ToListAsync();
         }
-
+        public async Task<List<Course>> GetCoursesByTeacherAsync(string teacherId)
+        {
+            return await _context.Courses
+                .Include(c => c.UserCourses)
+                .Where(c => c.UserCourses.Any(uc => uc.UserId == teacherId && uc.IsTeacher))
+                .ToListAsync();
+        }
     }
 }

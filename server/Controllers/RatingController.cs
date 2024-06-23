@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.Rating;
@@ -17,15 +18,15 @@ namespace server.Controllers
     [Route("api/[controller]")]
     public class RatingController : ControllerBase
     {
-        private readonly ILessonRepository _lessonRepo;
+        private readonly ICourseRepository _courseRepo;
         private readonly IRatingRepository _ratingRepo;
         private readonly UserManager<User> _userManager;
 
-        public RatingController(ILessonRepository lessonRepo, IRatingRepository ratingRepo, UserManager<User> userManager)
+        public RatingController(ICourseRepository courseRepo, IRatingRepository ratingRepo, UserManager<User> userManager)
         {
             _ratingRepo = ratingRepo;
             _userManager = userManager;
-            _lessonRepo = lessonRepo;
+            _courseRepo = courseRepo;
         }
 
         [HttpGet("get-all")]
@@ -36,10 +37,19 @@ namespace server.Controllers
             return Ok(ratingDto);
         }
 
+        [HttpGet("get-by-course/{courseId:int}")]
+        public async Task<IActionResult> GetByCourse(int courseId)
+        {
+            var ratings = await _ratingRepo.GetByCourseIdAsync(courseId);
+            var ratingDto = ratings.Select(r => r.ToRatingDto());
+            return Ok(ratingDto);
+        }
+
         [HttpPost("create")]
+        [Authorize]
         public async Task<IActionResult> Create(CreateRatingDto ratingDto)
         {
-            if (!await _lessonRepo.LessonExists(ratingDto.CourseId))
+            if (!await _courseRepo.CourseExists(ratingDto.CourseId))
             {
                 return BadRequest("Khóa học không tồn tại");
             }

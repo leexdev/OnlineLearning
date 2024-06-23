@@ -21,6 +21,7 @@ const Sidebar = () => {
     const [isDropDownOpen, setIsDropDownOpen] = useState(false);
     const { pathname } = useLocation();
     const { logout } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
         if (pathname.includes('/admin/grade') || pathname.includes('/admin/subject')) {
@@ -46,8 +47,8 @@ const Sidebar = () => {
                         <div className="flex items-center">
                             <img className="w-20 p-2 rounded-full" src={images.user} alt="avatar" />
                             <div className="info ml-2">
-                                <div className="name font-bold">Nguyễn Ngọc Lễ</div>
-                                <span className="text-gray-500 text-sm font-bold">Xin chào, Admin</span>
+                                <div className="name font-bold">{user?.name}</div>
+                                <span className="text-gray-500 text-sm font-bold">Xin chào, {user?.role}</span>
                             </div>
                         </div>
                     </li>

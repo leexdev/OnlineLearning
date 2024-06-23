@@ -19,21 +19,9 @@ namespace server.Repository
             _context = context;
         }
 
-        public async Task<List<UserCourse>> GetAllAsync(DateTime? startDate, DateTime? endDate)
+        public async Task<List<UserCourse>> GetAllAsync()
         {
-            var query = _context.UserCourses.AsQueryable();
-
-            if (startDate.HasValue)
-            {
-                query = query.Where(uc => uc.CreatedAt >= startDate.Value);
-            }
-
-            if (endDate.HasValue)
-            {
-                query = query.Where(uc => uc.CreatedAt <= endDate.Value);
-            }
-
-            return await query.ToListAsync();
+            return await _context.UserCourses.ToListAsync();
         }
 
         public async Task<List<CourseDto>> GetUserCourses(string userId)

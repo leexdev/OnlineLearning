@@ -4,12 +4,16 @@ using System.Data;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.Course;
 using server.Dtos.UserCourse;
+using server.Extensions;
 using server.Helpers;
 using server.Interfaces;
 using server.Mappers;
+using server.Models;
 
 namespace server.Controllers
 {
@@ -20,21 +24,23 @@ namespace server.Controllers
         private readonly ICourseRepository _courseRepo;
         private readonly ISubjectRepository _subjectRepo;
         private readonly IUserCourseRepository _ucRepo;
+        private readonly UserManager<User> _userManager;
         private readonly IFireBaseService _firebaseService;
         private readonly IFileService _fileService;
-        public CourseController(ICourseRepository courseRepo, ISubjectRepository subjectRepo, IUserCourseRepository ucRepo, IFireBaseService firebaseService, IFileService fileService)
+        public CourseController(ICourseRepository courseRepo, ISubjectRepository subjectRepo, IUserCourseRepository ucRepo, UserManager<User> userManager, IFireBaseService firebaseService, IFileService fileService)
         {
             _courseRepo = courseRepo;
             _subjectRepo = subjectRepo;
             _ucRepo = ucRepo;
+            _userManager = userManager;
             _fileService = fileService;
             _firebaseService = firebaseService;
         }
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
+        public async Task<IActionResult> GetAll()
         {
-            var courses = await _courseRepo.GetAllAsync(startDate, endDate);
+            var courses = await _courseRepo.GetAllAsync();
             var courseDtos = courses.Select(p => p.ToCourseDto());
             return Ok(courseDtos);
         }
@@ -92,6 +98,18 @@ namespace server.Controllers
             return Ok(course.ToCourseDto());
         }
 
+        [HttpGet("courses-by-teacher")]
+        [Authorize(Roles = "Teacher")]
+        public async Task<IActionResult> GetCoursesByTeacher()
+        {
+            var userName = User.GetUsername();
+            var user = await _userManager.FindByNameAsync(userName);
+            var courses = await _courseRepo.GetCoursesByTeacherAsync(user.Id);
+            var courseDto = courses.Select(c => c.ToCourseDto());
+            return Ok(courseDto);
+        }
+
+
         [HttpGet("get-by-subjectid/{subjectId}")]
         public async Task<IActionResult> GetBySubjectId([FromRoute] int subjectId)
         {
@@ -109,6 +127,7 @@ namespace server.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromForm] CreateCourseDto courseDto, [FromForm] CreateTeacherCourseDto teacherCourseDto)
         {
             if (!await _subjectRepo.SubjectExists(courseDto.SubjectId))
@@ -128,6 +147,7 @@ namespace server.Controllers
         }
 
         [HttpPut("update/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, [FromForm] UpdateCourseDto courseDto, [FromForm] CreateTeacherCourseDto teacherCourseDto)
         {
             if (!await _subjectRepo.SubjectExists(courseDto.SubjectId))
@@ -158,6 +178,7 @@ namespace server.Controllers
         }
 
         [HttpPut("update-new-price/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdatePrice(int id, int price)
         {
             var course = await _courseRepo.UpdatePrice(id, price);
@@ -170,6 +191,7 @@ namespace server.Controllers
         }
 
         [HttpPut("delete-new-price/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteNewPrice(int id)
         {
             var course = await _courseRepo.DeleteNewPrice(id);
@@ -183,6 +205,7 @@ namespace server.Controllers
 
 
         [HttpDelete("delete/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var course = await _courseRepo.DeleteAsync(id);

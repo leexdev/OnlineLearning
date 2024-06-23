@@ -11,9 +11,10 @@ namespace server.Models
     {
         public int Id { get; set; }
         public string? Name { get; set; }
+        public string? PhoneNumber { get; set; }
         public string? BirthDay { get; set; }
         public string? Academic { get; set; }
-        public string? Status { get; set; }
+        public string? Status { get; set; } = "Chưa tư vấn";
         public int courseId { get; set; }
         public Course? Course { get; set; }
     }

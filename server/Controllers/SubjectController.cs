@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using server.Data;
@@ -44,6 +45,7 @@ namespace server.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateSubjectDto subjectDto)
         {
             if (!await _gradeRepo.GradeExists(subjectDto.GradeId))
@@ -63,6 +65,7 @@ namespace server.Controllers
         }
 
         [HttpPut("update/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, UpdateSubjectDto subjectDto)
         {
             if (!await _gradeRepo.GradeExists(subjectDto.GradeId))
@@ -86,6 +89,7 @@ namespace server.Controllers
         }
 
         [HttpDelete("delete/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var subjectModel = await _subjectRepo.DeleteAsync(id);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using server.Dtos.TextToSpeech;
@@ -22,6 +23,7 @@ namespace server.Controllers
         }
 
         [HttpPost("convert")]
+        [Authorize]
         public async Task<IActionResult> ConvertTextToSpeech([FromBody] TextToSpeechRequest request)
         {
             var audioContent = await _textToSpeechService.ConvertTextToSpeechAsync(request.Text, request.Language);

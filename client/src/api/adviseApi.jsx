@@ -6,6 +6,11 @@ const adviseApi = {
         return await axiosClient.get(url);
     },
 
+    async getByTeacher() {
+        const url = '/Advise/by-teacher';
+        return await axiosClient.get(url);
+    },
+
     async get(id) {
         const url = `/Advise/get-by-id/${id}`;
         return await axiosClient.get(url);
@@ -21,14 +26,14 @@ const adviseApi = {
         return await axiosClient.post(url, data);
     },
 
-    async update(data) {
-        const url = `/Advise/update/${data.id}`;
-        return await axiosClient.patch(url, data);
+    async update(id, data) {
+        const url = `/Advise/update/${id}`;
+        return await axiosClient.put(url, data);
     },
 
     async delete(id) {
         const url = `/Advise/delete/${id}`;
-        return await axiosClient.patch(url);
+        return await axiosClient.put(url);
     },
 };
 

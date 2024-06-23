@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.New;
 using server.Interfaces;
@@ -41,6 +42,7 @@ namespace server.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateNewsDto newsDto)
         {
             if (!await _gradeRepo.GradeExists(newsDto.GradeId))
@@ -53,6 +55,7 @@ namespace server.Controllers
         }
 
         [HttpPut("Update/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, UpdateNewsDto newsDto)
         {
             if (!await _gradeRepo.GradeExists(newsDto.GradeId))
@@ -69,6 +72,7 @@ namespace server.Controllers
         }
 
         [HttpDelete("delete")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var news = await _newsRepo.DeleteAsync(id);

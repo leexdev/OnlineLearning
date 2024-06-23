@@ -9,7 +9,7 @@ namespace server.Interfaces
 {
     public interface ICourseRepository
     {
-        Task<List<Course>> GetAllAsync(DateTime? startDate, DateTime? endDate);
+        Task<List<Course>> GetAllAsync();
         Task<(List<Course> Courses, int TotalRecords)> GetPageAsync(QueryObject queryObject);
         Task<List<Course>> GetBySubjectId(int subjectId);
         Task<List<Course>> GetBySubjectName(string subjectName);
@@ -22,6 +22,6 @@ namespace server.Interfaces
         Task<Course?> DeleteAsync(int id);
         Task<bool> CourseExists(int id);
         Task<Course?> GetCourseWithoutChildrenAsync(int id);
-
+        Task<List<Course>> GetCoursesByTeacherAsync(string teacherId);
     }
 }

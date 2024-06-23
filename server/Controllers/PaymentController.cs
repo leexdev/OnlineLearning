@@ -39,6 +39,7 @@ namespace server.Controllers
         }
 
         [HttpGet("get-all")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
         {
             var payments = await _paymentRepo.GetAllAsync(startDate, endDate);
@@ -47,6 +48,7 @@ namespace server.Controllers
         }
 
         [HttpGet("get-page")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPage([FromQuery] QueryObject queryObject)
         {
             var (payments, totalRecords) = await _paymentRepo.GetPageAsync(queryObject);
@@ -93,6 +95,7 @@ namespace server.Controllers
 
         [HttpGet("process-payment-response")]
         [HttpPost("process-payment-response")]
+        [Authorize]
         public async Task<IActionResult> ProcessPaymentResponse()
         {
             var paymentResponse = await _vnPayService.ProcessPaymentResponseAsync(HttpContext);

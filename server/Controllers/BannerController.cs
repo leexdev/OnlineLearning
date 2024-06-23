@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.Banner;
 using server.Dtos.Course;
@@ -21,6 +22,7 @@ namespace server.Controllers
         }
 
         [HttpGet("get-all")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             var banners = await _bannerRepo.GetAllAsync();
@@ -29,6 +31,7 @@ namespace server.Controllers
         }
 
         [HttpGet("get-by-id/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetById(int id)
         {
             var banner = await _bannerRepo.GetByIdAsync(id);
@@ -41,6 +44,7 @@ namespace server.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateBannerDto bannerDto)
         {
             var banner = bannerDto.ToBannerFromCreate();
@@ -49,6 +53,7 @@ namespace server.Controllers
         }
 
         [HttpPut("update/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(int id, UpdateBannerDto updateDto)
         {
             var banner = await _bannerRepo.UpdateAsync(id, updateDto.ToBannerFromUpdate());
@@ -62,6 +67,7 @@ namespace server.Controllers
         }
 
         [HttpDelete("delete/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var banner = await _bannerRepo.DeleteAsync(id);
