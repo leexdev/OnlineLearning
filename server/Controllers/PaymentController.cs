@@ -95,7 +95,6 @@ namespace server.Controllers
 
         [HttpGet("process-payment-response")]
         [HttpPost("process-payment-response")]
-        [Authorize]
         public async Task<IActionResult> ProcessPaymentResponse()
         {
             var paymentResponse = await _vnPayService.ProcessPaymentResponseAsync(HttpContext);
@@ -134,7 +133,6 @@ namespace server.Controllers
         }
 
         [HttpGet("check-payment-status/{courseId}")]
-        [Authorize]
         public async Task<IActionResult> CheckPaymentStatus(int courseId)
         {
             var userName = User.GetUsername();

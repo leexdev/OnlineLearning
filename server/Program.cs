@@ -200,7 +200,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Configure the SignalR hub endpoint
 app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

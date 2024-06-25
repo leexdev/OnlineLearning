@@ -1,7 +1,7 @@
 import axiosClient from './axiosClient';
 
 const chatApi = {
-    getConversationWithContact: async (contactId) => {
+    async getConversationWithContact(contactId) {
         try {
             const response = await axiosClient.get(`/Chat/conversation/contact/${contactId}`);
             return response;
@@ -11,7 +11,7 @@ const chatApi = {
         }
     },
 
-    createConversation: async (contactId) => {
+    async createConversation(contactId) {
         try {
             const response = await axiosClient.post(`/Chat/conversation/${contactId}`);
             return response;
@@ -20,7 +20,8 @@ const chatApi = {
             return null;
         }
     },
-    getChatHistory: async (conversationId, page = 1, pageSize = 15) => {
+
+    async getChatHistory(conversationId, page = 1, pageSize = 15) {
         try {
             const response = await axiosClient.get(`/Chat/conversation/${conversationId}/messages`, {
                 params: { page, pageSize },
@@ -32,7 +33,7 @@ const chatApi = {
         }
     },
 
-    markMessageAsRead: async (messageId) => {
+    async markMessageAsRead(messageId) {
         try {
             const response = await axiosClient.post(`/Chat/messages/${messageId}/read`);
             return response;
@@ -40,6 +41,16 @@ const chatApi = {
             console.error('Error marking message as read: ', error);
             return null;
         }
+    },
+
+    async getTeachersForStudentCourses() {
+        const response = await axiosClient.get('/Chat/contacts/teachers-courses');
+        return response;
+    },
+
+    async GetStudentsForTeacher() {
+        const response = await axiosClient.get('/Chat/contacts/students');
+        return response;
     },
 };
 

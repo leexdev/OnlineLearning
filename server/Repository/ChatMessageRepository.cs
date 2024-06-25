@@ -56,5 +56,4 @@ public class ChatMessageRepository : IChatMessageRepository
         _context.ChatMessages.Update(message);
         await _context.SaveChangesAsync();
     }
-
 }

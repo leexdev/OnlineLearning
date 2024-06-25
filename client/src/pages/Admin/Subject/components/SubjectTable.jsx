@@ -1,4 +1,3 @@
-// components/SubjectTable.js
 import React from 'react';
 import SubjectItem from './SubjectItem';
 
@@ -14,15 +13,23 @@ const SubjectTable = ({ subjects, handleEdit, setSubjectToDelete, setShowDeleteM
                     </tr>
                 </thead>
                 <tbody>
-                    {subjects.map((subject) => (
-                        <SubjectItem
-                            key={subject.id}
-                            subject={subject}
-                            handleEdit={handleEdit}
-                            setSubjectToDelete={setSubjectToDelete}
-                            setShowDeleteModal={setShowDeleteModal}
-                        />
-                    ))}
+                    {subjects.length === 0 ? (
+                        <tr>
+                            <td colSpan="3" className="text-center py-4">
+                                Không có môn học nào
+                            </td>
+                        </tr>
+                    ) : (
+                        subjects.map((subject) => (
+                            <SubjectItem
+                                key={subject.id}
+                                subject={subject}
+                                handleEdit={handleEdit}
+                                setSubjectToDelete={setSubjectToDelete}
+                                setShowDeleteModal={setShowDeleteModal}
+                            />
+                        ))
+                    )}
                 </tbody>
             </table>
         </div>

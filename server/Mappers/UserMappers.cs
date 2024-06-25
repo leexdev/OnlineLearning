@@ -28,7 +28,7 @@ namespace server.Mappers
             return new UserDto
             {
                 Id = userModel.Id,
-                Name = userModel.Name,
+                Name = userModel.Name
             };
         }
         

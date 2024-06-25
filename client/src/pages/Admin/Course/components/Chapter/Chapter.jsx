@@ -265,9 +265,11 @@ const Chapter = ({
                                                                         key={question?.id}
                                                                         className="mb-2 p-2 bg-gray-50 rounded-md flex justify-center items-center"
                                                                     >
-                                                                        <div className="content flex-1">
-                                                                            {question?.content}
-                                                                        </div>
+                                                                        <div className='content flex-1'
+                                                                            dangerouslySetInnerHTML={{
+                                                                                __html: question?.content,
+                                                                            }}
+                                                                        />
 
                                                                         <button
                                                                             type="button"

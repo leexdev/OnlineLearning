@@ -49,7 +49,6 @@ namespace server.Dtos.Message
         public async Task JoinConversation(int conversationId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, conversationId.ToString());
-            Console.WriteLine($"Connection {Context.ConnectionId} joined group {conversationId}");
         }
 
         [Authorize]

@@ -1,7 +1,6 @@
 import React from 'react';
 
-const AnswerOptions = ({ answers, selectedAnswer, handleAnswerClick }) => {
-    console.log("answers", answers);
+const AnswerOptions = ({ answers, selectedAnswers, handleAnswerClick }) => {
     return (
         <div className="flex justify-center space-x-6 mb-8">
             {answers &&
@@ -9,7 +8,7 @@ const AnswerOptions = ({ answers, selectedAnswer, handleAnswerClick }) => {
                     <button
                         key={answer.id}
                         className={`w-24 h-24 p-2 text-2xl font-bold rounded-lg transition transform overflow-hidden text-ellipsis ${
-                            selectedAnswer === answer
+                            selectedAnswers.includes(answer)
                                 ? 'bg-peach text-white scale-110 shadow-xl'
                                 : 'bg-white text-gray-800 shadow-lg hover:bg-gray-200'
                         }`}

@@ -1,10 +1,10 @@
-import logo from '~/assets/images/logo.png'
-import cat from '~/assets/images/bitu_teacher.png'
-import user from '~/assets/images/defaultuser.jpg'
-import sadcat from '~/assets/images/sad_cat.png'
-import funnycat from '~/assets/images/Vui.png'
-import rightcat from '~/assets/images/rightcat.png'
-import banner from '~/assets/images/banner-tieu-hoc.png'
+import logo from './logo.png';
+import cat from './bitu_teacher.png';
+import user from './defaultuser.jpg';
+import sadcat from './sad_cat.png';
+import funnycat from './Vui.png';
+import rightcat from './rightcat.png';
+import banner from './banner-tieu-hoc.png';
 
 const images = {
     logo: logo,
@@ -13,7 +13,7 @@ const images = {
     sadcat: sadcat,
     rightcat: rightcat,
     banner: banner,
-    funnycat: funnycat
-}
+    funnycat: funnycat,
+};
 
-export default images
+export default images;

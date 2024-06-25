@@ -9,7 +9,7 @@ const Info = ({ title, course }) => {
         setIsExpanded(!isExpanded);
     };
 
-    const maxLength = 150;
+    const maxLength = 500;
     const fullDescription = course?.description || '';
     const truncatedDescription =
         fullDescription.length > maxLength ? `${fullDescription.slice(0, maxLength)}...` : fullDescription;

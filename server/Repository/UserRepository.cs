@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using server.Data;
 using server.Dtos.User;
 using server.Helpers;
 using server.Interfaces;
@@ -17,13 +18,15 @@ namespace server.Repository
         private readonly ITokenService _tokenService;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _context;
 
-        public UserRepository(UserManager<User> userManager, ITokenService tokenService, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
+        public UserRepository(UserManager<User> userManager, ITokenService tokenService, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _context = context;
         }
 
         public async Task<(bool Succeeded, IEnumerable<IdentityError> Errors, NewUserDto User)> RegisterUserAsync(RegisterDto registerDto)
@@ -182,6 +185,35 @@ namespace server.Repository
         {
             return await _userManager.Users.Where(u => !u.IsDeleted).ToListAsync();
         }
-    }
 
+        public async Task<List<User>> GetTeachersForStudentCoursesAsync(string studentId)
+        {
+            var teachers = await _context.UserCourses
+                .Where(uc => uc.UserId == studentId && !uc.IsTeacher)
+                .SelectMany(uc => _context.UserCourses
+                    .Where(tc => tc.CourseId == uc.CourseId && tc.IsTeacher)
+                    .Select(tc => tc.User))
+                .Distinct()
+                .ToListAsync();
+
+            return teachers;
+        }
+
+        public async Task<List<User>> GetStudentsForTeacher(string teacherId)
+        {
+            var teacherCourses = await _context.UserCourses
+                .Where(uc => uc.UserId == teacherId && uc.IsTeacher)
+                .Select(uc => uc.CourseId)
+                .ToListAsync();
+
+            var students = await _context.UserCourses
+                .Where(uc => teacherCourses.Contains(uc.CourseId) && uc.UserId != teacherId && !uc.IsTeacher)
+                .Select(uc => uc.User)
+                .Distinct()
+                .ToListAsync();
+
+            return students;
+        }
+
+    }
 }

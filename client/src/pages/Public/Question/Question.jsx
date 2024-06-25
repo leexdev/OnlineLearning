@@ -11,11 +11,12 @@ import Navigation from './components/Navigation';
 import SpeechAnalysisResult from './components/SpeechAnalysisResult'; // Import component mới
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
 
 const Question = () => {
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [selectedAnswer, setSelectedAnswer] = useState(null);
+    const [selectedAnswers, setSelectedAnswers] = useState([]);
     const [audioSrc, setAudioSrc] = useState(null);
     const [recordedAudioSrc, setRecordedAudioSrc] = useState(null);
     const [history, setHistory] = useState([]);
@@ -84,13 +85,29 @@ const Question = () => {
     }, []);
 
     const handleAnswerClick = (answer) => {
-        setSelectedAnswer(answer);
+        const correctAnswerCount = questions[currentQuestionIndex].answers.filter((a) => a.isCorrect).length;
+
+        if (correctAnswerCount === 1) {
+            setSelectedAnswers([answer]);
+        } else {
+            setSelectedAnswers((prevSelectedAnswers) => {
+                if (prevSelectedAnswers.includes(answer)) {
+                    return prevSelectedAnswers.filter((a) => a !== answer);
+                } else {
+                    return [...prevSelectedAnswers, answer];
+                }
+            });
+        }
     };
 
     const handleSubmit = async () => {
-        if (selectedAnswer) {
-            const isCorrect = selectedAnswer.isCorrect;
+        if (selectedAnswers.length > 0) {
             const questionId = questions[currentQuestionIndex].id;
+            const isCorrect =
+                selectedAnswers.every((answer) => answer.isCorrect) &&
+                selectedAnswers.length ===
+                    questions[currentQuestionIndex].answers.filter((ans) => ans.isCorrect).length;
+
             const newHistory = [...history];
             newHistory[currentQuestionIndex] = { questionId, isCorrect };
             setHistory(newHistory);
@@ -115,7 +132,8 @@ const Question = () => {
                 setUserLastAnswer(null);
                 if (!isCorrect) {
                     setShowExplanation(true);
-                    const correctAns = questions[currentQuestionIndex].answers.find((ans) => ans.isCorrect);
+                    const correctAns = questions[currentQuestionIndex].answers.filter((ans) => ans.isCorrect);
+                    console.log('correctAns', correctAns);
                     setCorrectAnswer(correctAns);
                 }
             } catch (error) {
@@ -123,9 +141,9 @@ const Question = () => {
                 alert('Lưu lịch sử trả lời thất bại.');
             }
 
-            setSelectedAnswer(null);
+            setSelectedAnswers([]);
         } else {
-            alert('Vui lòng chọn một đáp án.');
+            toast.error('Vui lòng chọn một đáp án.');
         }
     };
 
@@ -133,7 +151,7 @@ const Question = () => {
         const newIndex = currentQuestionIndex + direction;
         if (newIndex >= 0 && newIndex < questions.length) {
             setCurrentQuestionIndex(newIndex);
-            setSelectedAnswer(null);
+            setSelectedAnswers([]);
             setUserLastAnswer(null);
             setShowExplanation(false);
             setShowAnswer(false);
@@ -188,11 +206,10 @@ const Question = () => {
                     await handleAnalyzeAudio(audioBlob);
                 };
 
-                // Wait a bit to ensure the recorder is ready
                 setTimeout(() => {
                     newRecorder.start();
                     setIsRecording(true);
-                }, 100); // 100ms delay to ensure recorder is ready
+                }, 100);
             } catch (error) {
                 console.error('Error starting recording:', error);
             }
@@ -213,7 +230,7 @@ const Question = () => {
             return;
         }
 
-        setIsLoading(true); // Bắt đầu trạng thái loading
+        setIsLoading(true);
 
         const formData = new FormData();
         formData.append('AudioFile', audioBlob, 'audio.webm');
@@ -221,7 +238,6 @@ const Question = () => {
 
         try {
             const response = await questionApi.analyzeAudio(formData);
-            console.log(response);
             setAccuracy(response.accuracy);
             setDifferences(response.differences);
             let isCorrect;
@@ -244,7 +260,7 @@ const Question = () => {
                 console.error('Chi tiết lỗi:', error.response.data);
             }
         } finally {
-            setIsLoading(false); // Kết thúc trạng thái loading
+            setIsLoading(false);
         }
     };
 
@@ -288,10 +304,11 @@ const Question = () => {
     );
 
     const currentQuestion = questions[currentQuestionIndex];
+    const countCorrectAnswers = questions[currentQuestionIndex]?.answers.filter((ans) => ans.isCorrect).length || 0;
 
     return (
         <div className="lg:min-h-screen bg-gradient-to-r bg-sky-700 flex flex-col items-center justify-center p-4">
-            <div className="bg-white py-10 rounded-3xl border-sky-600 border-8 shadow-2xl max-w-3xl w-full transform transition duration-500 hover:scale-105 mb-6">
+            <div className="bg-white py-5 rounded-3xl border-sky-600 border-8 shadow-2xl max-w-5xl w-full transform transition duration-500 hover:scale-105 mb-6">
                 <QuestionHeader currentQuestionIndex={currentQuestionIndex} />
                 {currentQuestion && (
                     <>
@@ -299,6 +316,7 @@ const Question = () => {
                             content={currentQuestion.content}
                             handleTextToSpeech={handleTextToSpeech}
                             isPlaying={isPlaying}
+                            countCorrectAnswers={countCorrectAnswers}
                         />
                         {userLastAnswer && !showAnswerResult && (
                             <div
@@ -313,7 +331,7 @@ const Question = () => {
                         )}
                         <AnswerOptions
                             answers={currentQuestion.answers}
-                            selectedAnswer={selectedAnswer}
+                            selectedAnswers={selectedAnswers}
                             handleAnswerClick={handleAnswerClick}
                         />
                         <div className="flex justify-center">

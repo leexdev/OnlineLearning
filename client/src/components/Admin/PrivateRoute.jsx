@@ -9,7 +9,7 @@ const PrivateRoute = ({ children, roles }) => {
         return <div>Loading...</div>;
     }
 
-    if (!user || !roles.includes(user.role)) {
+    if (!user || (roles && !roles.includes(user.role))) {
         return <Navigate to="/" replace />;
     }
 

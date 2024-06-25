@@ -1,6 +1,43 @@
 import React, { useEffect } from 'react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import FormFieldError from '~/components/Common/FormFieldError';
+
+// Custom image handler
+const imageHandler = function () {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = () => {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const range = this.quill.getSelection();
+            this.quill.insertEmbed(range.index, 'image', reader.result);
+        };
+        reader.readAsDataURL(file);
+    };
+};
+
+const modules = {
+    toolbar: {
+        container: [
+            [{ header: '1' }, { header: '2' }, { font: [] }],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['bold', 'italic', 'underline'],
+            [{ color: [] }, { background: [] }],
+            [{ align: [] }],
+            ['link', 'image'],
+            ['clean'],
+        ],
+        handlers: {
+            image: imageHandler,
+        },
+    },
+};
 
 const EditQuestionModal = ({ isOpen, closeModal, handleEdit, subjectName, questionData }) => {
     const {
@@ -20,6 +57,7 @@ const EditQuestionModal = ({ isOpen, closeModal, handleEdit, subjectName, questi
             answers: [{ content: '', isCorrect: false }],
         },
     });
+
     const { fields, append, remove, replace } = useFieldArray({ control, name: 'answers' });
 
     const isPronounce = watch('isPronounce');
@@ -84,19 +122,30 @@ const EditQuestionModal = ({ isOpen, closeModal, handleEdit, subjectName, questi
                                         name="content"
                                         control={control}
                                         render={({ field }) => (
-                                            <textarea
+                                            <ReactQuill
                                                 {...field}
+                                                theme="snow"
+                                                modules={modules}
+                                                formats={[
+                                                    'header',
+                                                    'font',
+                                                    'list',
+                                                    'bullet',
+                                                    'bold',
+                                                    'italic',
+                                                    'underline',
+                                                    'color',
+                                                    'background',
+                                                    'align',
+                                                    'link',
+                                                    'image',
+                                                ]}
                                                 placeholder="Nhập nội dung câu hỏi..."
-                                                className="mt-1 block w-full p-2 border rounded-md focus:border-peach focus:ring-peach"
-                                                rows="5"
+                                                className="mt-1"
                                             />
                                         )}
                                         rules={{
                                             required: 'Nội dung câu hỏi không được để trống',
-                                            maxLength: {
-                                                value: 500,
-                                                message: 'Nội dung câu hỏi không vượt quá 500 ký tự',
-                                            },
                                         }}
                                     />
                                     {errors.content && <FormFieldError message={errors.content.message} />}

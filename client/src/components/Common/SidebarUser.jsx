@@ -1,8 +1,9 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faBookOpen, faChartSimple } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faBookOpen, faChartSimple, faMessage } from '@fortawesome/free-solid-svg-icons';
 import { NavLink } from 'react-router-dom';
 import ProfilePicture from '../../pages/Public/Profile/component/ProfilePicture';
+import { faRocketchat } from '@fortawesome/free-brands-svg-icons';
 
 const SidebarUser = ({ user, previewSrc, loadFile }) => {
     console.log(user);
@@ -65,6 +66,24 @@ const SidebarUser = ({ user, previewSrc, loadFile }) => {
                                 </NavLink>
                             </li>
                         )}
+                        <li className="p-3 !mt-0">
+                            <NavLink
+                                to="/chat"
+                                className={({ isActive }) =>
+                                    `p-3 uppercase ${
+                                        isActive
+                                            ? 'border-2 border-peach rounded-lg font-bold text-peach'
+                                            : 'hover:text-peach hover:font-bold'
+                                    }`
+                                }
+                                style={({ isActive }) => (isActive ? { padding: 'calc(0.75rem - 2px)' } : {})}
+                            >
+                                <FontAwesomeIcon className="mr-2" icon={faMessage} />
+                                <span className="font-semibold">
+                                    Nhắn tin {user?.role === 'Teacher' ? 'học viên' : 'giáo viên'}
+                                </span>
+                            </NavLink>
+                        </li>
                     </ul>
                 </div>
             </div>

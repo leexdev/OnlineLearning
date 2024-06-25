@@ -7,6 +7,7 @@ import {
     faBookOpen,
     faChartColumn,
     faGraduationCap,
+    faHome,
     faImages,
     faList,
     faMoneyCheck,
@@ -54,11 +55,26 @@ const Sidebar = () => {
                     </li>
                     <li>
                         <NavLink
-                            to="/admin/home"
+                            to="/"
                             className={({ isActive }) =>
                                 `flex items-center p-2 rounded-lg group ${
                                     isActive
                                         ? 'text-white bg-gray-900'
+                                        : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+                                }`
+                            }
+                        >
+                            <FontAwesomeIcon className="text-xl" icon={faHome} />
+                            <span className="ms-3 font-bold">Trang chủ</span>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            to="/admin/home"
+                            className={({ isActive }) =>
+                                `flex items-center p-2 rounded-lg group ${
+                                    isActive
+                                        ? 'text-white bg-gray-400'
                                         : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
                                 }`
                             }

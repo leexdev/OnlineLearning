@@ -1,44 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import images from '~/assets/images';
+import { format } from 'date-fns';
 
 const Sidebar = ({ contacts, onSelectContact, selectedContact }) => {
-    const [menuOpen, setMenuOpen] = useState(false);
-
-    const toggleMenu = () => {
-        setMenuOpen(!menuOpen);
-    };
-
-    // Sắp xếp danh sách liên hệ theo tin nhắn chưa đọc trước, sau đó theo thời gian tin nhắn mới nhất
     const sortedContacts = [...contacts].sort((a, b) => {
-        // Sắp xếp tin nhắn chưa đọc lên trước
         if (!a.lastMessageIsRead && b.lastMessageIsRead) return -1;
         if (a.lastMessageIsRead && !b.lastMessageIsRead) return 1;
-        // Sắp xếp theo thời gian tin nhắn mới nhất
         return new Date(b.lastMessageTime) - new Date(a.lastMessageTime);
     });
 
-    console.log("sortedContacts", sortedContacts);
-
     return (
-        <div className={`w-full md:w-1/4 bg-white border-r border-gray-300 ${menuOpen ? 'block' : 'hidden'} md:block`}>
-            <header className="p-4 border-b border-gray-300 flex justify-between items-center bg-indigo-600 text-white">
-                <h1 className="text-2xl font-semibold">Nhắn tin</h1>
-                <div className="md:hidden">
-                    <button onClick={toggleMenu} className="focus:outline-none">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5 text-gray-100"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                            <path d="M2 10a2 2 0 012-2h12a2 2 0 012 2 2 2 0 01-2 2H4a2 2 0 01-2-2z" />
-                        </svg>
-                    </button>
-                </div>
+        <div className="w-full bg-white border-gray-300 mt-4">
+            <header className="p-4 border-b border-gray-300 bg-indigo-600 text-white">
+                <h1 className="text-2xl font-semibold">Danh sách liên hệ</h1>
             </header>
 
-            <div className="overflow-y-auto h-full p-3">
+            <div className="overflow-y-auto max-h-64 p-3 border">
                 {sortedContacts.map((contact) => (
                     <div
                         key={contact.id}
@@ -67,7 +44,8 @@ const Sidebar = ({ contacts, onSelectContact, selectedContact }) => {
                                 {contact.lastMessage}
                             </p>
                             <p className="text-xs text-gray-400">
-                                {contact.lastMessageTime && new Date(contact.lastMessageTime).toLocaleString()}
+                                {contact.lastMessageTime &&
+                                    format(new Date(contact.lastMessageTime), 'dd/MM/yyyy HH:mm')}
                             </p>
                         </div>
                     </div>

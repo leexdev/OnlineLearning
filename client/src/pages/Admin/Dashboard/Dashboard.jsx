@@ -31,7 +31,6 @@ import {
     faChalkboardTeacher,
 } from '@fortawesome/free-solid-svg-icons';
 
-// Đăng ký các thành phần của Chart.js và plugin zoom
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -72,7 +71,7 @@ const Dashboard = () => {
                     userCourseApi.getAll(),
                     courseApi.getAll(),
                     userApi.getUsers(),
-                    userApi.getTeachers(), // Fetch teachers data
+                    userApi.getTeachers(),
                 ]);
 
                 console.log('payments', payments);
@@ -176,7 +175,9 @@ const Dashboard = () => {
                         ],
                     });
 
-                    setTotalStudents(users.length);
+                    const filteredUser = userCourses.filter((user) => !user.isTeacher);
+
+                    setTotalStudents(filteredUser.length);
                     setTotalCourses(courses.length);
                     setTotalPayments(successfulPayments.length);
                     setTotalRegisteredUsers(users.length);

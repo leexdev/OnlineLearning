@@ -9,5 +9,6 @@ namespace server.Dtos.UserCourse
     {
         public string UserId { get; set; } = string.Empty;
         public int CourseId { get; set; }
+        public bool IsTeacher { get; set; } = false;
     }
 }

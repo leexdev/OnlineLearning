@@ -40,7 +40,10 @@ const ProfileForm = ({ user }) => {
         setIsLoading(true);
         try {
             const updatedUser = await userApi.updateUser(data);
-            setUser(updatedUser);
+            setUser((prevUser) => ({
+                ...prevUser,
+                ...updatedUser,
+            }));
             setSuccess('Cập nhật thông tin thành công');
         } catch (error) {
             setError('Cập nhật thông tin thất bại');

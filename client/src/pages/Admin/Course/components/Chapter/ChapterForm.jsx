@@ -109,6 +109,8 @@ const ChapterForm = ({ course, onSubmit }) => {
             questionData.language = 'en';
         }
 
+        console.log("questionData", questionData);
+
         const newQuestion = {
             content: questionData.content,
             explanation: questionData.explanation,
@@ -236,7 +238,7 @@ const ChapterForm = ({ course, onSubmit }) => {
             })),
         };
 
-        console.log('Payload:', updatedQuestion); // Kiểm tra payload trước khi gửi
+        console.log('Payload:', updatedQuestion);
 
         try {
             const response = await questionApi.update(

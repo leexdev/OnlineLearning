@@ -37,10 +37,10 @@ const publicRoutes = [
     { path: '/lesson/:id/questions', component: Question },
     { path: '/payment-success', component: PaymentSuccess },
     { path: '/payment-failure', component: PaymentFailure },
-    { path: '/chat', component: Chat, layout: CustomLayout },
 ];
 
 const privateRoutes = [
+    { path: '/chat', component: Chat, layout: CustomLayout, roles: ['Teacher', 'User']},
     { path: '/my-advise', component: ListAdvise, roles: ['Teacher'] },
     { path: '/admin/home', component: DashboardAdmin, layout: AdminLayout, roles: ['Admin'] },
     { path: '/admin/banner', component: BannerAdmin, layout: AdminLayout, roles: ['Admin'] },

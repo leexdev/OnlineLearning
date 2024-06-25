@@ -5,7 +5,6 @@ using server.Dtos.Answer;
 public class CreateQuestionDto
 {
     [Required(ErrorMessage = "Nội dung là bắt buộc.")]
-    [StringLength(200, ErrorMessage = "Nội dung không được dài quá 200 ký tự.")]
     public string Content { get; set; } = string.Empty;
 
     [StringLength(1000, ErrorMessage = "Giải thích không được dài quá 1000 ký tự.")]

@@ -1,7 +1,7 @@
 import React from 'react';
 import CourseItem from './CourseItem';
 
-const CourseTable = ({ courses, handleAddDiscount, handleDeleteDiscount , setCourseToDelete, setShowDeleteModal }) => {
+const CourseTable = ({ courses, handleAddDiscount, handleDeleteDiscount, setCourseToDelete, setShowDeleteModal }) => {
     return (
         <div className="overflow-x-auto">
             <table className="min-w-full bg-white border rounded-lg">
@@ -14,16 +14,24 @@ const CourseTable = ({ courses, handleAddDiscount, handleDeleteDiscount , setCou
                     </tr>
                 </thead>
                 <tbody>
-                    {courses.map((course) => (
-                        <CourseItem
-                            key={course.id}
-                            course={course}
-                            handleAddDiscount={handleAddDiscount}
-                            handleDeleteDiscount={handleDeleteDiscount}
-                            setCourseToDelete={setCourseToDelete}
-                            setShowDeleteModal={setShowDeleteModal}
-                        />
-                    ))}
+                    {courses.length === 0 ? (
+                        <tr>
+                            <td colSpan="4" className="text-center py-4">
+                                Không có khóa học nào
+                            </td>
+                        </tr>
+                    ) : (
+                        courses.map((course) => (
+                            <CourseItem
+                                key={course.id}
+                                course={course}
+                                handleAddDiscount={handleAddDiscount}
+                                handleDeleteDiscount={handleDeleteDiscount}
+                                setCourseToDelete={setCourseToDelete}
+                                setShowDeleteModal={setShowDeleteModal}
+                            />
+                        ))
+                    )}
                 </tbody>
             </table>
         </div>

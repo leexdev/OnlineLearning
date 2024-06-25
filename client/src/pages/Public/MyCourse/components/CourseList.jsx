@@ -15,6 +15,8 @@ const CourseList = () => {
             try {
                 const response = await userCourseApi.get();
                 setCourses(response);
+
+                console.log(response);
                 setLoading(false);
             } catch (error) {
                 setError(error);

@@ -3,15 +3,11 @@ import { Link } from 'react-router-dom';
 import DiscountModal from '../DiscountModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faPercent, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { formatPrice } from '~/utils/formatPrice';
 
-const CourseItem = ({ course, handleAddDiscount, handleDeleteDiscount , setCourseToDelete, setShowDeleteModal }) => {
+const CourseItem = ({ course, handleAddDiscount, handleDeleteDiscount, setCourseToDelete, setShowDeleteModal }) => {
     const [discountType, setDiscountType] = useState('percentage');
     const [isModalVisible, setIsModalVisible] = useState(false);
-
-    const formatPrice = (price) => {
-        if (!price) return '';
-        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    };
 
     const handleDiscountSubmit = (discountType, discountValue) => {
         let calculatedNewPrice;

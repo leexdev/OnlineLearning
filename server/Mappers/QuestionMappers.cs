@@ -45,7 +45,8 @@ namespace server.Mappers
                 Explanation = questionDto.Explanation,
                 Language = questionDto.Language,
                 IsPronounce = questionDto.IsPronounce,
-                Answers = questionDto.Answers.ToAnswerListFromUpdate()
+                Answers = questionDto.Answers.ToAnswerListFromUpdate(),
+                Audio = null
             };
         }
     }

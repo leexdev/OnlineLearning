@@ -57,7 +57,7 @@ namespace server.Repository
                 throw new ArgumentException("Không tìm thấy CourseId trong danh sách UserCourse.");
             }
 
-            var oldUserCourses = await _context.UserCourses.Where(uc => uc.CourseId == courseId).ToListAsync();
+            var oldUserCourses = await _context.UserCourses.Where(uc => uc.CourseId == courseId && uc.IsTeacher).ToListAsync();
             _context.UserCourses.RemoveRange(oldUserCourses);
             await _context.SaveChangesAsync();
             var newUserCourses = new List<UserCourse>();

@@ -1,4 +1,3 @@
-// components/UserTable.js
 import React from 'react';
 import UserItem from './UserItem';
 
@@ -15,14 +14,22 @@ const UserTable = ({ users, setUserToDelete, setShowDeleteModal }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map((user) => (
-                        <UserItem
-                            key={user.id}
-                            user={user}
-                            setUserToDelete={setUserToDelete}
-                            setShowDeleteModal={setShowDeleteModal}
-                        />
-                    ))}
+                    {users.length === 0 ? (
+                        <tr>
+                            <td colSpan="4" className="text-center py-4">
+                                Không có người dùng nào
+                            </td>
+                        </tr>
+                    ) : (
+                        users.map((user) => (
+                            <UserItem
+                                key={user.id}
+                                user={user}
+                                setUserToDelete={setUserToDelete}
+                                setShowDeleteModal={setShowDeleteModal}
+                            />
+                        ))
+                    )}
                 </tbody>
             </table>
         </div>

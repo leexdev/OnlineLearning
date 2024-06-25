@@ -24,5 +24,7 @@ namespace server.Interfaces
         Task<User?> UpdateAsync(string id, User user);
         Task<User?> ChangePassword(string id, string currentPassword, string newPassword);
         Task<User?> DeleteAsync(string userId);
+        Task<List<User>> GetTeachersForStudentCoursesAsync(string studentId);
+        Task<List<User>> GetStudentsForTeacher(string teacherId);
     }
 }

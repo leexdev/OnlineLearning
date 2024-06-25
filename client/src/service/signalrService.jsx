@@ -4,15 +4,20 @@ import chatApi from '~/api/chatApi';
 const getJwtToken = () => localStorage.getItem('jwtToken');
 
 class SignalRService {
-     constructor() {
+    constructor() {
         this.connection = null;
         this.receiveMessageListeners = [];
-        this.isListenerAdded = false; // Chuyển biến trạng thái ra ngoài hàm
+        this.isListenerAdded = false;
     }
 
     startConnection = async (userToken) => {
-        if (!this.connection || this.connection.state !== 'Connected') {
-            const token = userToken || getJwtToken();
+        const token = userToken || getJwtToken();
+        if (!token) {
+            console.error('JWT token not found');
+            return;
+        }
+
+        if (!this.connection || this.connection.state === 'Disconnected') {
             this.connection = new HubConnectionBuilder()
                 .withUrl('http://localhost:5032/chatHub', {
                     accessTokenFactory: () => token,
@@ -26,7 +31,7 @@ class SignalRService {
                 await this.startConnection(userToken);
             });
 
-            if (!this.isListenerAdded) { // Kiểm tra nếu sự kiện đã được đăng ký
+            if (!this.isListenerAdded) {
                 this.connection.on('ReceiveMessage', (user, message, email) => {
                     console.log('ReceiveMessage event triggered');
                     this.receiveMessageListeners.forEach((callback) => {
@@ -34,7 +39,7 @@ class SignalRService {
                         callback(user, message, email);
                     });
                 });
-                this.isListenerAdded = true; // Đánh dấu là sự kiện đã được đăng ký
+                this.isListenerAdded = true;
             }
 
             try {

@@ -14,7 +14,8 @@ namespace server.Mappers
             return new UserCourseDto
             {
                 CourseId = courseModel.CourseId,
-                UserId = courseModel.UserId
+                UserId = courseModel.UserId,
+                IsTeacher = courseModel.IsTeacher
             };
         }
 

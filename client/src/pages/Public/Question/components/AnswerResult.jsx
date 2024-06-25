@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import images from '~/assets/images';
+import sounds from '~/assets/sounds';
 
 const AnswerResult = ({ isAnswerCorrect, currentQuestion, correctAnswer, showAnswer, setShowAnswer }) => {
-    console.log(showAnswer);
+    console.log('isAnswerCorrect', isAnswerCorrect);
+    useEffect(() => {
+        if (isAnswerCorrect !== null) {
+            const audio = new Audio(isAnswerCorrect ? sounds.correct : sounds.wrong);
+
+            console.log('audio', audio);
+            audio.play();
+        }
+    }, [isAnswerCorrect]);
+
     return (
         <div className={`mt-20 text-center pt-4 relative ${isAnswerCorrect ? 'bg-green-500' : 'bg-red-500'}`}>
             <img
@@ -27,7 +37,12 @@ const AnswerResult = ({ isAnswerCorrect, currentQuestion, correctAnswer, showAns
                         <div className="mt-4 text-center text-gray-700">
                             <div className="p-3 bg-white answer-correct">
                                 <p>
-                                    <strong>Đáp án đúng:</strong> {correctAnswer?.content}
+                                    <strong>Đáp án đúng:</strong>{' '}
+                                    {correctAnswer.map((answer, index) => (
+                                        <div key={index} className="mt-2">
+                                            {answer.content}
+                                        </div>
+                                    ))}
                                 </p>
                             </div>
                             {currentQuestion.explanation && (

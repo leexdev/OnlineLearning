@@ -138,7 +138,7 @@ namespace server.Controllers
 
             // var folderPath = $"image_course";
             // var urlImage = await _firebaseService.HandleFile(null, folderPath, imageFile);
-            var urlImage = "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/image_course%2F814bd750-aaa1-4993-8d2f-de3d694a1c1c_0417_artboard-3-copy-68-403x--284-29.png?alt=media&token=3bee75e9-bdf0-47a1-aa30-eef1b6671afd";
+            var urlImage = "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/image_course%2Fb002_v1.png?alt=media&token=ee88af33-d07b-49fd-8c22-368c37031435";
             var course = await _courseRepo.CreateAsync(courseDto.ToCourseFromCreate(urlImage));
             var userCourse = teacherCourseDto.ToTeacherCoursesFromCreate(course.Id);
             await _ucRepo.CreateTeacher(userCourse);

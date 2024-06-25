@@ -13,15 +13,23 @@ const TableGrade = ({ grades, handleEdit, setGradeToDelete, setShowDeleteModal }
                     </tr>
                 </thead>
                 <tbody>
-                    {grades.map((grade) => (
-                        <GradeItem
-                            key={grade.id}
-                            grade={grade}
-                            handleEdit={handleEdit}
-                            setGradeToDelete={setGradeToDelete}
-                            setShowDeleteModal={setShowDeleteModal}
-                        />
-                    ))}
+                    {grades.length === 0 ? (
+                        <tr>
+                            <td colSpan="3" className="text-center py-4">
+                                Không có dữ liệu nào
+                            </td>
+                        </tr>
+                    ) : (
+                        grades.map((grade) => (
+                            <GradeItem
+                                key={grade.id}
+                                grade={grade}
+                                handleEdit={handleEdit}
+                                setGradeToDelete={setGradeToDelete}
+                                setShowDeleteModal={setShowDeleteModal}
+                            />
+                        ))
+                    )}
                 </tbody>
             </table>
         </div>

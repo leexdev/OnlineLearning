@@ -108,7 +108,7 @@ const Course = () => {
             <div className="pt-5 pb-10">
                 <div className="container">
                     {!hasPurchased && <Thumbnail user={user} course={course} setAdviseSuccess={setSuccess} />}
-                    <div className={`lg:w-2/3 lg:px-8 ${hasPurchased ? 'w-full' : ''}`}>
+                    <div className="lg:w-2/3 lg:px-8 w-full">
                         <Nav />
                         <Info course={course} />
                         <Syllabus
