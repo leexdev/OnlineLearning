@@ -36,6 +36,12 @@ const Course = () => {
 
             try {
                 const courseData = await courseApi.get(id);
+
+                courseData.chapters.sort((a, b) => a.order - b.order);
+                courseData.chapters.forEach((chapter) => {
+                    chapter.lessons.sort((a, b) => a.order - b.order);
+                });
+
                 setCourse(courseData);
 
                 if (user) {
@@ -107,7 +113,7 @@ const Course = () => {
             <Header name={course?.name || 'Loading...'} />
             <div className="pt-5 pb-10">
                 <div className="container">
-                    {!hasPurchased && <Thumbnail user={user} course={course} setAdviseSuccess={setSuccess} />}
+                    <Thumbnail user={user} course={course} setAdviseSuccess={setSuccess} hasPurchased={hasPurchased} />
                     <div className="lg:w-2/3 lg:px-8 w-full">
                         <Nav />
                         <Info course={course} />
@@ -116,7 +122,7 @@ const Course = () => {
                             onLessonClick={handleLessonClick}
                             completedLessons={completedLessons}
                         />
-                        <Rating courseId={id} hasPurchased={hasPurchased} setError={setError} setSuccess={setSuccess}/> {/* Add Rating component */}
+                        <Rating courseId={id} hasPurchased={hasPurchased} setError={setError} setSuccess={setSuccess} />{' '}
                     </div>
                 </div>
             </div>

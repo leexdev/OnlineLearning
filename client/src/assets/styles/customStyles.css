@@ -14,3 +14,8 @@
     font-style: normal;
     color: #a0a0a0;
 }
+
+.ql-editor img {
+    max-width: 20%;
+    height: auto;
+}

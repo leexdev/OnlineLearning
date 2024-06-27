@@ -92,9 +92,7 @@ const Dashboard = () => {
                     teachers &&
                     Array.isArray(teachers)
                 ) {
-                    const successfulPayments = payments.filter(
-                        (payment) => payment.status === 'Thành công' || payment.status === '',
-                    );
+                    const successfulPayments = payments.filter((payment) => payment.status === 'Thành công');
 
                     const groupedPayments = successfulPayments.reduce((acc, payment) => {
                         if (!acc[payment.courseId]) {
@@ -104,7 +102,8 @@ const Dashboard = () => {
                         return acc;
                     }, {});
 
-                    const groupedUserCourses = userCourses.reduce((acc, userCourse) => {
+                    const studentUserCourses = userCourses.filter((userCourse) => !userCourse.isTeacher);
+                    const groupedUserCourses = studentUserCourses.reduce((acc, userCourse) => {
                         if (!acc[userCourse.courseId]) {
                             acc[userCourse.courseId] = 0;
                         }
@@ -112,9 +111,20 @@ const Dashboard = () => {
                         return acc;
                     }, {});
 
-                    const courseNames = Object.values(groupedPayments).map((payment) => payment.courseName);
-                    const amounts = Object.values(groupedPayments).map((payment) => payment.totalAmount);
-                    const studentCounts = Object.values(groupedUserCourses);
+                    const uniqueStudentIds = new Set(studentUserCourses.map((userCourse) => userCourse.userId));
+
+                    const courseNames = [];
+                    const amounts = [];
+                    const studentCounts = [];
+
+                    courses.forEach((course) => {
+                        const studentCount = groupedUserCourses[course.id] || 0;
+                        if (studentCount > 0) {
+                            courseNames.push(course.name);
+                            amounts.push(groupedPayments[course.id] ? groupedPayments[course.id].totalAmount : 0);
+                            studentCounts.push(studentCount);
+                        }
+                    });
 
                     const startOfDay = startDate
                         ? setMilliseconds(setSeconds(setMinutes(setHours(startDate, 0), 0), 0), 0)
@@ -175,9 +185,7 @@ const Dashboard = () => {
                         ],
                     });
 
-                    const filteredUser = userCourses.filter((user) => !user.isTeacher);
-
-                    setTotalStudents(filteredUser.length);
+                    setTotalStudents(uniqueStudentIds.size);
                     setTotalCourses(courses.length);
                     setTotalPayments(successfulPayments.length);
                     setTotalRegisteredUsers(users.length);

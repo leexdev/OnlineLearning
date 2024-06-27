@@ -13,8 +13,6 @@ const CreateCourseWizard = ({ courseToEdit }) => {
     const [course, setCourse] = useState(courseToEdit || null);
     const steps = ['Giới thiệu khóa học', 'Chương trình giảng Dạy'];
 
-    console.log("Hello");
-
     useEffect(() => {
         const fetchGrades = async () => {
             try {

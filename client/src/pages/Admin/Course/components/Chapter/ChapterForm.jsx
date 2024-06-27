@@ -28,6 +28,7 @@ const ChapterForm = ({ course, onSubmit }) => {
     const [currentChapterIndex, setCurrentChapterIndex] = useState(null);
     const [currentLessonIndex, setCurrentLessonIndex] = useState(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(null);
+
     const openModal = () => {
         setModalIsOpen(true);
     };
@@ -39,7 +40,6 @@ const ChapterForm = ({ course, onSubmit }) => {
     useEffect(() => {
         if (course != null) {
             setChapters(course.chapters);
-            console.log("course.chapters", course.chapters);
         }
     }, [course]);
 
@@ -98,46 +98,57 @@ const ChapterForm = ({ course, onSubmit }) => {
         }
     };
 
-    const addQuestion = (lessonIndex) => {
+    const addQuestion = (chapterIndex, lessonIndex) => {
+        setCurrentChapterIndex(chapterIndex);
         setCurrentLessonIndex(lessonIndex);
-        console.log('lessonIndex', lessonIndex);
         setQuestionModalIsOpen(true);
     };
 
     const handleAddQuestion = async (questionData, setError) => {
+        if (currentChapterIndex === null || currentLessonIndex === null) {
+            toast.error('Chưa chọn chương hoặc bài giảng hợp lệ');
+            return;
+        }
+
+        const chapter = chapters[currentChapterIndex];
+        const lesson = chapter?.lessons?.[currentLessonIndex];
+
+        if (!lesson) {
+            toast.error('Bài giảng không tồn tại');
+            return;
+        }
+
         if (course.subjectName.toLowerCase() === 'tiếng anh') {
             questionData.language = 'en';
         }
-
-        console.log("questionData", questionData);
 
         const newQuestion = {
             content: questionData.content,
             explanation: questionData.explanation,
             language: questionData.language,
             isPronounce: questionData.isPronounce,
-            lessonId: chapters[currentChapterIndex].lessons[currentLessonIndex].id,
-            answers: questionData.answers.map((answer) => ({
+            lessonId: lesson.id,
+            isSortable: questionData.isSortable,
+            answers: questionData.answers.map((answer, index) => ({
                 content: answer.content,
                 isCorrect: answer.isCorrect,
+                order: index + 1,
             })),
         };
 
         try {
             const response = await questionApi.add(newQuestion);
-            console.log('response', response);
             const createdQuestion = response;
 
             const updatedChapters = [...chapters];
             updatedChapters[currentChapterIndex].lessons[currentLessonIndex].questions.push(createdQuestion);
 
-            console.log('updatedChapters', updatedChapters);
             setChapters(updatedChapters);
 
             toast.success('Thêm câu hỏi mới thành công');
             setQuestionModalIsOpen(false);
         } catch (error) {
-            const responseData = error.response.data;
+            const responseData = error.response;
             if (responseData.errors) {
                 const errorData = convertErrorsToCamelCase(responseData.errors);
                 Object.keys(errorData).forEach((key) => setError(key, { type: 'manual', message: errorData[key] }));
@@ -162,10 +173,6 @@ const ChapterForm = ({ course, onSubmit }) => {
         setCurrentChapterIndex(chapterIndex);
         setCurrentLessonIndex(lessonIndex);
         setCurrentQuestionIndex(questionIndex);
-
-        console.log('chapterIndex', chapterIndex);
-        console.log('lessonIndex', lessonIndex);
-        console.log('questionIndex', questionIndex);
         setEditQuestionModalIsOpen(true);
     };
 
@@ -232,13 +239,12 @@ const ChapterForm = ({ course, onSubmit }) => {
             language: questionData.language,
             isPronounce: questionData.isPronounce,
             lessonId: chapters[currentChapterIndex].lessons[currentLessonIndex].id,
-            answers: questionData.answers.map((answer) => ({
+            answers: questionData.answers.map((answer, index) => ({
                 content: answer.content,
                 isCorrect: answer.isCorrect,
+                order: index + 1,
             })),
         };
-
-        console.log('Payload:', updatedQuestion);
 
         try {
             const response = await questionApi.update(
@@ -246,11 +252,9 @@ const ChapterForm = ({ course, onSubmit }) => {
                 updatedQuestion,
             );
 
-            console.log('response', response);
             const updatedQuestionData = response;
 
             const updatedChapters = [...chapters];
-
             updatedChapters[currentChapterIndex].lessons[currentLessonIndex].questions[currentQuestionIndex] =
                 updatedQuestionData;
 
@@ -471,7 +475,7 @@ const ChapterForm = ({ course, onSubmit }) => {
 
                     <div className="flex justify-center mt-4 p-4">
                         <Link
-                            to={"/admin/course"}
+                            to={'/admin/course'}
                             className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded shadow-md transition duration-200 ml-2"
                         >
                             Hoàn thành

@@ -5,7 +5,7 @@ import CourseCard from './components/CourseCard';
 import CourseList from './components/CourseList';
 import PropTypes from 'prop-types';
 import Spinner from '~/components/Common/Spinner';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import MessageModal from '~/components/Common/MessageModal';
 import images from '~/assets/images';
 import userCourseApi from '~/api/userCourseApi';
@@ -14,6 +14,7 @@ import AuthContext from '~/context/AuthContext';
 const Subject = () => {
     const { id } = useParams();
     const location = useLocation();
+    const navigate = useNavigate();
     const subjectName = location.state?.subjectName || '';
     const gradeName = location.state?.gradeName || '';
     const [courses, setCourses] = useState([]);
@@ -46,6 +47,12 @@ const Subject = () => {
 
         fetchCourses();
     }, [id, user]);
+
+    useEffect(() => {
+        if (courses.length === 1) {
+            navigate(`/course/${courses[0].id}`, { state: { courseId: courses[0].id }, replace: true });
+        }
+    }, [courses, navigate]);
 
     if (loading) {
         return <Spinner />;

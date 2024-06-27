@@ -227,6 +227,7 @@ const Lesson = () => {
                             comments={lesson.comments}
                             lessonId={parseInt(id)}
                             courseId={lesson.courseId}
+                            user={user}
                         />
                         <Comment
                             totalComments={totalComments}

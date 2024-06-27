@@ -249,7 +249,7 @@ const Chapter = ({
                                                             <p className="font-bold block flex-1">Danh sách câu hỏi:</p>
                                                             <button
                                                                 type="button"
-                                                                onClick={() => addQuestion(lessonIndex)}
+                                                                onClick={() => addQuestion(chapterIndex, lessonIndex)}
                                                                 className="text-gray-900 mr-6"
                                                             >
                                                                 <span className="p-2 bg-peach rounded-md font-bold text-white">
@@ -265,7 +265,8 @@ const Chapter = ({
                                                                         key={question?.id}
                                                                         className="mb-2 p-2 bg-gray-50 rounded-md flex justify-center items-center"
                                                                     >
-                                                                        <div className='content flex-1'
+                                                                        <div
+                                                                            className="content flex-1 max-h-[10vh] overflow-hidden"
                                                                             dangerouslySetInnerHTML={{
                                                                                 __html: question?.content,
                                                                             }}

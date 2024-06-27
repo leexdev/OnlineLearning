@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Google.Cloud.TextToSpeech.V1;
 using Microsoft.EntityFrameworkCore;
+using HtmlAgilityPack;
 using server.Data;
 using server.Interfaces;
 using server.Models;
@@ -23,8 +24,20 @@ namespace server.Service.TextToSpeech
 
         public async Task<byte[]> ConvertTextToSpeechAsync(string text, string language)
         {
-            var question = await _context.Questions
-                .FirstOrDefaultAsync(q => q.Content.ToUpper() == text.ToUpper() && q.Language == language);
+            // Chuyển đổi q.Content từ HTML sang văn bản thuần túy
+            var normalizedText = ConvertHtmlToPlainText(text);
+
+            // Ghi giá trị của normalizedText ra console
+            Console.WriteLine("normalizedText: " + normalizedText);
+
+            // Chuyển truy vấn sang LINQ to Objects để thực hiện trên bộ nhớ
+            var questions = await _context.Questions
+                .Where(q => q.Language == language)
+                .ToListAsync();
+
+            var question = questions
+                .AsEnumerable()
+                .FirstOrDefault(q => ConvertHtmlToPlainText(q.Content).ToUpper() == normalizedText.ToUpper());
 
             if (question != null && question.Audio != null)
             {
@@ -35,24 +48,14 @@ namespace server.Service.TextToSpeech
 
             if (audioContent != null && audioContent.Length > 0)
             {
-                if (question == null)
-                {
-                    question = new Question
-                    {
-                        Audio = audioContent
-                    };
-                    _context.Questions.Add(question);
-                }
-                else
-                {
-                    question.Audio = audioContent;
-                }
+                question.Audio = audioContent;
 
                 await _context.SaveChangesAsync();
             }
 
             return audioContent;
         }
+
 
         private async Task<byte[]> CallGoogleTextToSpeechApiAsync(string text, string language)
         {
@@ -97,6 +100,13 @@ namespace server.Service.TextToSpeech
             {
                 return null;
             }
+        }
+
+        private string ConvertHtmlToPlainText(string html)
+        {
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
+            return doc.DocumentNode.InnerText;
         }
     }
 }

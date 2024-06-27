@@ -71,7 +71,8 @@ namespace server.Mappers
             {
                 Title = lessonDto.Title,
                 isFree = lessonDto.isFree,
-                ChapterId = lessonDto.ChapterId
+                ChapterId = lessonDto.ChapterId,
+                Description = lessonDto.Description
             };
         }
     }

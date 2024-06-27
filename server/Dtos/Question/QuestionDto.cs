@@ -16,6 +16,7 @@ namespace server.Dtos.Question
         public string? Language { get; set; } = "vi";
         public bool? IsPronounce { get; set; } = false;
         public string? subjectName { get; set; }
+        public bool IsSortable { get; set; } = false;
         public List<AnswerDto> Answers { get; set; } = new List<AnswerDto>();
     }
 }

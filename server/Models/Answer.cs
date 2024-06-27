@@ -13,6 +13,7 @@ namespace server.Models
         public string Content { get; set; } = string.Empty;
         public bool IsCorrect { get; set; } = false;
         public int QuestionId { get; set; }
+        public int Order { get; set; }
         public Question? Question { get; set; }
     }
 }

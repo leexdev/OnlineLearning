@@ -40,7 +40,7 @@ const AnswerResult = ({ isAnswerCorrect, currentQuestion, correctAnswer, showAns
                                     <strong>Đáp án đúng:</strong>{' '}
                                     {correctAnswer.map((answer, index) => (
                                         <div key={index} className="mt-2">
-                                            {answer.content}
+                                            <div className='max-h-[30vh]' dangerouslySetInnerHTML={{ __html: answer.content }} />
                                         </div>
                                     ))}
                                 </p>

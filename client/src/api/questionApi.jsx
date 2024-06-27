@@ -44,6 +44,11 @@ const questionApi = {
             },
         });
     },
+
+    async verifyOrder(questionId, userAnswerOrder) {
+        const url = `/Question/verify-order/${questionId}`;
+        return await axiosClient.post(url, userAnswerOrder);
+    },
 };
 
 export default questionApi;

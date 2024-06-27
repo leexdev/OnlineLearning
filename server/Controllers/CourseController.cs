@@ -128,17 +128,25 @@ namespace server.Controllers
 
         [HttpPost("create")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([FromForm] CreateCourseDto courseDto, [FromForm] CreateTeacherCourseDto teacherCourseDto)
+        public async Task<IActionResult> Create([FromForm] CreateCourseDto courseDto, [FromForm] IFormFile imageFile, [FromForm] CreateTeacherCourseDto teacherCourseDto)
         {
             if (!await _subjectRepo.SubjectExists(courseDto.SubjectId))
                 return BadRequest("Môn học không tồn tại");
 
-            // if (!_fileService.IsImageFile(imageFile))
-            //     return BadRequest("Định dạng ảnh không phù hợp");
+            if (imageFile == null || !_fileService.IsImageFile(imageFile))
+                return BadRequest("Ảnh bắt buộc và phải có định dạng phù hợp");
 
-            // var folderPath = $"image_course";
-            // var urlImage = await _firebaseService.HandleFile(null, folderPath, imageFile);
-            var urlImage = "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/image_course%2Fb002_v1.png?alt=media&token=ee88af33-d07b-49fd-8c22-368c37031435";
+            var folderPath = $"image_course";
+            string urlImage;
+            try
+            {
+                urlImage = await _firebaseService.HandleFile(null, folderPath, imageFile);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi khi xử lý tệp hình ảnh: {ex.Message}");
+            }
+
             var course = await _courseRepo.CreateAsync(courseDto.ToCourseFromCreate(urlImage));
             var userCourse = teacherCourseDto.ToTeacherCoursesFromCreate(course.Id);
             await _ucRepo.CreateTeacher(userCourse);
@@ -146,10 +154,12 @@ namespace server.Controllers
             return CreatedAtAction(nameof(GetById), new { id = course.Id }, course.ToCourseDto());
         }
 
+
         [HttpPut("update/{id:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update(int id, [FromForm] UpdateCourseDto courseDto, [FromForm] CreateTeacherCourseDto teacherCourseDto)
+        public async Task<IActionResult> Update(int id, [FromForm] UpdateCourseDto courseDto, [FromForm] IFormFile? imageFile, [FromForm] CreateTeacherCourseDto teacherCourseDto)
         {
+            // Kiểm tra sự tồn tại của môn học
             if (!await _subjectRepo.SubjectExists(courseDto.SubjectId))
             {
                 return BadRequest("Môn học không tồn tại");
@@ -157,25 +167,44 @@ namespace server.Controllers
 
             var existingCourse = await _courseRepo.GetByIdAsync(id);
             if (existingCourse == null)
+            {
                 return NotFound();
+            }
 
-            //if (imageFile != null)
-            //{
-            //    var folderPath = "image_course";
-            //    urlImage = await _firebaseService.HandleFile(existingCourse.ImageUrl, folderPath, imageFile);
-            //}
+            string urlImage = existingCourse.ImageUrl;
 
-            var urlImage = "https://firebasestorage.googleapis.com/v0/b/learningonline-91538.appspot.com/o/image_course%2F814bd750-aaa1-4993-8d2f-de3d694a1c1c_0417_artboard-3-copy-68-403x--284-29.png?alt=media&token=3bee75e9-bdf0-47a1-aa30-eef1b6671afd";
+            if (imageFile != null)
+            {
+                var folderPath = "image_course";
+                try
+                {
+                    urlImage = await _firebaseService.HandleFile(existingCourse.ImageUrl, folderPath, imageFile);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, $"Lỗi khi xử lý tệp hình ảnh: {ex.Message}");
+                }
+            }
 
             var updatedCourseModel = await _courseRepo.UpdateAsync(id, courseDto.ToCourseFromUpdate(urlImage));
-            var userCourse = teacherCourseDto.ToTeacherCoursesFromCreate(updatedCourseModel.Id);
-            await _ucRepo.CreateTeacher(userCourse);
-
             if (updatedCourseModel == null)
-                return NotFound();
+            {
+                return NotFound("Không tìm thấy khóa học để cập nhật.");
+            }
+
+            try
+            {
+                var userCourse = teacherCourseDto.ToTeacherCoursesFromCreate(updatedCourseModel.Id);
+                await _ucRepo.CreateTeacher(userCourse);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi khi tạo thông tin giảng viên: {ex.Message}");
+            }
 
             return Ok(updatedCourseModel.ToCourseWithVideoLessonDto());
         }
+
 
         [HttpPut("update-new-price/{id:int}")]
         [Authorize(Roles = "Admin")]

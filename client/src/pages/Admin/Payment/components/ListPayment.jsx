@@ -16,7 +16,6 @@ const ListPayment = ({ searchTerm }) => {
     const fetchPayments = async (page, searchTerm = '') => {
         try {
             const response = await paymentApi.getPage({ page, pageSize: 10, searchTerm });
-            console.log("response", response);
             setPayments(response.data);
             setTotalPages(response.totalPages);
         } catch (error) {

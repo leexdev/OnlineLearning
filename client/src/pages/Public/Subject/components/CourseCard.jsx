@@ -1,6 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
-import { faClock } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import images from '~/assets/images';
 import AuthContext from '~/context/AuthContext';
@@ -18,6 +16,7 @@ const CourseCard = ({ course }) => {
             navigate(`/payment/${course.id}`);
         }
     };
+
     return (
         <div className="relative top-10 flex justify-center">
             <div className="content xl:absolute w-3/4 right-0 bottom-24">

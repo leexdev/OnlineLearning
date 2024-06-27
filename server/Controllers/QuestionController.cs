@@ -69,13 +69,24 @@ namespace server.Controllers
         {
             if (!await _lessonRepo.LessonExists(questionDto.LessonId))
             {
-                return NotFound("Bài giảng không tồn tại");
+                return NotFound($"Bài giảng với ID {questionDto.LessonId} không tồn tại.");
             }
 
             var question = questionDto.ToQuestionFromCreate();
 
-            var createdQuestion = await _questionRepo.AddQuestionWithAnswers(question);
-            return CreatedAtAction(nameof(GetById), new { id = question.Id }, createdQuestion.ToQuestionDto());
+            try
+            {
+                var createdQuestion = await _questionRepo.AddQuestionWithAnswers(question);
+                if (createdQuestion == null)
+                {
+                    return BadRequest("Không thể tạo câu hỏi mới.");
+                }
+                return CreatedAtAction(nameof(GetById), new { id = createdQuestion.Id }, createdQuestion.ToQuestionDto());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPut("update/{id}")]
@@ -104,6 +115,20 @@ namespace server.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPost("verify-order/{id:int}")]
+        public async Task<IActionResult> VerifyAnswerOrder(int id, [FromBody] List<string> userAnswerOrder)
+        {
+            try
+            {
+                bool isCorrect = await _questionRepo.VerifyAnswerOrder(id, userAnswerOrder);
+                return Ok(new { Correct = isCorrect });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

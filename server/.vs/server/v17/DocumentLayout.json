@@ -3,20 +3,24 @@
   "WorkspaceRootPath": "E:\\\u0110ATN\\LearningOnline\\server\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\controllers\\lessoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:controllers\\lessoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\extensions\\claimsextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:extensions\\claimsextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\repository\\courserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:repository\\courserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\controllers\\coursecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:controllers\\coursecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\repository\\subjectrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:repository\\subjectrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\service\\texttospeech\\texttospeechservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:service\\texttospeech\\texttospeechservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
@@ -26,28 +30,32 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Service\\FireBaseService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\repository\\chatmessagerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:repository\\chatmessagerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\controllers\\lessoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:controllers\\lessoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\controllers\\paymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:controllers\\paymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\repository\\chatmessagerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:repository\\chatmessagerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\learningonline.code-workspace||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:learningonline.code-workspace||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\repository\\courserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:repository\\courserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\repository\\subjectrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:repository\\subjectrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\extensions\\claimsextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:extensions\\claimsextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\repository\\usercourserepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -82,10 +90,6 @@
       "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:controllers\\subjectcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\dtos\\question\\updatequestiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:dtos\\question\\updatequestiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -104,10 +108,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\controllers\\texttospeechcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:controllers\\texttospeechcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\service\\texttospeech\\texttospeechservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|solutionrelative:service\\texttospeech\\texttospeechservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E08E1403-5BB3-47E7-935B-A190F45C6DC8}|server.csproj|e:\\\u0111atn\\learningonline\\server\\models\\question.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -157,7 +157,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 14,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Bookmark",
@@ -188,8 +188,101 @@
               "Name": "ST:0:0:{7f075f9f-1e1a-4ee8-9ce8-b8451fb61ec8}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CourseController.cs",
+              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\CourseController.cs",
+              "RelativeDocumentMoniker": "Controllers\\CourseController.cs",
+              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\CourseController.cs",
+              "RelativeToolTip": "Controllers\\CourseController.cs",
+              "ViewState": "AQIAAKIAAAAAAAAAAAAAALMAAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-15T11:40:11.884Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CourseRepository.cs",
+              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Repository\\CourseRepository.cs",
+              "RelativeDocumentMoniker": "Repository\\CourseRepository.cs",
+              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Repository\\CourseRepository.cs",
+              "RelativeToolTip": "Repository\\CourseRepository.cs",
+              "ViewState": "AQIAAFcAAAAAAAAAAAA8wHYAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-21T06:15:28.527Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SubjectRepository.cs",
+              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Repository\\SubjectRepository.cs",
+              "RelativeDocumentMoniker": "Repository\\SubjectRepository.cs",
+              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Repository\\SubjectRepository.cs",
+              "RelativeToolTip": "Repository\\SubjectRepository.cs",
+              "ViewState": "AQIAAC0AAAAAAAAAAAAuwEAAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-14T08:23:15.712Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAALsAAAAAAAAAAAAAAMwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-02T15:59:35.361Z",
+              "EditorCaption": ""
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 7,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
+              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "Controllers\\AccountController.cs",
+              "ViewState": "AQIAALoAAAAAAAAAAAAAAMwAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-02T15:48:34.062Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "LessonController.cs",
+              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\LessonController.cs",
+              "RelativeDocumentMoniker": "Controllers\\LessonController.cs",
+              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\LessonController.cs",
+              "RelativeToolTip": "Controllers\\LessonController.cs",
+              "ViewState": "AQIAADsAAAAAAAAAAAAzwEQAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-14T17:40:19.499Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TextToSpeechService.cs",
+              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Service\\TextToSpeech\\TextToSpeechService.cs",
+              "RelativeDocumentMoniker": "Service\\TextToSpeech\\TextToSpeechService.cs",
+              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Service\\TextToSpeech\\TextToSpeechService.cs",
+              "RelativeToolTip": "Service\\TextToSpeech\\TextToSpeechService.cs",
+              "ViewState": "AQIAAEgAAAAAAAAAAADwv1kAAAAyAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-12T12:14:04.367Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "PaymentController.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\PaymentController.cs",
               "RelativeDocumentMoniker": "Controllers\\PaymentController.cs",
@@ -201,98 +294,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "LearningOnline.code-workspace",
-              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\LearningOnline.code-workspace",
-              "RelativeDocumentMoniker": "LearningOnline.code-workspace",
-              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\LearningOnline.code-workspace",
-              "RelativeToolTip": "LearningOnline.code-workspace",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-06-06T13:10:42.586Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "CourseController.cs",
-              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\CourseController.cs",
-              "RelativeDocumentMoniker": "Controllers\\CourseController.cs",
-              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\CourseController.cs",
-              "RelativeToolTip": "Controllers\\CourseController.cs",
-              "ViewState": "AQIAAJUAAAAAAAAAAAAkwLYAAAANAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-15T11:40:11.884Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "CourseRepository.cs",
-              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Repository\\CourseRepository.cs",
-              "RelativeDocumentMoniker": "Repository\\CourseRepository.cs",
-              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Repository\\CourseRepository.cs",
-              "RelativeToolTip": "Repository\\CourseRepository.cs",
-              "ViewState": "AQIAAA8AAAAAAAAAAAAAACcAAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-21T06:15:28.527Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 10,
-              "Title": "SubjectRepository.cs",
-              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Repository\\SubjectRepository.cs",
-              "RelativeDocumentMoniker": "Repository\\SubjectRepository.cs",
-              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Repository\\SubjectRepository.cs",
-              "RelativeToolTip": "Repository\\SubjectRepository.cs",
-              "ViewState": "AQIAACgAAAAAAAAAAAAQwEAAAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-14T08:23:15.712Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "Program.cs",
-              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAALoAAAAAAAAAAAAQwM0AAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-02T15:59:35.361Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AccountController.cs",
-              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\AccountController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
-              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\AccountController.cs",
-              "RelativeToolTip": "Controllers\\AccountController.cs",
-              "ViewState": "AQIAALoAAAAAAAAAAAAAAMwAAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-02T15:48:34.062Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "LessonController.cs",
-              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\LessonController.cs",
-              "RelativeDocumentMoniker": "Controllers\\LessonController.cs",
-              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\LessonController.cs",
-              "RelativeToolTip": "Controllers\\LessonController.cs",
-              "ViewState": "AQIAADsAAAAAAAAAAAAQwEQAAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-14T17:40:19.499Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
               "Title": "ChatMessageRepository.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Repository\\ChatMessageRepository.cs",
               "RelativeDocumentMoniker": "Repository\\ChatMessageRepository.cs",
@@ -304,7 +306,31 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 11,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
+              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "Data\\ApplicationDbContext.cs",
+              "ViewState": "AQIAAH0AAAAAAAAAAAAQwJAAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-14T17:41:55.554Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "LearningOnline.code-workspace",
+              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\LearningOnline.code-workspace",
+              "RelativeDocumentMoniker": "LearningOnline.code-workspace",
+              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\LearningOnline.code-workspace",
+              "RelativeToolTip": "LearningOnline.code-workspace",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-06-06T13:10:42.586Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "ClaimsExtensions.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Extensions\\ClaimsExtensions.cs",
               "RelativeDocumentMoniker": "Extensions\\ClaimsExtensions.cs",
@@ -312,12 +338,11 @@
               "RelativeToolTip": "Extensions\\ClaimsExtensions.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-10T10:19:41.07Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-10T10:19:41.07Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "UserCourseRepository.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Repository\\UserCourseRepository.cs",
               "RelativeDocumentMoniker": "Repository\\UserCourseRepository.cs",
@@ -329,7 +354,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "ConversationRepository.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Repository\\ConversationRepository.cs",
               "RelativeDocumentMoniker": "Repository\\ConversationRepository.cs",
@@ -341,7 +366,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "QuestionController.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\QuestionController.cs",
               "RelativeDocumentMoniker": "Controllers\\QuestionController.cs",
@@ -353,7 +378,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "CreateCourseDto.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Dtos\\Course\\CreateCourseDto.cs",
               "RelativeDocumentMoniker": "Dtos\\Course\\CreateCourseDto.cs",
@@ -365,7 +390,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 18,
               "Title": "ChatHub.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Dtos\\Chat\\ChatHub.cs",
               "RelativeDocumentMoniker": "Dtos\\Chat\\ChatHub.cs",
@@ -377,7 +402,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 19,
               "Title": "IUserCourseRepository.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Interfaces\\IUserCourseRepository.cs",
               "RelativeDocumentMoniker": "Interfaces\\IUserCourseRepository.cs",
@@ -389,7 +414,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 20,
               "Title": "SpeechToTextService.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Service\\SpeechToText\\SpeechToTextService.cs",
               "RelativeDocumentMoniker": "Service\\SpeechToText\\SpeechToTextService.cs",
@@ -401,7 +426,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 21,
               "Title": "SubjectController.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\SubjectController.cs",
               "RelativeDocumentMoniker": "Controllers\\SubjectController.cs",
@@ -413,19 +438,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "ApplicationDbContext.cs",
-              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Data\\ApplicationDbContext.cs",
-              "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
-              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Data\\ApplicationDbContext.cs",
-              "RelativeToolTip": "Data\\ApplicationDbContext.cs",
-              "ViewState": "AQIAAH4AAAAAAAAAAAAQwJEAAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-14T17:41:55.554Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "UpdateQuestionDto.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Dtos\\Question\\UpdateQuestionDto.cs",
               "RelativeDocumentMoniker": "Dtos\\Question\\UpdateQuestionDto.cs",
@@ -437,7 +450,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "LanguageController.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\LanguageController.cs",
               "RelativeDocumentMoniker": "Controllers\\LanguageController.cs",
@@ -449,7 +462,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 24,
               "Title": "SubjectMappers.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Mappers\\SubjectMappers.cs",
               "RelativeDocumentMoniker": "Mappers\\SubjectMappers.cs",
@@ -461,7 +474,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 25,
               "Title": "server.http",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\server.http",
               "RelativeDocumentMoniker": "server.http",
@@ -473,7 +486,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 26,
               "Title": "TextToSpeechController.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Controllers\\TextToSpeechController.cs",
               "RelativeDocumentMoniker": "Controllers\\TextToSpeechController.cs",
@@ -482,18 +495,6 @@
               "ViewState": "AQIAAAMAAAAAAAAAAAAAACAAAAAMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-12T12:09:03.295Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 26,
-              "Title": "TextToSpeechService.cs",
-              "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Service\\TextToSpeech\\TextToSpeechService.cs",
-              "RelativeDocumentMoniker": "Service\\TextToSpeech\\TextToSpeechService.cs",
-              "ToolTip": "E:\\\u0110ATN\\LearningOnline\\server\\Service\\TextToSpeech\\TextToSpeechService.cs",
-              "RelativeToolTip": "Service\\TextToSpeech\\TextToSpeechService.cs",
-              "ViewState": "AQIAACgAAAAAAAAAAAAYwEQAAAAnAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-12T12:14:04.367Z"
             },
             {
               "$type": "Document",
@@ -616,7 +617,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "FireBaseService.cs",
               "DocumentMoniker": "E:\\\u0110ATN\\LearningOnline\\server\\Service\\FireBaseService.cs",
               "RelativeDocumentMoniker": "Service\\FireBaseService.cs",
@@ -627,7 +628,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Microsoft.Common.CurrentVersion.targets",
               "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
               "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",

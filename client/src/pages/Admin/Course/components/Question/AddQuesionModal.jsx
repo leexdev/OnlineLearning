@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import FormFieldError from '~/components/Common/FormFieldError';
 
-// Custom image handler
 const imageHandler = function () {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
@@ -49,22 +49,25 @@ const AddQuestionModal = ({ isOpen, closeModal, handleAdd, subjectName }) => {
         clearErrors,
         reset,
         watch,
+        setValue,
     } = useForm({
         defaultValues: {
             content: '',
             explanation: '',
             isPronounce: false,
+            isSortable: false,
             answers: [{ content: '', isCorrect: false }],
         },
     });
     const { fields, append, remove, replace } = useFieldArray({ control, name: 'answers' });
 
     const isPronounce = watch('isPronounce');
+    const isSortable = watch('isSortable');
 
     const onSubmit = (data) => {
         clearErrors('answers');
 
-        if (!isPronounce) {
+        if (!isPronounce && !isSortable) {
             const hasCorrectAnswer = data.answers.some((answer) => answer.isCorrect);
             if (!hasCorrectAnswer) {
                 setError('answers', {
@@ -79,10 +82,10 @@ const AddQuestionModal = ({ isOpen, closeModal, handleAdd, subjectName }) => {
     };
 
     useEffect(() => {
-        if (isPronounce) {
+        if (isPronounce || isSortable) {
             replace([]);
         }
-    }, [isPronounce, replace]);
+    }, [isPronounce, isSortable, replace]);
 
     useEffect(() => {
         const subscription = watch((value) => {
@@ -92,6 +95,22 @@ const AddQuestionModal = ({ isOpen, closeModal, handleAdd, subjectName }) => {
         });
         return () => subscription.unsubscribe();
     }, [watch, clearErrors]);
+
+    const handlePronounceChange = (e) => {
+        const isChecked = e.target.checked;
+        setValue('isPronounce', isChecked);
+        if (isChecked) {
+            setValue('isSortable', false);
+        }
+    };
+
+    const handleSortableChange = (e) => {
+        const isChecked = e.target.checked;
+        setValue('isSortable', isChecked);
+        if (isChecked) {
+            setValue('isPronounce', false);
+        }
+    };
 
     if (!isOpen) return null;
 
@@ -168,12 +187,130 @@ const AddQuestionModal = ({ isOpen, closeModal, handleAdd, subjectName }) => {
                                                 type="checkbox"
                                                 {...register('isPronounce')}
                                                 className="form-checkbox"
+                                                onChange={handlePronounceChange}
                                             />
                                             <span className="ml-2">Câu hỏi kiểm tra phát âm</span>
                                         </label>
                                     </div>
                                 )}
-                                {!isPronounce && (
+                                <div className="mt-2">
+                                    <label className="inline-flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            {...register('isSortable')}
+                                            className="form-checkbox"
+                                            onChange={handleSortableChange}
+                                        />
+                                        <span className="ml-2">Câu hỏi sắp xếp</span>
+                                    </label>
+                                </div>
+                                {!isPronounce && isSortable && (
+                                    <div className="mt-4">
+                                        <p className="font-bold">Câu Trả Lời</p>
+                                        <DragDropContext
+                                            onDragEnd={(result) => {
+                                                const { source, destination } = result;
+                                                if (!destination) return;
+
+                                                const updatedFields = Array.from(fields);
+                                                const [movedItem] = updatedFields.splice(source.index, 1);
+                                                updatedFields.splice(destination.index, 0, movedItem);
+
+                                                updatedFields.forEach((item, index) => {
+                                                    item.order = index;
+                                                });
+
+                                                replace(updatedFields);
+                                            }}
+                                        >
+                                            <Droppable droppableId="answers">
+                                                {(provided) => (
+                                                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                                                        {fields.map((field, index) => (
+                                                            <Draggable
+                                                                key={field.id}
+                                                                draggableId={field.id}
+                                                                index={index}
+                                                            >
+                                                                {(provided) => (
+                                                                    <div
+                                                                        ref={provided.innerRef}
+                                                                        {...provided.draggableProps}
+                                                                        {...provided.dragHandleProps}
+                                                                        className="mb-2 p-2 border rounded"
+                                                                    >
+                                                                        <div className="flex items-center">
+                                                                            <Controller
+                                                                                name={`answers.${index}.content`}
+                                                                                control={control}
+                                                                                defaultValue={field.content}
+                                                                                render={({ field }) => (
+                                                                                    <ReactQuill
+                                                                                        {...field}
+                                                                                        theme="snow"
+                                                                                        modules={modules}
+                                                                                        formats={[
+                                                                                            'header',
+                                                                                            'font',
+                                                                                            'list',
+                                                                                            'bullet',
+                                                                                            'bold',
+                                                                                            'italic',
+                                                                                            'underline',
+                                                                                            'color',
+                                                                                            'background',
+                                                                                            'align',
+                                                                                            'link',
+                                                                                            'image',
+                                                                                        ]}
+                                                                                        placeholder="Nhập nội dung câu trả lời..."
+                                                                                        className="mt-1"
+                                                                                    />
+                                                                                )}
+                                                                                rules={{
+                                                                                    required:
+                                                                                        'Nội dung câu trả lời không được để trống',
+                                                                                }}
+                                                                            />
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => remove(index)}
+                                                                                className="ml-2 bg-red-500 hover:bg-red-600 text-white font-semibold px-2 py-1 rounded shadow-md transition duration-200"
+                                                                            >
+                                                                                Xóa
+                                                                            </button>
+                                                                        </div>
+                                                                        {errors.answers &&
+                                                                            errors.answers[index]?.content && (
+                                                                                <FormFieldError
+                                                                                    message={
+                                                                                        errors.answers[index]?.content
+                                                                                            ?.message
+                                                                                    }
+                                                                                />
+                                                                            )}
+                                                                    </div>
+                                                                )}
+                                                            </Draggable>
+                                                        ))}
+                                                        {provided.placeholder}
+                                                    </div>
+                                                )}
+                                            </Droppable>
+                                        </DragDropContext>
+                                        {errors.answers && typeof errors.answers.message === 'string' && (
+                                            <div className="mt-2 text-red-600">{errors.answers.message}</div>
+                                        )}
+                                        <button
+                                            type="button"
+                                            onClick={() => append({ content: '' })}
+                                            className="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded shadow-md transition duration-200"
+                                        >
+                                            Thêm Câu Trả Lời
+                                        </button>
+                                    </div>
+                                )}
+                                {!isPronounce && !isSortable && (
                                     <div className="mt-4">
                                         <p className="font-bold">Câu Trả Lời</p>
                                         {fields.map((field, index) => (
@@ -184,10 +321,26 @@ const AddQuestionModal = ({ isOpen, closeModal, handleAdd, subjectName }) => {
                                                         control={control}
                                                         defaultValue={field.content}
                                                         render={({ field }) => (
-                                                            <input
+                                                            <ReactQuill
                                                                 {...field}
+                                                                theme="snow"
+                                                                modules={modules}
+                                                                formats={[
+                                                                    'header',
+                                                                    'font',
+                                                                    'list',
+                                                                    'bullet',
+                                                                    'bold',
+                                                                    'italic',
+                                                                    'underline',
+                                                                    'color',
+                                                                    'background',
+                                                                    'align',
+                                                                    'link',
+                                                                    'image',
+                                                                ]}
                                                                 placeholder="Nhập nội dung câu trả lời..."
-                                                                className="block w-full p-2 border rounded-md"
+                                                                className="mt-1"
                                                             />
                                                         )}
                                                         rules={{

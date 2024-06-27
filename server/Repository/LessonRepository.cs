@@ -45,7 +45,7 @@ namespace server.Repository
 
             await _context.SaveChangesAsync();
         }
-        
+
         public async Task<Lesson?> DeleteAsync(int id)
         {
             var lesson = await _context.Lessons.FirstOrDefaultAsync(l => l.Id == id);
@@ -102,6 +102,7 @@ namespace server.Repository
             lesson.Title = lessonModel.Title;
             lesson.isFree = lessonModel.isFree;
             lesson.ChapterId = lessonModel.ChapterId;
+            lesson.Description = lessonModel.Description;
 
             await _context.SaveChangesAsync();
             return lesson;

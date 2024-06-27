@@ -22,17 +22,18 @@ const formatDuration = (seconds) => {
     return hDisplay + mDisplay + sDisplay || '0 giây';
 };
 
-const Info = ({ title, description, duration, comments = [], lessonId, courseId }) => {
+const Info = ({ title, description, duration, comments = [], lessonId, courseId, user }) => {
     const safeDescription = description || 'Không có mô tả';
     const navigate = useNavigate();
-    const { user } = useContext(AuthContext);
     const [error, setError] = useState(null);
+
+    console.log("user", user);
 
     const handleNavigateToQuestions = async () => {
         try {
             const accessResponse = await userCourseApi.hasAccess(courseId);
-            if (!accessResponse.hasAccess) {
-                setError(`Bạn chưa mua khóa học này. Hãy đăng ký khóa học để làm bài tập!`);
+            if (user.role != "Admin" && !accessResponse.hasAccess) {
+                setError(`Bạn chưa mua khóa học này. Hãy đăng ký khóa học để làm bài tập nhé!`);
                 return;
             }
 
@@ -44,7 +45,7 @@ const Info = ({ title, description, duration, comments = [], lessonId, courseId 
 
             navigate(`/lesson/${lessonId}/questions`, { state: { lessonId, courseId } });
         } catch (error) {
-            setError('Bạn chưa mua khóa học này. Hãy đăng ký khóa học để làm bài tập!');
+            setError('Bạn chưa mua khóa học này. Hãy đăng ký khóa học để làm bài tập nhé!');
         }
     };
 
@@ -74,7 +75,12 @@ const Info = ({ title, description, duration, comments = [], lessonId, courseId 
                 </div>
                 <div className="mt-5">
                     <h4 className="text-xl font-bold mb-3">Mô tả bài học</h4>
-                    <div className="description">{safeDescription}</div>
+                    <div
+                        className="content flex-1 max-w-[60vh] overflow-hidden"
+                        dangerouslySetInnerHTML={{
+                            __html: safeDescription,
+                        }}
+                    />
                 </div>
             </div>
         </Fragment>

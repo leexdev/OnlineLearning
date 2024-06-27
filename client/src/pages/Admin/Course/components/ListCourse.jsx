@@ -24,10 +24,12 @@ const ListCourse = ({ searchTerm, resetPageOnSearch }) => {
 
     useEffect(() => {
         if (resetPageOnSearch) {
-            setCurrentPage(1);
-            navigate('?page=1');
+            const params = new URLSearchParams(location.search);
+            const page = parseInt(params.get('page')) || 1;
+            setCurrentPage(page);
+            navigate(`?page=${page}`);
         }
-    }, [searchTerm, resetPageOnSearch, navigate]);
+    }, [searchTerm, resetPageOnSearch, location.search, navigate]);
 
     const fetchCourses = async (page, searchTerm = '') => {
         try {
@@ -80,7 +82,7 @@ const ListCourse = ({ searchTerm, resetPageOnSearch }) => {
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-xl font-bold">Danh sách khóa học</h1>
                 <Link
-                    to="/admin/course/create"
+                    to={`/admin/course/create?page=${currentPage}`}
                     className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded shadow-md transition duration-200"
                 >
                     Thêm khóa học

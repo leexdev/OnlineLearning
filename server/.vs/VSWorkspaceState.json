@@ -9,7 +9,9 @@
     "\\Dtos",
     "\\Dtos\\Chat",
     "\\Models",
-    "\\Repository"
+    "\\Repository",
+    "\\Service",
+    "\\Service\\TextToSpeech"
   ],
   "SelectedNode": "\\server.sln",
   "PreviewInSolutionExplorer": false

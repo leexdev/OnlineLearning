@@ -26,10 +26,12 @@ namespace server.Repository
                 LessonId = questionModel.LessonId,
                 Language = questionModel.Language,
                 IsPronounce = questionModel.IsPronounce,
+                IsSortable = questionModel.IsSortable,
                 Answers = questionModel.Answers.Select(a => new Answer
                 {
                     Content = a.Content,
-                    IsCorrect = a.IsCorrect
+                    IsCorrect = a.IsCorrect,
+                    Order = a.Order
                 }).ToList()
             };
 
@@ -37,6 +39,7 @@ namespace server.Repository
             await _context.SaveChangesAsync();
             return question;
         }
+
 
         public async Task<Question> UpdateQuestionWithAnswers(int id, Question questionModel)
         {
@@ -54,12 +57,14 @@ namespace server.Repository
             question.LessonId = questionModel.LessonId;
             question.Language = questionModel.Language;
             question.IsPronounce = questionModel.IsPronounce;
+            question.IsSortable = questionModel.IsSortable;
 
             _context.Answers.RemoveRange(question.Answers);
             question.Answers = questionModel.Answers.Select(a => new Answer
             {
                 Content = a.Content,
-                IsCorrect = a.IsCorrect
+                IsCorrect = a.IsCorrect,
+                Order = a.Order
             }).ToList();
 
             await _context.SaveChangesAsync();
@@ -91,7 +96,27 @@ namespace server.Repository
             {
                 return null;
             }
+
+            if (question.IsSortable)
+            {
+                question.Answers = question.Answers.OrderBy(_ => Guid.NewGuid()).ToList();
+            }
+
             return question;
+        }
+
+
+        public async Task<bool> VerifyAnswerOrder(int questionId, List<string> userAnswerOrder)
+        {
+            var question = await _context.Questions.Include(q => q.Answers).FirstOrDefaultAsync(q => q.Id == questionId);
+            if (question == null)
+            {
+                throw new InvalidOperationException("Câu hỏi không tồn tại");
+            }
+
+            var correctOrder = question.Answers.OrderBy(a => a.Order).Select(a => a.Content).ToList();
+
+            return Enumerable.SequenceEqual(userAnswerOrder, correctOrder);
         }
 
         public async Task<List<Question>> GetByCourseIdAsync(int courseId)

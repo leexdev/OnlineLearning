@@ -12,6 +12,7 @@ namespace server.Interfaces
         Task<List<Question>> GetAllAsync();
         Task<Question?> GetByIdAsync(int id);
         Task<List<Question>> GetByCourseIdAsync(int courseId);
+        Task<bool> VerifyAnswerOrder(int questionId, List<string> userAnswerOrder);
         Task<List<Question>> GetByLessonId(int lessonId);
         Task<Question> AddQuestionWithAnswers(Question questionModel);
         Task<Question> UpdateQuestionWithAnswers(int id, Question questionModel);

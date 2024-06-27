@@ -100,51 +100,68 @@ const Question = () => {
         }
     };
 
-    const handleSubmit = async () => {
-        if (selectedAnswers.length > 0) {
-            const questionId = questions[currentQuestionIndex].id;
-            const isCorrect =
-                selectedAnswers.every((answer) => answer.isCorrect) &&
-                selectedAnswers.length ===
-                    questions[currentQuestionIndex].answers.filter((ans) => ans.isCorrect).length;
+    const handleSubmit = async (selectedAnswers) => {
+        console.log('Selected Answers on Submit:', selectedAnswers);
+        const currentQuestion = questions[currentQuestionIndex];
+        const questionId = currentQuestion.id;
 
-            const newHistory = [...history];
-            newHistory[currentQuestionIndex] = { questionId, isCorrect };
-            setHistory(newHistory);
-
-            if (isCorrect && !correctAnswers[questionId]) {
-                setCorrectAnswers((prev) => ({ ...prev, [questionId]: true }));
-                setCorrectCount((prev) => prev + 1);
-            } else if (!isCorrect && correctAnswers[questionId]) {
-                setCorrectAnswers((prev) => ({ ...prev, [questionId]: false }));
-                setCorrectCount((prev) => prev - 1);
-            }
-
-            const userAnswerHistoryDto = {
-                questionId: questions[currentQuestionIndex].id,
-                isCorrect: isCorrect,
-            };
-
-            try {
-                await userAnswerApi.saveUserAnswerHistory(userAnswerHistoryDto);
-                setIsAnswerCorrect(isCorrect);
-                setShowAnswerResult(true);
-                setUserLastAnswer(null);
-                if (!isCorrect) {
-                    setShowExplanation(true);
-                    const correctAns = questions[currentQuestionIndex].answers.filter((ans) => ans.isCorrect);
-                    console.log('correctAns', correctAns);
-                    setCorrectAnswer(correctAns);
-                }
-            } catch (error) {
-                console.error('Lỗi lưu lịch sử trả lời:', error);
-                alert('Lưu lịch sử trả lời thất bại.');
-            }
-
-            setSelectedAnswers([]);
-        } else {
+        if (selectedAnswers.length === 0 && !currentQuestion.isSortable) {
             toast.error('Vui lòng chọn một đáp án.');
+            return;
         }
+
+        let isCorrect = false;
+
+        if (currentQuestion.isSortable) {
+            try {
+                // Gửi danh sách các từ với thứ tự chính xác
+                const userAnswerOrder = selectedAnswers.map((answer) => answer.content);
+                const response = await questionApi.verifyOrder(questionId, userAnswerOrder);
+                isCorrect = response.correct;
+            } catch (error) {
+                console.error('Lỗi kiểm tra thứ tự câu trả lời:', error);
+                alert('Kiểm tra thứ tự câu trả lời thất bại.');
+                return;
+            }
+        } else {
+            isCorrect =
+                selectedAnswers.every((answer) => answer.isCorrect) &&
+                selectedAnswers.length === currentQuestion.answers.filter((ans) => ans.isCorrect).length;
+        }
+
+        const newHistory = [...history];
+        newHistory[currentQuestionIndex] = { questionId, isCorrect };
+        setHistory(newHistory);
+
+        if (isCorrect && !correctAnswers[questionId]) {
+            setCorrectAnswers((prev) => ({ ...prev, [questionId]: true }));
+            setCorrectCount((prev) => prev + 1);
+        } else if (!isCorrect && correctAnswers[questionId]) {
+            setCorrectAnswers((prev) => ({ ...prev, [questionId]: false }));
+            setCorrectCount((prev) => prev - 1);
+        }
+
+        const userAnswerHistoryDto = {
+            questionId: currentQuestion.id,
+            isCorrect: isCorrect,
+        };
+
+        try {
+            await userAnswerApi.saveUserAnswerHistory(userAnswerHistoryDto);
+            setIsAnswerCorrect(isCorrect);
+            setShowAnswerResult(true);
+            setUserLastAnswer(null);
+            if (!isCorrect) {
+                setShowExplanation(true);
+                const correctAns = currentQuestion.answers.filter((ans) => ans.isCorrect);
+                setCorrectAnswer(correctAns);
+            }
+        } catch (error) {
+            console.error('Lỗi lưu lịch sử trả lời:', error);
+            alert('Lưu lịch sử trả lời thất bại.');
+        }
+
+        setSelectedAnswers([]);
     };
 
     const handleQuestionNavigation = (direction) => {
@@ -317,6 +334,8 @@ const Question = () => {
                             handleTextToSpeech={handleTextToSpeech}
                             isPlaying={isPlaying}
                             countCorrectAnswers={countCorrectAnswers}
+                            isPronounce={currentQuestion.isPronounce}
+                            isSortable={currentQuestion.isSortable}
                         />
                         {userLastAnswer && !showAnswerResult && (
                             <div
@@ -333,11 +352,12 @@ const Question = () => {
                             answers={currentQuestion.answers}
                             selectedAnswers={selectedAnswers}
                             handleAnswerClick={handleAnswerClick}
+                            isSortable={currentQuestion.isSortable}
                         />
                         <div className="flex justify-center">
                             {currentQuestion.isPronounce === false && (
                                 <button
-                                    onClick={handleSubmit}
+                                    onClick={() => handleSubmit(selectedAnswers)}
                                     className="bg-orange-500 text-white px-12 py-4 rounded-full text-lg font-semibold shadow-lg hover:bg-orange-600 transition transform hover:scale-105"
                                 >
                                     Gửi câu trả lời{' '}

@@ -2,9 +2,9 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 
-const QuestionContent = ({ content, handleTextToSpeech, isPlaying, countCorrectAnswers }) => {
+const QuestionContent = ({ content, handleTextToSpeech, isPlaying, countCorrectAnswers, isPronounce, isSortable }) => {
+    console.log('countCorrectAnswers', countCorrectAnswers);
 
-    console.log("countCorrectAnswers", countCorrectAnswers);
     const stripHtmlTags = (html) => {
         const doc = new DOMParser().parseFromString(html, 'text/html');
         return doc.body.textContent || '';
@@ -12,19 +12,23 @@ const QuestionContent = ({ content, handleTextToSpeech, isPlaying, countCorrectA
 
     const strippedContent = stripHtmlTags(content);
 
+    const getMessage = () => {
+        if (isPronounce || isSortable) {
+            return '';
+        }
+        return countCorrectAnswers > 1 ? '(chọn 1 hoặc nhiều đáp án)' : '(chỉ chọn 1 đáp án)';
+    };
+
     return (
         <>
             <div className="flex px-10 justify-center">
-                <p className="text-gray-800 text-center mb-2 text-xl font-bold leading-relaxed">
+                <div className="text-center mb-2 text-xl font-bold leading-relaxed text-gray-800">
                     <div
-                        className="content flex-1"
-                        style={{ maxWidth: '60vh', overflow: 'hidden' }}
-                        dangerouslySetInnerHTML={{
-                            __html: content,
-                        }}
+                        className="content flex-1 max-w-[60vh] overflow-hidden"
+                        dangerouslySetInnerHTML={{ __html: content }}
                     />
-                    {countCorrectAnswers > 1 ? `(chọn 1 hoặc nhiều đáp án)` : '(chỉ chọn 1 đáp án)'}
-                </p>
+                    <p>{getMessage()}</p>
+                </div>
             </div>
             <div className="flex justify-center my-5">
                 <button

@@ -16,6 +16,7 @@ namespace server.Dtos.Question
         public int LessonId { get; set; }
         public string Language { get; set; } = "vi";
         public bool IsPronounce { get; set; } = false;
+        public bool IsSortable { get; set; } = false;
         public List<UpdateAnswerDto> Answers { get; set; } = new List<UpdateAnswerDto>();
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }

@@ -212,6 +212,9 @@ namespace server.Migrations
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
                     b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
@@ -519,6 +522,10 @@ namespace server.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("GradeId")
                         .HasColumnType("int");
 
@@ -591,6 +598,9 @@ namespace server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("IsPronounce")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSortable")
                         .HasColumnType("bit");
 
                     b.Property<string>("Language")

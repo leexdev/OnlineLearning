@@ -66,24 +66,26 @@ const SidebarUser = ({ user, previewSrc, loadFile }) => {
                                 </NavLink>
                             </li>
                         )}
-                        <li className="p-3 !mt-0">
-                            <NavLink
-                                to="/chat"
-                                className={({ isActive }) =>
-                                    `p-3 uppercase ${
-                                        isActive
-                                            ? 'border-2 border-peach rounded-lg font-bold text-peach'
-                                            : 'hover:text-peach hover:font-bold'
-                                    }`
-                                }
-                                style={({ isActive }) => (isActive ? { padding: 'calc(0.75rem - 2px)' } : {})}
-                            >
-                                <FontAwesomeIcon className="mr-2" icon={faMessage} />
-                                <span className="font-semibold">
-                                    Nhắn tin {user?.role === 'Teacher' ? 'học viên' : 'giáo viên'}
-                                </span>
-                            </NavLink>
-                        </li>
+                        {user?.role === 'Teacher' || user?.role === 'User' && (
+                            <li className="p-3 !mt-0">
+                                <NavLink
+                                    to="/chat"
+                                    className={({ isActive }) =>
+                                        `p-3 uppercase ${
+                                            isActive
+                                                ? 'border-2 border-peach rounded-lg font-bold text-peach'
+                                                : 'hover:text-peach hover:font-bold'
+                                        }`
+                                    }
+                                    style={({ isActive }) => (isActive ? { padding: 'calc(0.75rem - 2px)' } : {})}
+                                >
+                                    <FontAwesomeIcon className="mr-2" icon={faMessage} />
+                                    <span className="font-semibold">
+                                        Nhắn tin {user?.role === 'Teacher' ? 'học viên' : 'giáo viên'}
+                                    </span>
+                                </NavLink>
+                            </li>
+                        )}
                     </ul>
                 </div>
             </div>

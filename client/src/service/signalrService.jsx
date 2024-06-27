@@ -19,7 +19,7 @@ class SignalRService {
 
         if (!this.connection || this.connection.state === 'Disconnected') {
             this.connection = new HubConnectionBuilder()
-                .withUrl('http://localhost:5032/chatHub', {
+                .withUrl('https://localhost:5032/chatHub', {
                     accessTokenFactory: () => token,
                     withCredentials: true,
                 })

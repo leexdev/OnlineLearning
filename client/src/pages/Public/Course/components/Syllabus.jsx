@@ -9,8 +9,6 @@ const Syllabus = ({ chapters, onLessonClick, completedLessons }) => {
     const [filteredChapters, setFilteredChapters] = useState(chapters);
     const freeLessons = chapters.flatMap(chapter => chapter.lessons.filter(lesson => lesson.isFree));
 
-    console.log("chapters", chapters);
-
     useEffect(() => {
         if (searchTerm === '') {
             setFilteredChapters(chapters);

@@ -26,6 +26,7 @@ namespace server.Mappers
             {
                 Content = answerDto.Content,
                 IsCorrect = answerDto.IsCorrect,
+                Order = answerDto.Order
             };
         }
 

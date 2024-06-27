@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace server.Models
 {
-    [Table("News")]
     public class News : BaseModel
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public string Content = string.Empty;
         public string ImageUrl = string.Empty;
         public int GradeId { get; set; }

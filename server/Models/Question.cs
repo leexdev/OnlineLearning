@@ -16,6 +16,7 @@ namespace server.Models
         public string? Language { get; set; } = "vi";
         public bool? IsPronounce { get; set; } = false;
         public byte[]? Audio { get; set; }
+        public bool IsSortable { get; set; } = false;
         public Lesson? Lesson { get; set; }
         public List<Answer> Answers { get; set; } = new List<Answer>();
         public List<UserAnswerHistory> UserAnswerHistories { get; set; } = new List<UserAnswerHistory>();

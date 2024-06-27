@@ -179,3 +179,4 @@ E:\ĐATN\LearningOnline\server\bin\Debug\net8.0\NAudio.Lame.dll
 E:\ĐATN\LearningOnline\server\bin\Debug\net8.0\NAudio.Midi.dll
 E:\ĐATN\LearningOnline\server\bin\Debug\net8.0\NAudio.Wasapi.dll
 E:\ĐATN\LearningOnline\server\bin\Debug\net8.0\NAudio.WinMM.dll
+E:\ĐATN\LearningOnline\server\bin\Debug\net8.0\HtmlAgilityPack.dll

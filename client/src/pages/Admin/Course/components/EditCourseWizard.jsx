@@ -29,7 +29,6 @@ const EditCourseWizard = () => {
             try {
                 const response = await courseApi.getAllChildren(courseId);
                 setCourse(response);
-                console.log("response", response );
             } catch (error) {
                 console.error('Lỗi khi lấy dữ liệu khóa học:', error);
                 toast.error('Không thể tải dữ liệu khóa học.');
@@ -61,7 +60,7 @@ const EditCourseWizard = () => {
     };
 
     if (!course) {
-        return <div>Loading...</div>; // Hiển thị khi dữ liệu khóa học chưa được tải xong
+        return <div>Loading...</div>;
     }
 
     return (

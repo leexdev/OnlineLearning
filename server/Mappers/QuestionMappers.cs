@@ -19,6 +19,7 @@ namespace server.Mappers
                 Explanation = questionModel.Explanation,
                 Language = questionModel.Language,
                 IsPronounce = questionModel.IsPronounce,
+                IsSortable = questionModel.IsSortable,
                 Answers = questionModel.Answers.Select(a => a.ToAnswerDto()).ToList(),
             };
         }
@@ -32,6 +33,7 @@ namespace server.Mappers
                 Explanation = questionDto.Explanation,
                 IsPronounce = questionDto.IsPronounce,
                 Language = questionDto.Language,
+                IsSortable = questionDto.IsSortable,
                 Answers = questionDto.Answers.ToAnswerListFromCreate()
             };
         }
@@ -45,6 +47,7 @@ namespace server.Mappers
                 Explanation = questionDto.Explanation,
                 Language = questionDto.Language,
                 IsPronounce = questionDto.IsPronounce,
+                IsSortable = questionDto.IsSortable,
                 Answers = questionDto.Answers.ToAnswerListFromUpdate(),
                 Audio = null
             };

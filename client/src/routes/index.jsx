@@ -23,6 +23,7 @@ import EditCourseWizard from '~/pages/Admin/Course/components/EditCourseWizard';
 import UserAdmin from '~/pages/Admin/User/User';
 import PaymentAdmin from '~/pages/Admin/Payment/Payment';
 import ListAdvise from '~/pages/Public/Advise/ListAdvise';
+import News from '~/pages/Public/News/News';
 
 const publicRoutes = [
     { path: '*', component: NotFound },
@@ -31,6 +32,7 @@ const publicRoutes = [
     { path: '/lesson/:id', component: Lesson, layout: CustomLayout },
     { path: '/course/:id', component: Course },
     { path: '/profile', component: Profile },
+    { path: '/news', component: News },
     { path: '/my-course', component: MyCourse },
     { path: '/my-course/my-process', component: MyProcess },
     { path: '/payment/:id', component: Payment },
@@ -40,7 +42,7 @@ const publicRoutes = [
 ];
 
 const privateRoutes = [
-    { path: '/chat', component: Chat, layout: CustomLayout, roles: ['Teacher', 'User']},
+    { path: '/chat', component: Chat, layout: CustomLayout, roles: ['Teacher', 'User'] },
     { path: '/my-advise', component: ListAdvise, roles: ['Teacher'] },
     { path: '/admin/home', component: DashboardAdmin, layout: AdminLayout, roles: ['Admin'] },
     { path: '/admin/banner', component: BannerAdmin, layout: AdminLayout, roles: ['Admin'] },
